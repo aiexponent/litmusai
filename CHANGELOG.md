@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Point every shipped URL and CI snippet at the `aiexponent` GitHub org. The repo moved from `aiexponenthq`, so `pyproject.toml` project URLs, the README badge and quickstart, `docs/ci-integration.md`, and the action README all pointed at a stale owner. Copy-paste `uses:` lines now resolve on first try.
+
 ## [1.0.0] — 2026-04-28
 
 > **LitmusAI 1.0.0 ships with the AiExponent reference ruleset (UNREVIEWED — internal panel authored, no external lawyer review). Apache 2.0, AS IS.**

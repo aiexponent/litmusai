@@ -84,7 +84,7 @@ jobs:
         # Trusted-publishing config required on PyPI side:
         #   pypi.org/manage/account/publishing → Add pending publisher
         #   project name: litmus-screener      (PyPI distribution; brand is "LitmusAI")
-        #   owner: aiexponenthq
+        #   owner: aiexponent
         #   repository: litmusai               (GitHub repo; product brand)
         #   workflow: release.yml
         #   environment: pypi

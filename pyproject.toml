@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "litmus-screener"
-version = "1.0.0"
+version = "1.0.1"
 description = "LitmusAI — free, deterministic CLI screener for Article 5 of the EU AI Act (Regulation (EU) 2024/1689)."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -69,9 +69,9 @@ litmus = "litmusai.cli.main:app"
 [project.urls]
 Homepage = "https://aiexponent.com/products/litmusai"
 Documentation = "https://aiexponent.com/docs/litmusai"
-Repository = "https://github.com/aiexponenthq/litmusai"
-Issues = "https://github.com/aiexponenthq/litmusai/issues"
-Changelog = "https://github.com/aiexponenthq/litmusai/blob/main/CHANGELOG.md"
+Repository = "https://github.com/aiexponent/litmusai"
+Issues = "https://github.com/aiexponent/litmusai/issues"
+Changelog = "https://github.com/aiexponent/litmusai/blob/main/CHANGELOG.md"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/litmusai"]
