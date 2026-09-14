@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: aiexponenthq/litmusai/.github/actions/litmusai-screen@v1
+      - uses: aiexponent/litmusai/.github/actions/litmusai-screen@v1
         with:
           path: ai-system.yaml
           fail-on: amber

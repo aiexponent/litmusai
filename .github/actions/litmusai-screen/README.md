@@ -5,7 +5,7 @@ Screen an AI system against Article 5 of the EU AI Act as a CI/CD gate.
 ## Usage
 
 ```yaml
-- uses: aiexponenthq/litmusai/.github/actions/litmusai-screen@v1
+- uses: aiexponent/litmusai/.github/actions/litmusai-screen@v1
   with:
     path: system.yaml
     fail-on: amber  # or: red, none
@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: aiexponenthq/litmusai/.github/actions/litmusai-screen@v1
+      - uses: aiexponent/litmusai/.github/actions/litmusai-screen@v1
         with:
           path: ai-system.yaml
           fail-on: amber
