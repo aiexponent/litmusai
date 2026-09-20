@@ -40,9 +40,9 @@ pip install litmus-screener   # the brand is "LitmusAI"; the PyPI distribution i
 litmus screen --describe "a chatbot for mental health support for teenagers"
 
 # Or from a structured YAML file
-litmus init                    # creates system.yaml template
-litmus screen system.yaml      # full screening with all 8 categories
-litmus export report.json --format pdf
+litmus init                                         # creates system.yaml template
+litmus screen system.yaml --output report.json      # full screening with all 8 categories
+litmus export report.json -o report.sarif --format sarif
 ```
 
 ## How It Works

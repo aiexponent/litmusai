@@ -276,6 +276,46 @@ class TestE2ECommands:
         results = sarif["runs"][0].get("results", [])
         assert len(results) > 0
 
+    def test_export_json_creates_file(self, tmp_path: Path) -> None:
+        """litmus export --format json creates formatted JSON file."""
+        report_file = tmp_path / "report.json"
+        out_file = tmp_path / "report_out.json"
+        _run("screen", str(_fixture("calculator_clear")), "--output", str(report_file))
+        result = _run("export", str(report_file), "--output", str(out_file), "--format", "json")
+        assert result.returncode == 0, result.stderr
+        assert out_file.exists()
+        data = json.loads(out_file.read_text())
+        assert "categories" in data
+        assert "summary" in data
+
+    def test_export_unsupported_format_pdf(self, tmp_path: Path) -> None:
+        """litmus export --format pdf prints clear error with supported formats."""
+        report_file = tmp_path / "report.json"
+        out_file = tmp_path / "report.pdf"
+        _run("screen", str(_fixture("calculator_clear")), "--output", str(report_file))
+        result = _run("export", str(report_file), "--output", str(out_file), "--format", "pdf")
+        assert result.returncode == 2
+        assert "PDF export is not supported" in result.stderr
+        assert "Supported formats: json, markdown, sarif" in result.stderr
+
+    def test_export_unknown_format(self, tmp_path: Path) -> None:
+        """litmus export with an arbitrary unknown format exits with code 2 and lists supported formats."""
+        report_file = tmp_path / "report.json"
+        out_file = tmp_path / "report.xyz"
+        _run("screen", str(_fixture("calculator_clear")), "--output", str(report_file))
+        result = _run("export", str(report_file), "--output", str(out_file), "--format", "xyz")
+        assert result.returncode == 2
+        assert "Unknown format: 'xyz'" in result.stderr
+        assert "Supported formats: json, markdown, sarif" in result.stderr
+
+    def test_export_missing_output_option(self, tmp_path: Path) -> None:
+        """litmus export without --output/-o fails with missing option error."""
+        report_file = tmp_path / "report.json"
+        _run("screen", str(_fixture("calculator_clear")), "--output", str(report_file))
+        result = _run("export", str(report_file), "--format", "sarif")
+        assert result.returncode == 2
+        assert "Missing option" in result.stderr
+
     # ── 8. litmus portfolio tests/fixtures/portfolio/ ─────────────────────
 
     def test_portfolio_screens_all_fixtures(self) -> None:
