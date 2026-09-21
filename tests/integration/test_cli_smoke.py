@@ -80,3 +80,48 @@ class TestCLISmoke:
                 continue
 
         assert not offenders, f"Found stale legacy org references in: {offenders}"
+
+    def test_dependabot_config_valid(self) -> None:
+        """PRD-184: Ensure .github/dependabot.yml exists and has valid weekly configuration."""
+        repo_root = Path(__file__).resolve().parents[2]
+        dependabot_path = repo_root / ".github" / "dependabot.yml"
+        assert dependabot_path.is_file(), ".github/dependabot.yml does not exist"
+
+        import yaml
+
+        data = yaml.safe_load(dependabot_path.read_text(encoding="utf-8"))
+        assert data.get("version") == 2
+        updates = data.get("updates", [])
+        ecosystems = {u.get("package-ecosystem"): u for u in updates}
+        assert "pip" in ecosystems, "Missing pip package-ecosystem in dependabot.yml"
+        assert "github-actions" in ecosystems, (
+            "Missing github-actions package-ecosystem in dependabot.yml"
+        )
+        assert ecosystems["pip"].get("schedule", {}).get("interval") == "weekly"
+        assert ecosystems["github-actions"].get("schedule", {}).get("interval") == "weekly"
+
+    def test_readme_badges_and_reciprocal_ecosystem_footer(self) -> None:
+        """PRD-184: Ensure README badges use flat-square and footer contains 5-tool reciprocal links."""
+        repo_root = Path(__file__).resolve().parents[2]
+        readme_path = repo_root / "README.md"
+        assert readme_path.is_file(), "README.md does not exist"
+
+        content = readme_path.read_text(encoding="utf-8")
+        assert "style=flat-square" in content
+        assert "0D5463" in content
+
+        sibling_tools = [
+            "litmusai",
+            "license-compliance-checker",
+            "rag-benchmarking",
+            "riskforge",
+            "agentic-document-analyser",
+        ]
+        for tool in sibling_tools:
+            assert tool in content, f"Missing tool '{tool}' in README reciprocal ecosystem"
+
+        assert "https://github.com/aiexponent/license-compliance-checker" in content
+        assert "https://github.com/aiexponent/rag-benchmarking" in content
+        assert "https://github.com/aiexponent/riskforge" in content
+        assert "https://github.com/aiexponent/agentic-document-analyser" in content
+        assert "https://aiexponent.com" in content
