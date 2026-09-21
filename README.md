@@ -1,11 +1,9 @@
 <div align="center">
-  <a href="https://aiexponent.com">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/aiexponent/litmusai/main/.github/brand/logo-full-dark.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/aiexponent/litmusai/main/.github/brand/logo-full-light.png">
-      <img src="https://raw.githubusercontent.com/aiexponent/litmusai/main/.github/brand/logo-full-light.png" alt="AiExponent — Building AI that deserves to be trusted" width="560"/>
-    </picture>
-  </a>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/aiexponent/litmusai/main/.github/brand/og-litmusai-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/aiexponent/litmusai/main/.github/brand/og-litmusai-light.png">
+    <img src="https://raw.githubusercontent.com/aiexponent/litmusai/main/.github/brand/og-litmusai-dark.png" alt="LitmusAI — EU AI Act Article 5 Prohibited Practice Screener" width="100%"/>
+  </picture>
   <h1 align="center">LitmusAI</h1>
   <p align="center"><em>Free, deterministic Article 5 screener for the EU AI Act.</em></p>
   <p align="center">
