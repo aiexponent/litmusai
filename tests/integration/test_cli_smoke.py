@@ -5,6 +5,7 @@ from __future__ import annotations
 import subprocess
 import sys
 import time
+from pathlib import Path
 
 
 class TestCLISmoke:
@@ -54,3 +55,28 @@ class TestCLISmoke:
         )
         assert result.returncode in (0, 2)
         assert "Usage" in result.stdout
+
+    def test_no_stale_legacy_org_references(self) -> None:
+        """PRD-167: Ensure no stale legacy org references exist across repo files."""
+        repo_root = Path(__file__).resolve().parents[2]
+        extensions = {".py", ".md", ".json", ".yaml", ".yml", ".toml", "LICENSE", "NOTICE"}
+        target = "aiexponent" + "hq"
+        offenders: list[str] = []
+        for path in repo_root.rglob("*"):
+            if not path.is_file():
+                continue
+            if path.resolve() == Path(__file__).resolve():
+                continue
+            rel_parts = path.relative_to(repo_root).parts
+            if any(p.startswith(".") for p in rel_parts if p != ".github"):
+                continue
+            if path.suffix not in extensions and path.name not in extensions:
+                continue
+            try:
+                content = path.read_text(encoding="utf-8")
+                if target in content.lower():
+                    offenders.append(str(path.relative_to(repo_root)))
+            except UnicodeDecodeError:
+                continue
+
+        assert not offenders, f"Found stale legacy org references in: {offenders}"

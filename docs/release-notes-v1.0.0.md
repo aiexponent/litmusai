@@ -15,7 +15,7 @@
 - **Deterministic**: same input + same ruleset = same output, with a SHA-256 input hash on every report
 - **BYO-ruleset** mechanism — ship your lawyer-signed ruleset and `litmus use-ruleset your.json`; reports show `(SIGNED by: …)` instead of `UNREVIEWED`
 - **Multiple output formats**: rich console table, JSON, SARIF (GitHub Advanced Security / GitLab SAST / Azure DevOps), Markdown, optional PDF via WeasyPrint
-- **GitHub Action wrapper** at `aiexponenthq/litmusai/.github/actions/litmusai-screen@v1` for drop-in CI integration
+- **GitHub Action wrapper** at `aiexponent/litmusai/.github/actions/litmusai-screen@v1` for drop-in CI integration
 
 ## What this release ships
 
@@ -67,9 +67,9 @@ pip install litmus-screener   # the brand is "LitmusAI"; the PyPI distribution i
 litmus screen --describe "a chatbot for mental health support for teenagers"
 
 # Or from a structured YAML file
-litmus init                    # creates system.yaml template
-litmus screen system.yaml
-litmus export report.json --format pdf
+litmus init                                         # creates system.yaml template
+litmus screen system.yaml --output report.json
+litmus export report.json -o report.sarif --format sarif
 ```
 
 ## Disclaimers

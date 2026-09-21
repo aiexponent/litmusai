@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Point every shipped URL and CI snippet at the `aiexponent` GitHub org. The repo moved from `aiexponenthq`, so `pyproject.toml` project URLs, the README badge and quickstart, `docs/ci-integration.md`, and the action README all pointed at a stale owner. Copy-paste `uses:` lines now resolve on first try.
+- Point every shipped URL and CI snippet at the `aiexponent` GitHub org. The repo moved from the legacy organization, so `pyproject.toml` project URLs, the README badge and quickstart, `docs/ci-integration.md`, and the action README all pointed at a stale owner. Copy-paste `uses:` lines now resolve on first try.
 
 ## [1.0.0] — 2026-04-28
 
@@ -61,7 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added — developer experience
 
-- **GitHub Action wrapper** at `aiexponenthq/litmusai/.github/actions/litmusai-screen@v1` — drop-in CI integration with `path`, `fail-on`, `output-format`, and `override-file` inputs (FR-27)
+- **GitHub Action wrapper** at `aiexponent/litmusai/.github/actions/litmusai-screen@v1` — drop-in CI integration with `path`, `fail-on`, `output-format`, and `override-file` inputs (FR-27)
 - **Conventional exit codes** (FR-28): 0 = clear / below-threshold, 1 = threshold exceeded, 2 = invalid input / schema error, 3 = tamper detected
 - Three worked-example `system.yaml` files in `examples/` covering CLEAR (`example-clear.yaml`), AMBER (`example-amber.yaml`), and RED (`example-red.yaml`) verdicts. CI pin via `tests/integration/test_examples.py` ensures any future ruleset change that flips an example's verdict surfaces before release.
 
@@ -76,6 +76,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Notes
 
-- **Distribution name vs brand name.** The product brand is **LitmusAI**. The PyPI distribution is **`litmus-screener`** because `litmus-ai` and `litmusai` were already taken on PyPI by an unrelated AI project ("Litmus AI" hallucination-detection SDK). Install command: `pip install litmus-screener`. The CLI entry point is still `litmus`, the Python module is still `litmusai`, the GitHub repo is still `aiexponenthq/litmusai`. Same pattern as `pip install torch` for PyTorch.
+- **Distribution name vs brand name.** The product brand is **LitmusAI**. The PyPI distribution is **`litmus-screener`** because `litmus-ai` and `litmusai` were already taken on PyPI by an unrelated AI project ("Litmus AI" hallucination-detection SDK). Install command: `pip install litmus-screener`. The CLI entry point is still `litmus`, the Python module is still `litmusai`, the GitHub repo is still `aiexponent/litmusai`. Same pattern as `pip install torch` for PyTorch.
 - **Legal-review status: UNREVIEWED.** External lawyer review is **not** a release blocker per the project's published acceptance criteria (PRD §NFR-10). The package ships with conservative-by-default verdicts, prominent `UNREVIEWED` disclaimers on every distribution surface, and a Bring-Your-Own-Ruleset mechanism so customers with their own counsel can supply a signed ruleset today. A future `ruleset-2024-1689-v1.1` release will bump the ruleset's `legal_status` to `REVIEWED`; the LitmusAI package version (`1.0.x`) tracks API stability and will not bump for that change.
 - **Not legal advice. Not a notified body.** Apache 2.0. AS IS.
