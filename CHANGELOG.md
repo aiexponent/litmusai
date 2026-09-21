@@ -5,11 +5,27 @@ All notable changes to LitmusAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.1] — 2026-09-21
 
 ### Fixed
 
-- Point every shipped URL and CI snippet at the `aiexponent` GitHub org. The repo moved from the legacy organization, so `pyproject.toml` project URLs, the README badge and quickstart, `docs/ci-integration.md`, and the action README all pointed at a stale owner. Copy-paste `uses:` lines now resolve on first try.
+- **CLI Export Command Ergonomics (PRD-166)**: Fixed crash in `litmus export` when invoked without `--output`, making the flag optional and defaulting cleanly to stdout. Added explicit format validation for `json`, `markdown`, and `sarif`, with clear guidance when `pdf` is requested without optional WeasyPrint dependencies.
+- **Windows Console Compatibility**: Replaced Unicode em-dash and arrow characters in `litmus debug` output with ASCII alternatives, preventing `UnicodeEncodeError` on Windows systems using `cp1252` encoding.
+- **CI Test Runner on Windows**: Configured `shell: bash` for multi-line test steps in GitHub Actions CI to fix Windows matrix runner failures.
+- **Organization and Action Paths (PRD-167)**: Updated all repository URLs, CI workflow references, and documentation to the canonical `aiexponent/litmusai` organization, removing deprecated redirects.
+
+### Changed
+
+- **Visual Badges (PRD-184)**: Standardized all README status badges to `style=flat-square` with brand teal `#0D5463`.
+- **Licensing & Attribution**: Upgraded `LICENSE` to the full canonical Apache-2.0 text and added formal `NOTICE` file attributing `AI Exponent LLC`.
+- **CI Actions Bump**: Updated GitHub Actions dependencies to Node.js 24 runtime (`checkout@v6`, `setup-python@v6`, `upload-artifact@v7`, `download-artifact@v8`).
+
+### Added
+
+- **Reciprocal Ecosystem Footer (PRD-184)**: Added reciprocal 5-tool open-source AI governance cross-linking footer in `README.md` referencing sibling tools (`license-compliance-checker`, `rag-benchmarking`, `riskforge`, and `agentic-document-analyser`).
+- **Dependabot Configuration (PRD-184)**: Added `.github/dependabot.yml` configured for weekly security update scanning on `pip` and `github-actions`.
+- **Self-Scan Workflow**: Added `license-compatibility.yml` workflow for automated license compliance policy checks.
+- **Regression Test Suites**: Added automated assertions for Dependabot configuration, README ecosystem links, and organization naming integrity.
 
 ## [1.0.0] — 2026-04-28
 
