@@ -202,7 +202,7 @@ deployment:
               "shortDescription": {
                 "text": "Article 5(1)(b) Exploitation of age, disability, or specific social vulnerability"
               },
-              "helpUri": "https://aiexponent.com/docs/litmusai/article-5#5.1.b"
+              "helpUri": "https://aiexponent.com/eu-ai-act/article-5"
             }
           ]
         }

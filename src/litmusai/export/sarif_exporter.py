@@ -23,7 +23,7 @@ def to_sarif(report: dict[str, Any]) -> dict[str, Any]:
                 "id": rule_id,
                 "name": cat.get("label", cat_id),
                 "shortDescription": {"text": f"Article {cat_id} screening"},
-                "helpUri": f"https://aiexponent.com/docs/litmusai/article-5#{cat_id}",
+                "helpUri": "https://aiexponent.com/eu-ai-act/article-5",
             }
         )
 
