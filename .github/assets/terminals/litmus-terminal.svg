@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 484" width="100%" height="auto" style="max-width: 920px; border-radius: 12px; display: block; margin: 16px 0;">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1C2632"/>
+      <stop offset="100%" stop-color="#161F2B"/>
+    </linearGradient>
+    <linearGradient id="topHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#26303C"/>
+      <stop offset="50%" stop-color="#5DB7C8" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#26303C"/>
+    </linearGradient>
+    <style>
+      .term-text { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 13.5px; line-height: 22px; }
+      .term-title { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 13px; font-weight: 500; fill: #94A3B8; }
+      .prompt { fill: #5DB7C8; font-weight: bold; }
+      .cmd { fill: #FAF7F2; font-weight: bold; }
+      .text-white { fill: #FAF7F2; }
+      .text-muted { fill: #94A3B8; }
+      .text-dim { fill: #64748B; }
+      .text-cyan { fill: #5DB7C8; }
+      .text-green { fill: #34D399; font-weight: bold; }
+      .text-amber { fill: #FBBF24; font-weight: bold; }
+      .text-red { fill: #F87171; font-weight: bold; }
+      .text-purple { fill: #C084FC; font-weight: bold; }
+      .border-subtle { stroke: #26303C; stroke-width: 1.5; }
+    </style>
+  </defs>
+  <rect x="0.5" y="0.5" width="919" height="483" rx="12" fill="#0F1419" class="border-subtle"/>
+  <rect x="0" y="0" width="920" height="3" fill="url(#topHighlight)"/>
+  <rect x="1" y="1" width="918" height="38" rx="11" fill="url(#headerGrad)"/>
+  <rect x="1" y="24" width="918" height="16" fill="url(#headerGrad)"/>
+  <line x1="0" y1="39" x2="920" y2="39" stroke="#26303C" stroke-width="1"/>
+  <circle cx="20" cy="20" r="6" fill="#EF4444"/>
+  <circle cx="38" cy="20" r="6" fill="#F59E0B"/>
+  <circle cx="56" cy="20" r="6" fill="#10B981"/>
+  <text x="460" y="24" text-anchor="middle" class="term-title">litmus screen — zsh — 920×484</text>
+  <text x="24" y="66" class="term-text">
+    <tspan class="prompt">$ </tspan>
+    <tspan class="cmd">litmus screen --describe &quot;a chatbot for mental-health support for teenagers&quot;</tspan>
+  </text>
+  <text x="24" y="88" class="term-text">
+    <tspan class="text-dim">AiExponent LitmusAI v1.0.1 · EU AI Act Article 5 Prohibited Practice Engine</tspan>
+  </text>
+  <text x="24" y="110" class="term-text">
+    <tspan class="text-dim">Parsing input specification across 8 statutory categories...</tspan>
+  </text>
+  <text x="24" y="132" class="term-text">
+    <tspan class="text-white">  [1/8] Art. 5(1)(a) Subliminal / Cognitive Manipulation ......... </tspan>
+    <tspan class="text-green">[ CLEAR ]</tspan>
+    <tspan class="text-muted"> (conf: 0.96)</tspan>
+  </text>
+  <text x="24" y="154" class="term-text">
+    <tspan class="text-white">  [2/8] Art. 5(1)(b) Exploitation of Vulnerabilities (Minors) ... </tspan>
+    <tspan class="text-amber">[ AMBER ]</tspan>
+    <tspan class="text-muted"> (conf: 0.92)</tspan>
+  </text>
+  <text x="24" y="176" class="term-text">
+    <tspan class="text-dim">        ↳ </tspan>
+    <tspan class="text-amber">FLAG:</tspan>
+    <tspan class="text-muted"> Adolescent cohort + clinical mental-health context detected</tspan>
+  </text>
+  <text x="24" y="198" class="term-text">
+    <tspan class="text-dim">        ↳ </tspan>
+    <tspan class="text-cyan">STATUTE:</tspan>
+    <tspan class="text-muted"> EU AI Act Art. 5(1)(b) (age-group psychological vulnerability)</tspan>
+  </text>
+  <text x="24" y="220" class="term-text">
+    <tspan class="text-dim">        ↳ </tspan>
+    <tspan class="text-green">REMEDY:</tspan>
+    <tspan class="text-white"> Human-in-the-loop escalation required before deployment (Art. 14)</tspan>
+  </text>
+  <text x="24" y="242" class="term-text">
+    <tspan class="text-white">  [3/8] Art. 5(1)(c) Social Scoring by Public/Private Entities ... </tspan>
+    <tspan class="text-green">[ CLEAR ]</tspan>
+    <tspan class="text-muted"> (conf: 0.99)</tspan>
+  </text>
+  <text x="24" y="264" class="term-text">
+    <tspan class="text-white">  [4/8] Art. 5(1)(d) Individual Predictive Criminal Risk Profiling </tspan>
+    <tspan class="text-green">[ CLEAR ]</tspan>
+    <tspan class="text-muted"> (conf: 1.00)</tspan>
+  </text>
+  <text x="24" y="286" class="term-text">
+    <tspan class="text-white">  [5/8] Art. 5(1)(e) Untargeted Scraping of Facial Images ........ </tspan>
+    <tspan class="text-green">[ CLEAR ]</tspan>
+    <tspan class="text-muted"> (conf: 0.99)</tspan>
+  </text>
+  <text x="24" y="308" class="term-text">
+    <tspan class="text-white">  [6/8] Art. 5(1)(f) Emotion Inference in Workplace / Education .. </tspan>
+    <tspan class="text-green">[ CLEAR ]</tspan>
+    <tspan class="text-muted"> (conf: 0.98)</tspan>
+  </text>
+  <text x="24" y="330" class="term-text">
+    <tspan class="text-white">  [7/8] Art. 5(1)(g) Biometric Categorisation of Protected Traits  </tspan>
+    <tspan class="text-green">[ CLEAR ]</tspan>
+    <tspan class="text-muted"> (conf: 0.97)</tspan>
+  </text>
+  <text x="24" y="352" class="term-text">
+    <tspan class="text-white">  [8/8] Art. 5(1)(h) Real-Time Remote Biometric Identification ... </tspan>
+    <tspan class="text-green">[ CLEAR ]</tspan>
+    <tspan class="text-muted"> (conf: 1.00)</tspan>
+  </text>
+  <text x="24" y="374" class="term-text">
+    <tspan class="text-dim">────────────────────────────────────────────────────────────────────────────────────────────</tspan>
+  </text>
+  <text x="24" y="396" class="term-text">
+    <tspan class="text-white">VERDICT: </tspan>
+    <tspan class="text-amber">[ AMBER ] REVIEW REQUIRED</tspan>
+    <tspan class="text-white"> — 1 remediation required before production clearance</tspan>
+  </text>
+  <text x="24" y="418" class="term-text">
+    <tspan class="text-cyan">SARIF:   </tspan>
+    <tspan class="text-muted">Tamper-evident audit report exported to </tspan>
+    <tspan class="text-white">./litmus-verdict.sarif</tspan>
+  </text>
+  <text x="24" y="440" class="term-text">
+    <tspan class="text-cyan">HASH:    </tspan>
+    <tspan class="text-dim">SHA-256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</tspan>
+  </text>
+</svg>

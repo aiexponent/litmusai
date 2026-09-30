@@ -32,8 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - run: pip install -e ".[dev]"
@@ -48,8 +48,8 @@ jobs:
     needs: guard
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
       - name: Install build tooling
@@ -97,7 +97,7 @@ jobs:
       # Funnel the tag through env so it never lands inline in run: scripts.
       TAG_NAME: ${{ github.ref_name }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: actions/download-artifact@v8
         with:
           name: dist
@@ -120,7 +120,7 @@ jobs:
             echo "::warning::No release-notes file at $NOTES_FILE — using auto-generated notes"
           fi
       - name: Cut GitHub release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           name: ${{ steps.notes.outputs.release_name }}
           body_path: ${{ steps.notes.outputs.notes_path }}
