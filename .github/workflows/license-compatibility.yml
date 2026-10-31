@@ -2,7 +2,7 @@ name: License Compatibility (LCC dogfooding)
 
 # AiExponent dogfooding gate: every released tool runs LCC against itself
 # to surface license compatibility issues across the dependency tree.
-# Initially warn-only — promote to gating once the baseline is clean.
+# Initially warn-only; promote to gating once the baseline is clean.
 #
 # Source obligation: PRD-v2.0 section 5.5 (Dependency scanning via LCC's
 # own eu-ai-act-compliance policy at every release).

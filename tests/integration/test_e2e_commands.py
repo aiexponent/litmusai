@@ -2,7 +2,7 @@
 
 Spawns real subprocesses using sys.executable so tests exercise the full
 import stack, Typer routing, screener engine, exporters, and exit-code
-contract — exactly as a user would from a shell.
+contract: exactly as a user would from a shell.
 
 Acceptance criteria covered:
   AC-12  --help fast (see test_cli_smoke.py)
@@ -22,13 +22,15 @@ from pathlib import Path
 
 import pytest
 
+from litmusai.categories import ARTICLE_5_CATEGORIES
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
 
 _PORTFOLIO_DIR = Path(__file__).parents[1] / "fixtures" / "portfolio"
 
-# Map fixture stem to expected overall verdict — verified against live ruleset.
+# Map fixture stem to expected overall verdict: verified against live ruleset.
 _EXPECTED_VERDICTS: dict[str, str] = {
     "calculator_clear": "clear",
     "social_scoring_red": "red",
@@ -40,6 +42,11 @@ _EXPECTED_VERDICTS: dict[str, str] = {
     "loan_scorer_amber": "amber",
     "minors_behaviour_red": "red",
     "public_space_biometric_amber": "amber",
+    # Article 5(1)(ba) and (bb), ruleset v1.1 (PRD-411)
+    "undress_app_red": "red",
+    "video_generator_no_csam_safeguards_red": "red",
+    "image_generator_safeguarded_clear": "clear",
+    "photo_retouch_1b_amber": "amber",
 }
 
 
@@ -96,7 +103,7 @@ class TestE2ECommands:
 
         report_file = tmp_path / "report.json"
         _run("screen", str(out_file), "--output", str(report_file))
-        # returncode may be 0 (clear/amber) — template has all false flags
+        # returncode may be 0 (clear/amber): template has all false flags
         assert report_file.exists(), "No report written"
         report = json.loads(report_file.read_text())
         assert report["summary"]["overall_verdict"] == "clear"
@@ -191,12 +198,11 @@ class TestE2ECommands:
             assert key in report, f"Missing key in report: {key!r}"
 
     def test_screen_output_report_has_all_categories(self, tmp_path: Path) -> None:
-        """JSON report contains all 8 Article 5 categories."""
+        """JSON report contains all ten Article 5 categories, in regulation order."""
         report_file = tmp_path / "report.json"
         _run("screen", str(_fixture("calculator_clear")), "--output", str(report_file))
         report = json.loads(report_file.read_text())
-        expected_cats = {"5.1.a", "5.1.b", "5.1.c", "5.1.d", "5.1.e", "5.1.f", "5.1.g", "5.1.h"}
-        assert set(report["categories"].keys()) == expected_cats
+        assert list(report["categories"].keys()) == list(ARTICLE_5_CATEGORIES)
 
     def test_screen_output_report_embeds_system(self, tmp_path: Path) -> None:
         """JSON report embeds the parsed SystemDescription."""
@@ -326,7 +332,7 @@ class TestE2ECommands:
         """
         result = _run("portfolio", str(_PORTFOLIO_DIR))
         assert result.returncode == 0, f"portfolio failed:\n{result.stderr}"
-        # System names always fit within the column width — assert on those.
+        # System names always fit within the column width: assert on those.
         expected_system_names = [
             "SimpleCalc",
             "CitizenTrustScore",
@@ -366,6 +372,80 @@ class TestE2ECommands:
         assert verdict_map["ClinicalMoodAssist"] == "amber"
         assert verdict_map["RecidivismRiskEngine"] == "red"
         assert verdict_map["LoanRiskScorer"] == "amber"
+        assert verdict_map["UndressSnap"] == "red"
+        assert verdict_map["OpenVid Weights"] == "red"
+        assert verdict_map["Headshot Studio"] == "clear"
+        assert verdict_map["RetouchPro"] == "amber"
+
+    # ── 7. litmus --help and --describe on the new categories ────────────
+
+    def test_help_names_ten_categories(self) -> None:
+        """PRD-411: the help text names the ten Article 5(1) categories."""
+        result = _run("--help")
+        assert result.returncode == 0
+        assert "10 categories" in result.stdout
+        assert "(ba) and (bb)" in result.stdout
+
+    def test_describe_undress_app_is_red_on_ba(self, tmp_path: Path) -> None:
+        report_file = tmp_path / "report.json"
+        result = _run(
+            "screen",
+            "--describe",
+            "an app that undresses photos of real people",
+            "--output",
+            str(report_file),
+            "--fail-on",
+            "none",
+        )
+        assert result.returncode == 0, result.stderr
+        report = json.loads(report_file.read_text())
+        assert report["categories"]["5.1.ba"]["verdict"] == "red"
+        assert report["summary"]["overall_verdict"] == "red"
+
+    def test_describe_filtered_image_generator_is_not_red(self, tmp_path: Path) -> None:
+        report_file = tmp_path / "report.json"
+        result = _run(
+            "screen",
+            "--describe",
+            "a text-to-image generator with a content filter and consent checks",
+            "--output",
+            str(report_file),
+            "--fail-on",
+            "none",
+        )
+        assert result.returncode == 0, result.stderr
+        report = json.loads(report_file.read_text())
+        assert report["summary"]["overall_verdict"] != "red"
+        assert report["categories"]["5.1.bb"]["verdict"] == "amber", "safeguards not documented"
+
+    def test_describe_credit_scoring_is_amber_not_red(self, tmp_path: Path) -> None:
+        """litmusai#25: a credit score from repayment history is not social scoring."""
+        report_file = tmp_path / "report.json"
+        _run(
+            "screen",
+            "--describe",
+            "a credit scoring model using repayment history and engagement patterns",
+            "--output",
+            str(report_file),
+            "--fail-on",
+            "none",
+        )
+        report = json.loads(report_file.read_text())
+        assert report["categories"]["5.1.c"]["verdict"] == "amber"
+
+    def test_describe_social_credit_is_red(self, tmp_path: Path) -> None:
+        report_file = tmp_path / "report.json"
+        _run(
+            "screen",
+            "--describe",
+            "a social credit score of citizens from social media behaviour",
+            "--output",
+            str(report_file),
+            "--fail-on",
+            "none",
+        )
+        report = json.loads(report_file.read_text())
+        assert report["categories"]["5.1.c"]["verdict"] == "red"
 
     # ── 9. litmus debug report.json ───────────────────────────────────────
 

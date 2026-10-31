@@ -1,4 +1,4 @@
-# LitmusAI example — expected verdict: RED (Article 5(1)(f) prohibition)
+# LitmusAI example: expected verdict RED (Article 5(1)(f) prohibition)
 # ------------------------------------------------------------------------------
 # This example shows a workplace emotion-recognition system. Article
 # 5(1)(f) of Regulation (EU) 2024/1689 prohibits the placing on the
@@ -15,7 +15,7 @@
 # Expected:
 #   Overall verdict: RED
 #   5.1.f (Emotion recognition in workplace/education): RED
-#   Other 7 categories: CLEAR
+#   Other nine categories: CLEAR
 
 name: "MoodSync Workplace Wellbeing Suite"
 version: "0.9.0-pilot"
@@ -33,7 +33,7 @@ system_description: >
   level dashboards visible to people-managers. No medical claim is
   made; the system is marketed as "wellbeing analytics", not as a
   medical / safety tool. There is no explicit safety use-case (e.g.
-  drowsiness detection in heavy-machinery operators) — the deployment
+  drowsiness detection in heavy-machinery operators); the deployment
   is regular knowledge-worker meetings.
 
 deployment_jurisdictions: ["EU"]
@@ -61,7 +61,7 @@ outputs:
   individual_scores: false              # the system surfaces emotion
                                         # vectors and team aggregates,
                                         # not numerical scores about
-                                        # individuals — kept false to
+                                        # individuals; kept false to
                                         # isolate the 5(1)(f) signal
                                         # in the screen output
   behaviour_predictions: false

@@ -1,22 +1,23 @@
-# LitmusAI example — expected verdict: AMBER (requires human review)
+# LitmusAI example: expected verdict AMBER (requires human review)
 # ------------------------------------------------------------------------------
 # This example shows a financial-services credit-scoring system that
 # lands in the grey zone for Article 5(1)(c) (social scoring). The rule
-# fires on amber, not red, because the deployer is a private-sector
-# lender, the score is not the sole basis of the decision, and there
-# are documented mitigations (human-in-the-loop, right-to-contest).
+# fires on amber, not red, because the score comes from financial data
+# used in its own context (repayment, income), not from social behaviour,
+# and it is not used for detrimental treatment in an unrelated context.
+# Any individual scoring still gets an amber for review by design.
 #
 # This is also a high-risk system under Article 6 + Annex III §5(b)
 # (creditworthiness / credit scoring). Annex III scope lives in
 # RiskForge, not here. LitmusAI only screens against Article 5
 # prohibitions. A system can be "Article 5: amber" AND still be
-# "Article 6: high-risk" — both files need to be produced.
+# "Article 6: high-risk"; both files need to be produced.
 #
 # Run:  litmus screen example-amber.yaml
 # Expected:
 #   Overall verdict: AMBER
-#   5.1.c (Social scoring): AMBER — needs review
-#   Other 7 categories: CLEAR
+#   5.1.c (Social scoring): AMBER, needs review
+#   Other nine categories: CLEAR
 
 name: "Lendly Adaptive Credit Score"
 version: "1.3.0"
@@ -50,18 +51,20 @@ inputs:
   biometric: false
   facial_images: false
   emotional_state_inference: false
-  behaviour_history: false
+  behaviour_history: true             # repayment history from the bureau pull
+  social_behaviour_data: false        # no social media, associations or lifestyle data
   scraped_internet_data: false
   freetext_prompts: false
   other: null
 
 outputs:
-  individual_scores: true             # the 0–1000 credit score
+  individual_scores: true             # the 0 to 1000 credit score
   behaviour_predictions: false
   criminal_risk_predictions: false
   emotion_inferences: false
   sensitive_attribute_classifications: false
   freetext_generations: false
+  detrimental_treatment_unrelated_context: false   # the score decides the loan it was built for
   other: "approve/decline/refer recommendation; interest-rate band"
 
 deployment_context:

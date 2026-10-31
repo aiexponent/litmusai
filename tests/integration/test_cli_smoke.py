@@ -1,4 +1,4 @@
-"""Integration tests: CLI smoke tests — AC-12 (--help < 50ms), --version."""
+"""Integration tests: CLI smoke tests: AC-12 (--help < 50ms), --version."""
 
 from __future__ import annotations
 

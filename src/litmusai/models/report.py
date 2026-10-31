@@ -1,4 +1,4 @@
-"""Output models for LitmusAI screening reports — PRD §7.2, FR-36."""
+"""Output models for LitmusAI screening reports: PRD §7.2, FR-36."""
 
 from __future__ import annotations
 
@@ -60,7 +60,9 @@ class OverrideEntry(BaseModel, extra="forbid"):
 
 
 class ScreeningReport(BaseModel, extra="forbid"):
-    report_version: str = "1.0"
+    # "1.0": eight categories, litmus-screener 1.0.x. "1.1": ten categories
+    # and the generative_media block, litmus-screener 1.1.0 onwards.
+    report_version: str = "1.1"
     ruleset_version: str
     litmusai_version: str
     generated_at: datetime

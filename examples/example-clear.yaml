@@ -1,19 +1,20 @@
-# LitmusAI example — expected verdict: CLEAR (all 8 categories pass)
+# LitmusAI example: expected verdict CLEAR (all ten categories pass)
 # ------------------------------------------------------------------------------
-# This example shows a system that is well outside Article 5's eight
+# This example shows a system that is well outside Article 5's ten
 # prohibited-practice categories. It deliberately ticks none of the input,
-# output, or deployment-context flags that any Article 5 sub-point depends on.
-# Use as a starting template for ordinary, low-risk AI deployments.
+# output, deployment-context or generative-media flags that any Article 5
+# sub-point depends on. Use as a starting template for ordinary, low-risk
+# AI deployments.
 #
 # Run:  litmus screen example-clear.yaml
 # Expected:
 #   Overall verdict: CLEAR
-#   All 8 categories: CLEAR
+#   All ten categories: CLEAR
 
 name: "MeetingSummariser"
 version: "2.4.1"
 provider: "Acme Productivity Tools"
-deployer: "Internal — same as provider"
+deployer: "Internal, same as provider"
 purpose: >
   Summarises Zoom / Google Meet recordings into structured action-item
   lists for adult professional users who explicitly upload a transcript.
@@ -33,7 +34,7 @@ deployment_jurisdictions: ["EU", "US", "UK"]
 output_consumed_in_eu: true
 
 # Who the system's outputs are about. For a meeting summariser the
-# affected population is the meeting participants — adults in a
+# affected population is the meeting participants: adults in a
 # professional context, not a vulnerable group, not minors.
 subject_population:
   categories: ["general_public"]
@@ -42,7 +43,7 @@ subject_population:
     Minors are not in scope (terms of service require users to be 18+).
 
 # Input / output / deployment-context flags must reflect reality. If
-# uncertain, set true and document mitigations — false claims here are
+# uncertain, set true and document mitigations; false claims here are
 # the most common cause of mis-screening.
 inputs:
   biometric: false
@@ -77,7 +78,7 @@ deployment_context:
 # Mitigations are how you defend ambiguous edges in a screening review.
 # Keep them concrete and verifiable, not aspirational.
 mitigations:
-  - "Users explicitly upload their own transcripts — no covert capture"
+  - "Users explicitly upload their own transcripts; no covert capture"
   - "Output is reviewed by the user before any downstream action"
   - "No persistent biometric profiles built across sessions"
   - "Terms of service require user age >= 18"

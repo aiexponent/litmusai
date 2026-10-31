@@ -1,0 +1,105 @@
+# LitmusAI example: expected verdict CLEAR (a safeguarded image generator)
+# ------------------------------------------------------------------------------
+# A fictional portrait and marketing image generator that can depict real,
+# identifiable people (customers upload their own photo) and ships the
+# measures that Article 5(1a)(a)(ii) of Regulation (EU) 2024/1689, as
+# amended by Regulation (EU) 2026/1744, expects: reliable prevention of
+# intimate outputs, child sexual abuse material prevention, consent of the
+# depicted person collected and demonstrable, misuse detection and
+# correction, and all of it documented.
+#
+# Use this as the template for an ordinary generative media product. Every
+# safeguard flag means "in place, in force and verifiable", not "planned".
+# The company and product are invented.
+#
+# Run:  litmus screen example-generative-clear.yaml
+# Expected:
+#   Overall verdict: CLEAR
+#   All ten categories: CLEAR
+
+name: "Lumen Portrait Studio"
+version: "4.2.0"
+provider: "Lumen Creative GmbH (fictional)"
+deployer: "Lumen Creative GmbH (fictional)"
+purpose: >
+  Generate professional headshots and marketing portraits of a customer
+  from photos the customer uploads of themselves.
+
+system_description: >
+  Web service. A customer verifies their identity, uploads five to ten
+  photos of themselves, confirms by explicit consent that the photos
+  depict them and may be used to generate portraits, and receives
+  realistic headshots in chosen styles. A reference-image check rejects
+  uploads whose face does not match the verified customer, so no one can
+  generate images of another person. An output classifier blocks nudity
+  and sexual content; prompts are restricted to clothing, background and
+  lighting presets. Known-material matching and an age check on uploads
+  prevent material depicting children. Abuse reports go to a staffed
+  queue with a 24-hour response target. All measures are documented in the
+  product's safety case and tested each release.
+
+deployment_jurisdictions: ["EU", "UK"]
+output_consumed_in_eu: true
+
+subject_population:
+  categories: ["general_public"]
+  notes: >
+    Adult customers generating images of themselves. Accounts require
+    identity verification and an age of 18 or over.
+
+inputs:
+  biometric: false
+  facial_images: true                    # the customer's own photos
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false                # presets only
+  other: null
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: "realistic portrait images of the verified customer"
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: true       # realistic portraits
+  identifiable_persons: true             # of the customer
+  intimate_depictions_possible: false    # classifier and preset-only prompts
+  intimate_depictions_intended: false
+  minors_depictions_possible: false      # age check on uploads and accounts
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: true           # explicit consent logged per upload set
+    intimate_output_prevention: true     # output classifier, preset prompts
+    csam_prevention: true                # known-material matching, age check
+    misuse_correction: true              # staffed abuse queue, account bans
+    documented: true                     # safety case, tested each release
+
+mitigations:
+  - "Identity verification and face match tie every generation to the uploading customer"
+  - "Explicit consent to generation is recorded with the upload set and can be produced on request"
+  - "Output classifier blocks nudity and sexual content; prompts are presets only"
+  - "Known-material matching and age check on uploads"
+  - "Abuse reports handled by a staffed queue within 24 hours; repeat offenders banned"
+  - "Safety case reviewed and the measures tested before each release"
+
+metadata:
+  last_reviewed: 2026-10-31
+  owner: "Head of Product, Lumen Creative GmbH (fictional)"
+  reviewed_by: "AI Governance Lead, Lumen Creative GmbH (fictional)"

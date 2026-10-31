@@ -1,0 +1,22 @@
+name: "RetouchPro"
+version: "5.0.0"
+provider: "Fictional Imaging SA"
+purpose: "Adjust brightness, contrast, background and captions on photos the user already has."
+system_description: "Edits existing images, including ones that already show nudity, without changing what is exposed or what activity is shown (Art. 5(1b)). No consent collection, no documented safety case."
+deployment_jurisdictions: ["EU"]
+output_consumed_in_eu: true
+subject_population:
+  categories: ["general_public"]
+inputs:
+  facial_images: true
+outputs: {}
+deployment_context: {}
+generative_media:
+  realistic_media_generation: true
+  identifiable_persons: true
+  intimate_depictions_possible: true
+  manipulation_within_1b_only: true
+  safeguards:
+    intimate_output_prevention: false
+    documented: false
+mitigations: []

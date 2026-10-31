@@ -1,0 +1,106 @@
+# LitmusAI example: expected verdict RED (Article 5(1)(ba) prohibition)
+# ------------------------------------------------------------------------------
+# A fictional "undress" app. It takes an uploaded photo of a real person and
+# generates a realistic nude version of that person. Article 5(1)(ba) of
+# Regulation (EU) 2024/1689, inserted by Regulation (EU) 2026/1744, prohibits
+# placing on the market, putting into service or using an AI system that
+# generates or manipulates realistic images, video or audio of an
+# identifiable natural person's intimate parts, or of that person engaged in
+# sexually explicit activity, without that person's freely given, specific,
+# informed, unambiguous and explicit consent.
+#
+# Article 5(1a)(a)(i): generating that material is the system's intended
+# purpose, so the prohibition applies to the provider regardless of
+# safeguards. The point applies from 2 December 2026 (Article 113(a) as
+# amended). The company, product and people here are invented.
+#
+# Run:  litmus screen example-ba-red.yaml
+# Expected:
+#   Overall verdict: RED
+#   5.1.ba (Non-consensual intimate material): RED
+#   5.1.bb (Child sexual abuse material): AMBER (safeguards not documented)
+#   Other categories: CLEAR
+
+name: "Unveil Photo App"
+version: "2.0.0"
+provider: "Unveil Labs OU (fictional)"
+deployer: "Consumer app, self-serve"
+purpose: >
+  Let a user upload a photo of any person and receive a realistic image of
+  that person with their clothing removed.
+
+system_description: >
+  Mobile app backed by a diffusion model fine-tuned on paired clothed and
+  nude images. The user uploads a photograph of a person, the app detects
+  the body and face, and generates an image that keeps the face and body
+  shape and replaces the clothing with realistic nude skin. The depicted
+  person is not asked for consent and the app has no way to collect it.
+  Outputs are saved to the user's gallery and can be shared.
+
+deployment_jurisdictions: ["EU", "US"]
+output_consumed_in_eu: true
+
+subject_population:
+  categories: ["general_public"]
+  notes: >
+    Any person whose photograph a user uploads. The depicted person is not
+    a user and never interacts with the app.
+
+inputs:
+  biometric: false
+  facial_images: true                    # the uploaded photo
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: null
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: "a realistic nude image of the uploaded person"
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: true       # realistic images of a person's body
+  identifiable_persons: true             # the uploaded person's face is kept
+  intimate_depictions_possible: true     # intimate parts are the output
+  intimate_depictions_intended: true     # that is the product
+  minors_depictions_possible: false      # an age estimator rejects faces that
+                                         # look under 18 (see mitigations)
+  manipulation_within_1b_only: false     # the edit increases exposure
+  safeguards:
+    consent_demonstrable: false          # the depicted person is never asked
+    intimate_output_prevention: false    # intimate output is the purpose
+    csam_prevention: true                # age estimation on upload
+    misuse_correction: false
+    documented: false
+
+# Safeguards and mitigations do not cure Article 5(1)(ba) when generating
+# the material is the intended purpose (Article 5(1a)(a)(i)). Only consent
+# of the depicted person, collected and demonstrable, takes a system out of
+# the prohibition, and this app cannot collect it.
+mitigations:
+  - "Age estimation rejects uploads of faces that look under 18 (DOES NOT cure 5(1)(ba))"
+  - "Watermark on every output (DOES NOT cure 5(1)(ba))"
+  - "Terms of service say users must have the depicted person's permission (DOES NOT cure 5(1)(ba): consent is not collected or demonstrable)"
+
+metadata:
+  last_reviewed: 2026-10-31
+  owner: "Founder, Unveil Labs OU (fictional)"
+  reviewed_by: "External counsel advised: withdraw from the EU market before 2 December 2026"

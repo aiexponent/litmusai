@@ -1,4 +1,4 @@
-# LitmusAI Screen — GitHub Action
+# LitmusAI Screen: GitHub Action
 
 Screen an AI system against Article 5 of the EU AI Act as a CI/CD gate.
 
@@ -15,10 +15,10 @@ Screen an AI system against Article 5 of the EU AI Act as a CI/CD gate.
 
 | Input | Required | Default | Description |
 |-------|----------|---------|-------------|
-| `path` | Yes | — | Path to system.yaml |
+| `path` | Yes | (none) | Path to system.yaml |
 | `fail-on` | No | `red` | Fail on this verdict or worse |
 | `output-format` | No | `json` | Output format: json or sarif |
-| `ruleset` | No | — | Path to custom ruleset |
+| `ruleset` | No | (bundled reference ruleset) | Path to custom ruleset |
 | `python-version` | No | `3.11` | Python version |
 
 ## Outputs

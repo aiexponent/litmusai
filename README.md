@@ -2,7 +2,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/aiexponent/litmusai/main/.github/brand/og-litmusai-dark.png">
     <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/aiexponent/litmusai/main/.github/brand/og-litmusai-light.png">
-    <img src="https://raw.githubusercontent.com/aiexponent/litmusai/main/.github/brand/og-litmusai-dark.png" alt="LitmusAI — EU AI Act Article 5 Prohibited Practice Screener" width="100%"/>
+    <img src="https://raw.githubusercontent.com/aiexponent/litmusai/main/.github/brand/og-litmusai-dark.png" alt="LitmusAI: EU AI Act Article 5 Prohibited Practice Screener" width="100%"/>
   </picture>
   <h1 align="center">LitmusAI</h1>
   <p align="center"><em>Free, deterministic Article 5 screener for the EU AI Act.</em></p>
@@ -19,11 +19,11 @@
 
 ---
 
-> **LitmusAI 1.0.1 ships with the AiExponent reference ruleset (UNREVIEWED — internal panel authored, no external lawyer review). Apache 2.0, AS IS.**
+> **LitmusAI 1.1.0 ships with the AiExponent reference ruleset `ruleset-2024-1689-v1.1` (UNREVIEWED: internal panel authored, no external lawyer review). Apache 2.0, AS IS.**
 >
-> The package's CLI surface, JSON/SARIF schema, and BYO-ruleset contract are stable for production integration. The reference ruleset has been authored and reviewed by an internal AiExponent panel (six engineering + governance roles) but has **not** been reviewed by a qualified EU AI Act practising lawyer. Every screening report carries this disclosure prominently. Customers who require lawyer-reviewed output can supply their own signed ruleset via the BYO mechanism — see [`docs/ruleset-authoring.md`](docs/ruleset-authoring.md).
+> The package's CLI surface, JSON/SARIF schema, and BYO-ruleset contract are stable for production integration. The reference ruleset has been authored and reviewed by an internal AiExponent panel (six engineering + governance roles) but has **not** been reviewed by a qualified EU AI Act practising lawyer. Every screening report carries this disclosure prominently. Customers who require lawyer-reviewed output can supply their own signed ruleset via the BYO mechanism; see [`docs/ruleset-authoring.md`](docs/ruleset-authoring.md).
 >
-> A full external legal review will land in a `ruleset-2024-1689-v1.1` release with `legal_status: REVIEWED`. Tracked under [Legal review status](#legal-review-status) below.
+> The legal-review status is not tied to a version number. A ruleset counts as REVIEWED only when it carries a signed provenance header from a qualified reviewer, and `litmus --version` prints `ruleset_legal_status: REVIEWED` for it. Tracked under [Legal review status](#legal-review-status) below.
 
 ---
 
@@ -37,7 +37,7 @@ Most engineering and product teams do not have an in-house EU AI Act counsel to 
 
 > *"Is this AI practice prohibited under Article 5?"*
 
-Screen your system against all **eight statutory categories** of Article 5(1)(a)–(h). Receive a per-category **Red / Amber / Clear** verdict with exact legal citations, confidence levels, and concrete remediation advice — in under 60 seconds, completely offline, and without uploading sensitive system descriptions to any third-party server.
+Screen your system against all **ten statutory categories** of Article 5(1): the original eight, points (a) to (h), and the two inserted by [Regulation (EU) 2026/1744](https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng), points (ba) and (bb), which apply from 2 December 2026. Receive a per-category **Red / Amber / Clear** verdict with exact legal citations, confidence levels, and concrete remediation advice, in under 60 seconds, completely offline, and without uploading sensitive system descriptions to any third-party server.
 
 Built by [AI Exponent LLC](https://aiexponent.com). Apache 2.0. Runs entirely offline after `pip install`.
 
@@ -55,14 +55,14 @@ litmus screen --describe "a chatbot for mental health support for teenagers"
 
 # 2. Or initialize a structured declaration for your system
 litmus init                                         # creates system.yaml starter template
-litmus screen system.yaml --output report.json      # full 8-category evaluation
+litmus screen system.yaml --output report.json      # full ten-category evaluation
 
 # 3. Export audit-ready reports for legal or security teams
 litmus export report.json -o report.sarif --format sarif
 ```
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/aiexponent/litmusai/main/.github/assets/terminals/litmus-terminal.svg" alt="LitmusAI CLI Terminal Execution Preview — Article 5 Prohibited Practice Screening" width="100%"/>
+  <img src="https://raw.githubusercontent.com/aiexponent/litmusai/main/.github/assets/terminals/litmus-terminal.svg" alt="LitmusAI CLI Terminal Execution Preview: Article 5 Prohibited Practice Screening" width="100%"/>
 </p>
 
 ---
@@ -92,7 +92,7 @@ graph TB
 
     subgraph Core ["2. Deterministic Screening Engine"]
         AST["Safe AST Evaluator<br/><em>(Constrained expressions, zero eval, zero Python execution)</em>"]
-        RULE["Article 5 Reference Ruleset<br/><em>(22 statutory rules covering 5.1.a - 5.1.h)</em>"]
+        RULE["Article 5 Reference Ruleset<br/><em>(28 rules covering 5.1.a to 5.1.h, 5.1.ba and 5.1.bb)</em>"]
         BYO["Bring-Your-Own Ruleset<br/><em>(Optional lawyer-signed JSON via litmus use-ruleset)</em>"]
     end
 
@@ -104,7 +104,7 @@ graph TB
     subgraph Outputs ["4. Audit-Ready Artifacts"]
         OUT1["Rich Terminal UI<br/><em>(Color-coded Red / Amber / Clear table)</em>"]
         OUT2["SARIF 2.1.0 Report<br/><em>(GitHub Security tab & GitLab SAST)</em>"]
-        OUT3["JSON / Markdown / PDF<br/><em>(Filing-ready compliance packs)</em>"]
+        OUT3["JSON / Markdown / PDF<br/><em>(Reports for legal and security review)</em>"]
     end
 
     INP1 & INP2 & INP3 --> AST
@@ -123,11 +123,11 @@ graph TB
 
 ## What LitmusAI Does
 
-- **Article 5 Full Coverage**: Screens against all 8 prohibited practices under Article 5(1)(a)–(h).
+- **Article 5 Full Coverage**: Screens against all ten prohibited practices under Article 5(1), points (a) to (h) plus (ba) and (bb) from Regulation (EU) 2026/1744. A report run before 2 December 2026 says that the two new points apply from that date.
 - **Deterministic by Design**: Same input + same ruleset = identical output, guaranteed across platforms.
 - **Zero Network Calls (NFR-8)**: 100% offline execution. No telemetry, no telemetry pings, no crash reports. Your architecture and prompts never leave your local machine (enforced in CI via `pytest-socket`).
 - **Cryptographic Tamper-Evidence**: Generates a canonical RFC 8785 SHA-256 digest on every report. Verify report integrity anytime via `litmus verify <report>`.
-- **Bring-Your-Own-Ruleset (BYO)**: Legal counsel can author, sign, and distribute custom rulesets. Once activated (`litmus use-ruleset`), reports certify `(SIGNED by: Counsel)` rather than `UNREVIEWED`.
+- **Bring-Your-Own-Ruleset (BYO)**: Legal counsel can author, sign, and distribute custom rulesets. Once activated (`litmus use-ruleset`), reports show `(SIGNED by: Counsel)` rather than `UNREVIEWED` in the provenance line.
 - **Multi-Format Export**: Native support for rich console output, machine-readable JSON, Markdown documentation, and SARIF 2.1.0 (with optional PDF via WeasyPrint).
 
 ---
@@ -138,7 +138,9 @@ graph TB
 | :--- | :--- | :--- | :--- |
 | **5.1.a** | Harmful manipulation & cognitive distortion | Art. 5(1)(a) | **RED** if subliminal techniques + behavioral distortion + physical/psychological harm. |
 | **5.1.b** | Exploitation of vulnerable groups (age/disability) | Art. 5(1)(b) | **RED** if targeting minors/vulnerable cohorts + behavioral distortion + harm. |
-| **5.1.c** | Social scoring by public or private actors | Art. 5(1)(c) | **RED** if evaluating personality/social behavior + leading to detrimental or disproportionate treatment. |
+| **5.1.ba** | Non-consensual intimate material of identifiable persons (applies from 2 December 2026) | Art. 5(1)(ba), 5(1a), 5(1b), as inserted by Regulation (EU) 2026/1744 | **RED** if generating such material is the intended purpose without demonstrable consent, or is a foreseeable and reproducible outcome with no adequate, documented safeguards; **AMBER** if realistic media of identifiable people is generated and safeguards or consent are undocumented. Edits that do not increase exposure (Art. 5(1b)) never reach RED. |
+| **5.1.bb** | Child sexual abuse material (applies from 2 December 2026) | Art. 5(1)(bb), 5(1a), as inserted by Regulation (EU) 2026/1744; Directive 2011/93/EU Art. 2(c) and (e) | **RED** if such material is a foreseeable and reproducible outcome and nothing reliably prevents it; **AMBER** for any realistic-media generator without documented prevention, and for law-enforcement use where a "without right" defence may apply. No consent carve-out. |
+| **5.1.c** | Social scoring by public or private actors | Art. 5(1)(c) | **RED** if scoring from social behaviour data, or if the score leads to detrimental treatment in an unrelated context; **AMBER** for any other individual scoring, including credit scoring from repayment history (high-risk under Annex III, not prohibited). |
 | **5.1.d** | Predictive criminal risk profiling | Art. 5(1)(d) | **RED** if profiling-based risk assessment solely on personal traits (without human corroboration). |
 | **5.1.e** | Untargeted facial image scraping | Art. 5(1)(e) | **RED** if scraping facial images from the internet or CCTV to build facial recognition databases. |
 | **5.1.f** | Emotion inference in workplace or education | Art. 5(1)(f) | **RED** in employment or educational institutions; **AMBER** if medical/safety exemptions apply. |
@@ -193,7 +195,7 @@ deployment:
       "tool": {
         "driver": {
           "name": "LitmusAI",
-          "version": "1.0.1",
+          "version": "1.1.0",
           "informationUri": "https://aiexponent.com/products/litmusai",
           "rules": [
             {
@@ -293,9 +295,9 @@ LitmusAI implements deterministic UNIX exit codes for scripting and CI gates:
 
 > **UNREVIEWED REFERENCE RULESET**
 >
-> The default LitmusAI ruleset (`ruleset-2024-1689-v1.0`) is a good-faith engineering interpretation of Article 5, authored by AiExponent's internal compliance panel. **It has not been reviewed or signed by a qualified EU AI Act lawyer and is not legal advice.**
+> The default LitmusAI ruleset (`ruleset-2024-1689-v1.1`) is a good-faith engineering interpretation of Article 5, as amended by Regulation (EU) 2026/1744, authored by AiExponent's internal compliance panel. **It has not been reviewed or signed by a qualified EU AI Act lawyer and is not legal advice.** The panel's review records ship with the package under `litmusai/_data/ruleset/`.
 >
-> A full external legal review will land in a future `ruleset-2024-1689-v1.1` release with `legal_status: REVIEWED` and a SIGNED provenance header. The package version (`litmusai 1.0.1`) reflects API and CLI stability — the legal-review status rides on the ruleset version + the explicit `ruleset_legal_status: UNREVIEWED` line printed by `litmus version`.
+> The package version (`litmusai 1.1.0`) reflects API and CLI stability. The legal-review status rides on the ruleset itself: a ruleset is REVIEWED only when it carries a signed provenance header from a qualified reviewer, and `litmus --version` prints `ruleset_legal_status: UNREVIEWED` or `REVIEWED` accordingly. No version number of the reference ruleset implies an external review; when one lands, the signed header and that line are the evidence.
 >
 > If your organisation needs a lawyer-signed ruleset today, see [`docs/ruleset-authoring.md`](docs/ruleset-authoring.md) for the BYO-ruleset path. A complete dummy-signed example ships in `tests/fixtures/rulesets/acme-corp-signed-v1.0.json`.
 >
@@ -315,7 +317,7 @@ LitmusAI makes **zero network calls** during screening. No telemetry, no usage a
 
 ## License
 
-Apache 2.0 — see [LICENSE](LICENSE).
+Apache 2.0; see [LICENSE](LICENSE).
 
 ---
 

@@ -16,7 +16,7 @@ Requires Python 3.11+. No API keys, no sign-ups, no network access.
 litmus screen --describe "a chatbot for mental health support for teenagers"
 ```
 
-LitmusAI infers system characteristics from your description and screens against all 8 Article 5 categories.
+LitmusAI infers system characteristics from your description and screens against all ten Article 5 categories, including points (ba) and (bb) added by Regulation (EU) 2026/1744.
 
 ## Full Screen (structured YAML)
 
@@ -38,7 +38,7 @@ litmus export report.json --output report.md --format markdown
 | Verdict | Meaning | Action |
 |---------|---------|--------|
 | **CLEAR** | No Article 5 indicators detected | Document and proceed |
-| **AMBER** | Potential indicators — ambiguous | Get legal review before deployment |
+| **AMBER** | Potential indicators, ambiguous | Get legal review before deployment |
 | **RED** | System likely falls within a prohibition | Do not deploy without qualified counsel |
 
 ## CI/CD Integration
@@ -53,9 +53,9 @@ litmus screen system.yaml --fail-on amber
 
 ## Next Steps
 
-- [Article 5 Coverage](article-5-coverage.md) — what each category means
-- [Ruleset Authoring](ruleset-authoring.md) — bring your own lawyer-signed ruleset
-- [CI Integration](ci-integration.md) — GitHub Action setup
+- [Article 5 Coverage](article-5-coverage.md): what each category means
+- [Ruleset Authoring](ruleset-authoring.md): bring your own lawyer-signed ruleset
+- [CI Integration](ci-integration.md): GitHub Action setup
 
 ---
 

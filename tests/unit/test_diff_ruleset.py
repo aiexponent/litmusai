@@ -1,4 +1,4 @@
-"""Unit tests for the ruleset-diff engine — PRD FR-26."""
+"""Unit tests for the ruleset-diff engine: PRD FR-26."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
+from litmusai.categories import ARTICLE_5_CATEGORIES, DEFAULT_RULESET_PATH, PREVIOUS_RULESET_PATH
 from litmusai.cli.main import app
 from litmusai.engine.diff import (
     MetadataChange,
@@ -19,14 +20,7 @@ from litmusai.engine.diff import (
 )
 from litmusai.models.ruleset import Ruleset
 
-REFERENCE_RULESET_PATH = (
-    Path(__file__).resolve().parents[2]
-    / "src"
-    / "litmusai"
-    / "_data"
-    / "ruleset"
-    / "ruleset-2024-1689-v1.0.json"
-)
+REFERENCE_RULESET_PATH = DEFAULT_RULESET_PATH
 
 
 @pytest.fixture
@@ -52,7 +46,7 @@ def _ruleset_with(reference_data: dict, **overrides: object) -> Ruleset:
 
 
 # ---------------------------------------------------------------------------
-# Engine tests — diff_rulesets
+# Engine tests: diff_rulesets
 # ---------------------------------------------------------------------------
 
 
@@ -205,7 +199,7 @@ def test_diff_is_deterministic(reference_data: dict, ruleset: Ruleset) -> None:
 
 
 # ---------------------------------------------------------------------------
-# CLI tests — `litmus diff-ruleset`
+# CLI tests: `litmus diff-ruleset`
 # ---------------------------------------------------------------------------
 
 
@@ -276,7 +270,57 @@ def test_cli_json_output_is_valid_rulesetdiff(
 
 
 # ---------------------------------------------------------------------------
-# Helper-class shape tests — used by the v1.1 changelog artifact
+# Shipped rulesets: v1.0 to v1.1 is additions plus the agreed edits (PRD-411)
+# ---------------------------------------------------------------------------
+
+
+def test_shipped_v1_0_to_v1_1_diff_is_additions_plus_agreed_edits() -> None:
+    old = Ruleset.model_validate(json.loads(PREVIOUS_RULESET_PATH.read_text()))
+    new = Ruleset.model_validate(json.loads(DEFAULT_RULESET_PATH.read_text()))
+    diff = diff_rulesets(old, new)
+
+    assert diff.removed_rules == []
+    added = {r.id: r for r in diff.added_rules}
+    assert set(added) == {
+        "rule_ba_intended_purpose_no_consent",
+        "rule_ba_foreseeable_no_safeguards",
+        "rule_ba_identifiable_persons_review",
+        "rule_bb_minors_sexual_material",
+        "rule_bb_without_right_defence_review",
+        "rule_bb_no_csam_safeguards",
+    }
+    assert {r.category for r in added.values()} == {"5.1.ba", "5.1.bb"}
+    assert all(r.applies_from == "2026-12-02" for r in added.values())
+    assert all(any("Art. 113(a)" in c for c in r.citations) for r in added.values()), (
+        "every new rule cites the amended application date"
+    )
+
+    modified = {m.id: {c.field for c in m.changes} for m in diff.modified_rules}
+    # litmusai#25: the social scoring expression changed. The other three are
+    # wording only (em-dashes removed from descriptions).
+    assert "expression" in modified.pop("rule_c_social_scoring")
+    assert set(modified) == {
+        "rule_b_targets_minors_freetext",
+        "rule_g_sensitive_classification_general",
+        "rule_h_law_enforcement_rbi_exception",
+    }
+    for fields in modified.values():
+        assert "expression" not in fields
+        assert "verdict_if_triggered" not in fields
+
+    assert diff.unchanged_rule_count == len(old.rules) - 4
+    assert [m.field for m in diff.metadata_changes] == ["regulation"]
+
+
+def test_shipped_v1_1_has_rules_for_every_category() -> None:
+    new = Ruleset.model_validate(json.loads(DEFAULT_RULESET_PATH.read_text()))
+    assert {r.category for r in new.rules} == set(ARTICLE_5_CATEGORIES)
+    assert new.ruleset_version == "ruleset-2024-1689-v1.1"
+    assert new.signature is None
+
+
+# ---------------------------------------------------------------------------
+# Helper-class shape tests (used by the ruleset changelog artifact)
 # ---------------------------------------------------------------------------
 
 

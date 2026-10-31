@@ -1,27 +1,20 @@
-"""Contract tests for the Screener — pinned to PRD AC-2, AC-3, AC-4, AC-6, FR-18."""
+"""Contract tests for the Screener: pinned to PRD AC-2, AC-3, AC-4, AC-6, FR-18."""
 
 from __future__ import annotations
 
 import json
 from copy import deepcopy
 from datetime import UTC, datetime
-from pathlib import Path
 from typing import Any
 
 import pytest
 
+from litmusai.categories import ARTICLE_5_CATEGORIES, DEFAULT_RULESET_PATH
 from litmusai.engine.screener import Screener
 from litmusai.models.ruleset import Ruleset
 from litmusai.models.system import SystemDescription
 
-RULESET_PATH = (
-    Path(__file__).resolve().parents[2]
-    / "src"
-    / "litmusai"
-    / "_data"
-    / "ruleset"
-    / "ruleset-2024-1689-v1.0.json"
-)
+RULESET_PATH = DEFAULT_RULESET_PATH
 
 
 @pytest.fixture
@@ -65,7 +58,7 @@ class TestClearBaseline:
         assert report.summary.overall_verdict == "clear"
         assert report.summary.red_count == 0
         assert report.summary.amber_count == 0
-        assert report.summary.clear_count == 8
+        assert report.summary.clear_count == len(ARTICLE_5_CATEGORIES)
 
 
 class TestSocialScoringRed:

@@ -12,6 +12,7 @@ from typing import Any
 import pytest
 from pydantic import ValidationError
 
+from litmusai.categories import ARTICLE_5_CATEGORIES
 from litmusai.models import (
     CategoryResult,
     Citation,
@@ -22,16 +23,8 @@ from litmusai.models import (
     SystemDescription,
 )
 
-ALL_CATEGORIES = [
-    "5.1.a",
-    "5.1.b",
-    "5.1.c",
-    "5.1.d",
-    "5.1.e",
-    "5.1.f",
-    "5.1.g",
-    "5.1.h",
-]
+ALL_CATEGORIES = list(ARTICLE_5_CATEGORIES)
+N_CATEGORIES = len(ALL_CATEGORIES)
 
 
 def _sample_category_result(verdict: str = "clear") -> CategoryResult:
@@ -119,12 +112,12 @@ class TestReportSummary:
             overall_verdict="amber",
             red_count=0,
             amber_count=2,
-            clear_count=6,
+            clear_count=N_CATEGORIES - 2,
             requires_legal_review=True,
             highest_penalty_exposure="€35M or 7% global turnover (Art. 99(3))",
         )
         assert s.amber_count == 2
-        assert s.red_count + s.amber_count + s.clear_count == 8
+        assert s.red_count + s.amber_count + s.clear_count == N_CATEGORIES
 
     def test_negative_count_rejected(self) -> None:
         with pytest.raises(ValidationError):
@@ -147,7 +140,7 @@ class TestRulesetProvenance:
             signer_name=None,
             signed_date=None,
             signature_status="unsigned",
-            display_label="aiexponent-reference-v1.0 (UNREVIEWED — internal panel authored, no external legal review)",
+            display_label="aiexponent-reference-v1.0 (UNREVIEWED: internal panel authored, no external legal review)",
         )
         assert p.signature_status == "unsigned"
         assert "UNREVIEWED" in p.display_label
@@ -185,8 +178,8 @@ class TestScreeningReport:
         system = SystemDescription(**minimal_system_dict)
         categories = {cat: _sample_category_result() for cat in ALL_CATEGORIES}
         return ScreeningReport(
-            report_version="1.0",
-            ruleset_version="ruleset-2024-1689-v1.0",
+            report_version="1.1",
+            ruleset_version="ruleset-2024-1689-v1.1",
             litmusai_version="0.1.0",
             generated_at=fixed_timestamp,
             input_hash_sha256="a" * 64,
@@ -196,7 +189,7 @@ class TestScreeningReport:
                 overall_verdict="clear",
                 red_count=0,
                 amber_count=0,
-                clear_count=8,
+                clear_count=N_CATEGORIES,
                 requires_legal_review=False,
                 highest_penalty_exposure="€35M or 7% global turnover (Art. 99(3))",
             ),
@@ -208,7 +201,7 @@ class TestScreeningReport:
                 signed_date=None,
                 signature_status="unsigned",
                 display_label=(
-                    "aiexponent-reference-v1.0 (UNREVIEWED — internal panel authored, "
+                    "ruleset-2024-1689-v1.1 (UNREVIEWED: internal panel authored, "
                     "no external legal review)"
                 ),
             ),
@@ -223,11 +216,11 @@ class TestScreeningReport:
         self, minimal_system_dict: dict[str, Any], fixed_timestamp: datetime
     ) -> None:
         report = self._make_report(minimal_system_dict, fixed_timestamp)
-        assert report.report_version == "1.0"
-        assert len(report.categories) == 8
+        assert report.report_version == "1.1"
+        assert len(report.categories) == N_CATEGORIES
         assert report.input_hash_sha256 == "a" * 64
 
-    def test_requires_all_eight_categories(
+    def test_requires_all_categories(
         self, minimal_system_dict: dict[str, Any], fixed_timestamp: datetime
     ) -> None:
         report = self._make_report(minimal_system_dict, fixed_timestamp)
@@ -249,7 +242,7 @@ class TestScreeningReport:
         as_json = report.model_dump_json()
         reparsed = ScreeningReport.model_validate_json(as_json)
         assert reparsed.ruleset_provenance.signature_status == "unsigned"
-        assert reparsed.summary.clear_count == 8
+        assert reparsed.summary.clear_count == N_CATEGORIES
 
     def test_overrides_default_empty(
         self, minimal_system_dict: dict[str, Any], fixed_timestamp: datetime

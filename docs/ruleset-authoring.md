@@ -9,7 +9,7 @@ A ruleset is a JSON file with this structure:
 ```json
 {
   "ruleset_version": "your-org-v1.0",
-  "regulation": "Regulation (EU) 2024/1689",
+  "regulation": "Regulation (EU) 2024/1689, as amended by Regulation (EU) 2026/1744",
   "effective_date": "2025-02-02",
   "rules": [...],
   "signature": { ... }  // optional
@@ -28,20 +28,47 @@ A ruleset is a JSON file with this structure:
   "verdict_if_triggered": "amber",
   "citations": ["Art. 5(1)(a)", "Recital 29"],
   "reviewed_by": "Your Law Firm LLP",
-  "reviewed_date": "2026-05-01"
+  "reviewed_date": "2026-05-01",
+  "applies_from": null
 }
 ```
+
+`category` is one of the ten Article 5(1) points: `5.1.a`, `5.1.b`, `5.1.ba`, `5.1.bb`, `5.1.c`, `5.1.d`, `5.1.e`, `5.1.f`, `5.1.g`, `5.1.h`.
+
+`applies_from` is optional. Set it to an ISO date (for example `"2026-12-02"` for points (ba) and (bb)) when the provision the rule encodes applies from a later date than the rest of the regulation. Reports then say "The prohibition applies from 2 December 2026" in the rationale. Leave it out, or `null`, for provisions that already apply.
+
+A ruleset that has no rule for a category is still valid. The report lists every category; a category without rules shows Clear with `low` confidence and a "not screened" rationale, so nobody mistakes an unscreened point for a cleared one.
 
 ### Expression language
 
 Rules use a constrained expression language (not Python). Supported:
 
-- **Field access:** `system.inputs.biometric`, `system.outputs.individual_scores`
+- **Field access:** `system.inputs.biometric`, `system.outputs.individual_scores`, `system.generative_media.safeguards.documented`
 - **Comparisons:** `==`, `!=`
 - **Boolean:** `and`, `or`, `not`
 - **Set membership:** `"value" in system.mitigations`
 - **Functions:** `contains()`, `starts_with()`, `has_jurisdiction()`, `targets_population()`
 - **Parentheses:** `(a or b) and c`
+
+### Declaration fields for points (ba) and (bb)
+
+The `generative_media` block of `system.yaml` carries the facts those rules test. Every field is a boolean that defaults to `false`, so a `system.yaml` written for an earlier version stays valid.
+
+| Field | Meaning |
+| --- | --- |
+| `realistic_media_generation` | Generates or manipulates realistic images, video, audio or similar material (a face, voice or body in a credible real-life manner). |
+| `identifiable_persons` | Outputs can depict identifiable natural persons. |
+| `intimate_depictions_possible` | Intimate parts or sexually explicit activity are a reasonably foreseeable and reproducible outcome without significant technical modification. |
+| `intimate_depictions_intended` | Producing such depictions of identifiable persons is the intended purpose, or the deployer's purpose. |
+| `minors_depictions_possible` | Outputs can depict children in material within Directive 2011/93/EU, Article 2(c) and (e). |
+| `manipulation_within_1b_only` | Only edits that neither increase exposure nor alter the nature of depicted activity (Art. 5(1b)). |
+| `safeguards.consent_demonstrable` | Explicit consent of each depicted person is collected before generation and can be demonstrated. |
+| `safeguards.intimate_output_prevention` | Measures that reliably prevent intimate outputs of identifiable persons. |
+| `safeguards.csam_prevention` | Measures that reliably prevent child sexual abuse material. |
+| `safeguards.misuse_correction` | Observed or reported misuse is detected and corrected. |
+| `safeguards.documented` | The measures are written down, reviewed and testable. |
+
+Two fields added for Article 5(1)(c) in the same release: `inputs.social_behaviour_data` (conduct outside the service that is scored) and `outputs.detrimental_treatment_unrelated_context` (the score is used against the person in an unrelated context).
 
 ### Signature block (optional)
 
@@ -59,7 +86,7 @@ Rules use a constrained expression language (not Python). Supported:
 
 Supported algorithms: `sha256`, `pgp-detached`, `x509-pkcs7`.
 
-## Worked example — `acme-corp-signed-v1.0.json`
+## Worked example: `acme-corp-signed-v1.0.json`
 
 A complete dummy-signed reference ruleset ships with the package at
 [`tests/fixtures/rulesets/acme-corp-signed-v1.0.json`](../tests/fixtures/rulesets/acme-corp-signed-v1.0.json).
@@ -76,7 +103,7 @@ It demonstrates every concept from the schema sections above:
 - The `sha256` signature algorithm
 
 The signature in the fixture is a placeholder hex string for testing
-purposes only — production rulesets must carry a real cryptographic
+purposes only; production rulesets must carry a real cryptographic
 signature over the canonical JSON of the rules array. The signature
 algorithm column tells LitmusAI how to verify; supported values are
 `sha256` (HMAC-style), `pgp-detached`, and `x509-pkcs7`.
@@ -121,7 +148,7 @@ ruleset: your-org-v1.0 (SIGNED by: Smith & Co LLP · 2026-05-01 · signature ver
 When using the default reference ruleset:
 
 ```
-ruleset: aiexponent-reference-v1.0 (UNREVIEWED — internal panel authored, no external legal review)
+ruleset: ruleset-2024-1689-v1.1 (UNREVIEWED: internal panel authored, no external legal review)
 ```
 
 ---

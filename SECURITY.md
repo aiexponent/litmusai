@@ -22,10 +22,10 @@ If you believe LitmusAI's reference ruleset produces a **wrongly Clear verdict**
 
 ## Scope
 
-- Expression evaluator (`engine/expression.py`) — any code execution outside the whitelist
-- YAML parsing — any bypass of `yaml.safe_load`
-- Ruleset signature verification — any bypass of signature validation
-- Input hash integrity — any collision or canonicalisation failure
+- Expression evaluator (`engine/expression.py`): any code execution outside the whitelist
+- YAML parsing: any bypass of `yaml.safe_load`
+- Ruleset signature verification: any bypass of signature validation
+- Input hash integrity: any collision or canonicalisation failure
 
 ## Out of Scope
 

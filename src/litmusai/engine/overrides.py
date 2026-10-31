@@ -1,4 +1,4 @@
-"""Override management — FR-10, US-17."""
+"""Override management: FR-10, US-17."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""litmus screen — run Article 5 screening (FR-1 to FR-19, US-01, US-20)."""
+"""litmus screen: run Article 5 screening (FR-1 to FR-19, US-01, US-20)."""
 
 from __future__ import annotations
 
@@ -11,11 +11,14 @@ from pydantic import ValidationError
 from rich.console import Console
 from rich.table import Table
 
+from litmusai.categories import DEFAULT_RULESET_PATH
 from litmusai.cli.main import app
 from litmusai.engine.screener import Screener
 from litmusai.models.ruleset import Ruleset
 from litmusai.models.system import (
     DeploymentContext,
+    GenerativeMedia,
+    GenerativeMediaSafeguards,
     SubjectPopulation,
     SystemDescription,
     SystemInputs,
@@ -24,9 +27,7 @@ from litmusai.models.system import (
 
 console = Console()
 
-_DEFAULT_RULESET = (
-    Path(__file__).resolve().parents[2] / "_data" / "ruleset" / "ruleset-2024-1689-v1.0.json"
-)
+_DEFAULT_RULESET = DEFAULT_RULESET_PATH
 
 _VERDICT_STYLE = {
     "clear": "[green]CLEAR[/green]",
@@ -43,15 +44,16 @@ def _load_ruleset(path: Path | None = None) -> Ruleset:
 def _quickscreen_to_system(describe: str) -> SystemDescription:
     """Build a SystemDescription from free text via keyword inference.
 
-    This is the Steve Jobs critical path — a PM should be able to run
+    A PM should be able to run
     `litmus screen --describe "a chatbot for mental health support for teenagers"`
     and get a meaningful verdict in 20 seconds without knowing YAML.
     """
     text = describe.lower()
+    minors_words = ("teenager", "teens", "child", "children", "minor", "youth", "kid")
 
     # Population inference
     populations: list[str] = ["general_public"]
-    if any(w in text for w in ("teenager", "teens", "child", "children", "minor", "youth", "kid")):
+    if any(w in text for w in minors_words):
         populations = ["minors"]
     if (
         any(
@@ -110,6 +112,96 @@ def _quickscreen_to_system(describe: str) -> SystemDescription:
     )
     financial = any(w in text for w in ("loan", "credit", "financial", "bank", "insurance"))
 
+    # Social scoring inference (Art. 5(1)(c), litmusai#25): conduct outside the
+    # service, and treatment in an unrelated context.
+    social_behaviour = any(
+        w in text
+        for w in (
+            "social media",
+            "social behaviour",
+            "social behavior",
+            "social credit",
+            "citizen score",
+            "reputation score",
+            "trustworthiness",
+        )
+    )
+    unrelated_treatment = any(
+        w in text
+        for w in ("social credit", "citizen score", "unrelated context", "blacklist", "denylist")
+    )
+
+    # Generative media inference (Art. 5(1)(ba) and (bb)).
+    intimate_intended = any(
+        w in text for w in ("nudify", "undress", "strip clothes", "remove clothes", "porn")
+    )
+    realistic_media = intimate_intended or any(
+        w in text
+        for w in (
+            "deepfake",
+            "face swap",
+            "face-swap",
+            "voice clone",
+            "voice cloning",
+            "image generat",
+            "video generat",
+            "text-to-image",
+            "text to image",
+            "text-to-video",
+            "text to video",
+            "lip sync",
+            "lip-sync",
+            "synthetic media",
+            "photo edit",
+            "image edit",
+            "avatar",
+        )
+    )
+    identifiable = realistic_media and any(
+        w in text
+        for w in (
+            "real people",
+            "real person",
+            "of people",
+            "photos of",
+            "photo of",
+            "celebrit",
+            "deepfake",
+            "face swap",
+            "face-swap",
+            "voice clone",
+            "voice cloning",
+            "nudify",
+            "undress",
+            "likeness",
+            "selfie",
+        )
+    )
+    intimate_possible = realistic_media and (
+        intimate_intended
+        or any(
+            w in text for w in ("nude", "intimate", "sexual", "explicit", "nsfw", "adult content")
+        )
+    )
+    minors_possible = realistic_media and any(w in text for w in minors_words)
+    consent = "consent" in text
+    output_filters = any(
+        w in text
+        for w in (
+            "safety filter",
+            "content filter",
+            "output filter",
+            "content moderation",
+            "guardrail",
+            "nsfw filter",
+            "refusal training",
+            "classifier",
+        )
+    )
+    misuse_correction = any(
+        w in text for w in ("abuse report", "report abuse", "notice and action", "abuse detection")
+    )
+
     return SystemDescription(
         name="Quick Screen",
         version="0.0.0",
@@ -124,6 +216,7 @@ def _quickscreen_to_system(describe: str) -> SystemDescription:
             facial_images=facial,
             emotional_state_inference=emotion_input,
             behaviour_history=behaviour,
+            social_behaviour_data=social_behaviour,
             scraped_internet_data=scraped,
             freetext_prompts=freetext,
         ),
@@ -134,6 +227,21 @@ def _quickscreen_to_system(describe: str) -> SystemDescription:
             emotion_inferences=emotion_out,
             sensitive_attribute_classifications=sensitive,
             freetext_generations=freetext_out,
+            detrimental_treatment_unrelated_context=unrelated_treatment,
+        ),
+        generative_media=GenerativeMedia(
+            realistic_media_generation=realistic_media,
+            identifiable_persons=identifiable,
+            intimate_depictions_possible=intimate_possible,
+            intimate_depictions_intended=intimate_intended,
+            minors_depictions_possible=minors_possible,
+            safeguards=GenerativeMediaSafeguards(
+                consent_demonstrable=consent,
+                intimate_output_prevention=output_filters,
+                csam_prevention=output_filters,
+                misuse_correction=misuse_correction,
+                documented=False,
+            ),
         ),
         deployment_context=DeploymentContext(
             workplace=workplace,

@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "litmus-screener"
-version = "1.0.1"
-description = "LitmusAI — free, deterministic CLI screener for Article 5 of the EU AI Act (Regulation (EU) 2024/1689)."
+version = "1.1.0"
+description = "LitmusAI: free, deterministic CLI screener for Article 5 of the EU AI Act (Regulation (EU) 2024/1689, as amended by Regulation (EU) 2026/1744)."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
@@ -104,7 +104,7 @@ python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 markers = [
-    "unit: pure unit tests — fast, no I/O beyond the package itself",
+    "unit: pure unit tests: fast, no I/O beyond the package itself",
     "contract: tests pinned to a PRD functional requirement or acceptance criterion",
     "boundary: tests at the boundary between LitmusAI and its environment (files, schemas)",
     "integration: end-to-end tests spawning the CLI or hitting the full pipeline",
@@ -160,7 +160,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101", "S106", "S311", "S603"]
-"src/litmusai/engine/expression.py" = ["S307"]  # only if we ever touch eval — explicit opt-in
+"src/litmusai/engine/expression.py" = ["S307"]  # only if we ever touch eval: explicit opt-in
 
 [tool.ruff.format]
 quote-style = "double"

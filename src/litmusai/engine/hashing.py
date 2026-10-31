@@ -1,4 +1,4 @@
-"""RFC 8785 JSON canonicalisation + SHA-256 hashing — FR-19, NFR-7."""
+"""RFC 8785 JSON canonicalisation + SHA-256 hashing: FR-19, NFR-7."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from typing import Any
 def _default(obj: Any) -> Any:
     """Coerce types `json` does not know about into stable string forms.
 
-    `date` and `datetime` get ISO-8601 strings — both round-trip-safe and
+    `date` and `datetime` get ISO-8601 strings: both round-trip-safe and
     canonical. Pydantic's `SystemDescription.metadata.last_reviewed` field
     is typed as `date`, so any input file that populates it lands here.
     """

@@ -2,15 +2,17 @@ name: "CitizenTrustScore"
 version: "2.0.0"
 provider: "GovTech Platform"
 purpose: "Evaluate citizen trustworthiness for access to public services."
-system_description: "Social credit scoring from behaviour history and scraped data."
+system_description: "Social credit scoring from social media conduct, behaviour history and scraped data. Low scores restrict access to housing and travel."
 deployment_jurisdictions: ["EU"]
 output_consumed_in_eu: true
 subject_population:
   categories: ["general_public"]
 inputs:
   behaviour_history: true
+  social_behaviour_data: true
   scraped_internet_data: true
 outputs:
   individual_scores: true
+  detrimental_treatment_unrelated_context: true
 deployment_context: {}
 mitigations: []

@@ -2,7 +2,7 @@
 
 We import pytest_socket here and leave its enablement to the CLI flag
 `--disable-socket` in CI so local devs can still pull dependencies.
-The full suite in CI always runs with sockets disabled — this is the
+The full suite in CI always runs with sockets disabled: this is the
 NFR-8 gate.
 """
 
@@ -18,7 +18,7 @@ import pytest
 def minimal_system_dict() -> dict[str, Any]:
     """A well-formed SystemDescription payload with every field at its safest default.
 
-    This is the 'clear' baseline — a calculator app for adults — used by
+    This is the 'clear' baseline: a calculator app for adults: used by
     AC-2 and as a starting point for most category-specific tests.
     """
     return {

@@ -1,4 +1,4 @@
-"""litmus init — create a starter system.yaml template (FR-3, US-13)."""
+"""litmus init: create a starter system.yaml template (FR-3, US-13)."""
 
 from __future__ import annotations
 
@@ -37,6 +37,7 @@ inputs:
   facial_images: false
   emotional_state_inference: false
   behaviour_history: false
+  social_behaviour_data: false        # conduct outside the service: social media, associations
   scraped_internet_data: false
   freetext_prompts: false
   other: null
@@ -48,6 +49,7 @@ outputs:
   emotion_inferences: false
   sensitive_attribute_classifications: false
   freetext_generations: false
+  detrimental_treatment_unrelated_context: false   # score used against the person elsewhere
   other: null
 
 deployment_context:
@@ -59,6 +61,23 @@ deployment_context:
   healthcare: false
   financial_services: false
   other: null
+
+# Article 5(1)(ba) and (bb), inserted by Regulation (EU) 2026/1744 and
+# applicable from 2 December 2026. Leave everything false for a system
+# that does not generate or manipulate realistic images, video or audio.
+generative_media:
+  realistic_media_generation: false   # realistic images, video, audio or similar material
+  identifiable_persons: false         # outputs can depict identifiable real people
+  intimate_depictions_possible: false # intimate parts or sexual activity, without major modification
+  intimate_depictions_intended: false # that output is the system's purpose
+  minors_depictions_possible: false   # outputs can depict children in such material
+  manipulation_within_1b_only: false  # edits that neither increase exposure nor change the activity
+  safeguards:                         # each one: in place, in force and verifiable
+    consent_demonstrable: false       # explicit consent of each depicted person, collected and provable
+    intimate_output_prevention: false # filters, refusal training, guardrails against intimate outputs
+    csam_prevention: false            # measures against child sexual abuse material
+    misuse_correction: false          # abuse detection, notice and action, follow-up on circumvention
+    documented: false                 # the measures above are written down and testable
 
 mitigations: []
 
