@@ -1,0 +1,158 @@
+{
+  "report_version": "1.0",
+  "ruleset_version": "ruleset-2024-1689-v1.0",
+  "litmusai_version": "1.0.1",
+  "generated_at": "2026-11-01T17:17:42.526817Z",
+  "input_hash_sha256": "b23ddf91554447c0ab180646ce18eef87a65038e07b7a3482984fad786a5ee37",
+  "system": {
+    "name": "SimpleCalc",
+    "version": "1.0.0",
+    "provider": "MathTools Inc",
+    "deployer": null,
+    "purpose": "Basic arithmetic calculator for adults.",
+    "system_description": "A stateless calculator. No personal data, no ML.",
+    "deployment_jurisdictions": [
+      "EU"
+    ],
+    "output_consumed_in_eu": true,
+    "subject_population": {
+      "categories": [
+        "general_public"
+      ],
+      "notes": null
+    },
+    "inputs": {
+      "biometric": false,
+      "facial_images": false,
+      "emotional_state_inference": false,
+      "behaviour_history": false,
+      "scraped_internet_data": false,
+      "freetext_prompts": false,
+      "other": null
+    },
+    "outputs": {
+      "individual_scores": false,
+      "behaviour_predictions": false,
+      "criminal_risk_predictions": false,
+      "emotion_inferences": false,
+      "sensitive_attribute_classifications": false,
+      "freetext_generations": false,
+      "other": null
+    },
+    "deployment_context": {
+      "workplace": false,
+      "education": false,
+      "public_space": false,
+      "real_time_operation": false,
+      "law_enforcement_use": false,
+      "healthcare": false,
+      "financial_services": false,
+      "other": null
+    },
+    "mitigations": [],
+    "metadata": {
+      "last_reviewed": null,
+      "owner": null,
+      "reviewed_by": null
+    }
+  },
+  "categories": {
+    "5.1.a": {
+      "label": "Harmful manipulation",
+      "verdict": "clear",
+      "confidence": "high",
+      "rationale": "No rules triggered for Harmful manipulation. No indicators of Article 5.1.a risk.",
+      "triggered_rules": [],
+      "regulation_citations": [],
+      "remediation": []
+    },
+    "5.1.b": {
+      "label": "Exploitation of vulnerabilities",
+      "verdict": "clear",
+      "confidence": "high",
+      "rationale": "No rules triggered for Exploitation of vulnerabilities. No indicators of Article 5.1.b risk.",
+      "triggered_rules": [],
+      "regulation_citations": [],
+      "remediation": []
+    },
+    "5.1.c": {
+      "label": "Social scoring",
+      "verdict": "clear",
+      "confidence": "high",
+      "rationale": "No rules triggered for Social scoring. No indicators of Article 5.1.c risk.",
+      "triggered_rules": [],
+      "regulation_citations": [],
+      "remediation": []
+    },
+    "5.1.d": {
+      "label": "Criminal risk prediction (individual)",
+      "verdict": "clear",
+      "confidence": "high",
+      "rationale": "No rules triggered for Criminal risk prediction (individual). No indicators of Article 5.1.d risk.",
+      "triggered_rules": [],
+      "regulation_citations": [],
+      "remediation": []
+    },
+    "5.1.e": {
+      "label": "Untargeted facial image scraping",
+      "verdict": "clear",
+      "confidence": "high",
+      "rationale": "No rules triggered for Untargeted facial image scraping. No indicators of Article 5.1.e risk.",
+      "triggered_rules": [],
+      "regulation_citations": [],
+      "remediation": []
+    },
+    "5.1.f": {
+      "label": "Emotion inference (workplace/education)",
+      "verdict": "clear",
+      "confidence": "high",
+      "rationale": "No rules triggered for Emotion inference (workplace/education). No indicators of Article 5.1.f risk.",
+      "triggered_rules": [],
+      "regulation_citations": [],
+      "remediation": []
+    },
+    "5.1.g": {
+      "label": "Biometric categorisation (sensitive attributes)",
+      "verdict": "clear",
+      "confidence": "high",
+      "rationale": "No rules triggered for Biometric categorisation (sensitive attributes). No indicators of Article 5.1.g risk.",
+      "triggered_rules": [],
+      "regulation_citations": [],
+      "remediation": []
+    },
+    "5.1.h": {
+      "label": "Real-time remote biometric identification (public spaces)",
+      "verdict": "clear",
+      "confidence": "high",
+      "rationale": "No rules triggered for Real-time remote biometric identification (public spaces). No indicators of Article 5.1.h risk.",
+      "triggered_rules": [],
+      "regulation_citations": [],
+      "remediation": []
+    }
+  },
+  "summary": {
+    "overall_verdict": "clear",
+    "red_count": 0,
+    "amber_count": 0,
+    "clear_count": 8,
+    "requires_legal_review": false,
+    "highest_penalty_exposure": "\u20ac35M or 7% global turnover (Art. 99(3))"
+  },
+  "ruleset_provenance": {
+    "ruleset_version": "ruleset-2024-1689-v1.0",
+    "regulation": "Regulation (EU) 2024/1689",
+    "effective_date": "2025-02-02",
+    "signer_name": null,
+    "signed_date": null,
+    "signature_status": "unsigned",
+    "display_label": "ruleset-2024-1689-v1.0 (UNREVIEWED \u2014 internal panel authored, no external legal review)"
+  },
+  "disclaimers": [
+    "This is a screening tool, not legal advice.",
+    "LitmusAI is not a notified body.",
+    "Article 5 screening must be reviewed by qualified legal counsel.",
+    "Screening does not confirm compliance with any other article of the EU AI Act.",
+    "The ruleset is a good-faith interpretation of Regulation (EU) 2024/1689 and may not reflect the views of the European AI Office or national competent authorities."
+  ],
+  "overrides_applied": []
+}
