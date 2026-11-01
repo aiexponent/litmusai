@@ -112,12 +112,12 @@ jobs:
           NOTES_FILE="docs/release-notes-v${VERSION}.md"
           if [[ -f "$NOTES_FILE" ]]; then
             echo "notes_path=$NOTES_FILE" >> "$GITHUB_OUTPUT"
-            echo "release_name=${TAG_NAME} — Article 5 screener (UNREVIEWED ruleset, internal panel authored)" >> "$GITHUB_OUTPUT"
+            echo "release_name=${TAG_NAME}: Article 5 screener (UNREVIEWED ruleset, internal panel authored)" >> "$GITHUB_OUTPUT"
             echo "Found release notes at $NOTES_FILE"
           else
             echo "notes_path=" >> "$GITHUB_OUTPUT"
             echo "release_name=${TAG_NAME}" >> "$GITHUB_OUTPUT"
-            echo "::warning::No release-notes file at $NOTES_FILE — using auto-generated notes"
+            echo "::warning::No release-notes file at $NOTES_FILE; using auto-generated notes"
           fi
       - name: Cut GitHub release
         uses: softprops/action-gh-release@v3

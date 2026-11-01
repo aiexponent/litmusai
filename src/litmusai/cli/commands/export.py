@@ -1,4 +1,4 @@
-"""litmus export — export a screening report to different formats (FR-5, US-05)."""
+"""litmus export: export a screening report to different formats (FR-5, US-05)."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Unit tests for the overrides engine — FR-10, US-17."""
+"""Unit tests for the overrides engine: FR-10, US-17."""
 
 from __future__ import annotations
 
@@ -9,20 +9,14 @@ from typing import Any
 
 import pytest
 
+from litmusai.categories import ARTICLE_5_CATEGORIES, DEFAULT_RULESET_PATH
 from litmusai.engine.overrides import apply_overrides
 from litmusai.engine.screener import Screener
 from litmusai.models.report import OverrideEntry, ScreeningReport
 from litmusai.models.ruleset import Ruleset
 from litmusai.models.system import SystemDescription
 
-RULESET_PATH = (
-    __import__("pathlib").Path(__file__).resolve().parents[2]
-    / "src"
-    / "litmusai"
-    / "_data"
-    / "ruleset"
-    / "ruleset-2024-1689-v1.0.json"
-)
+RULESET_PATH = DEFAULT_RULESET_PATH
 
 
 @pytest.fixture
@@ -76,14 +70,14 @@ class TestApplyOverrides:
         result = apply_overrides(amber_report, [override])
         assert result.summary.overall_verdict == "clear"
         assert result.summary.amber_count == 0
-        assert result.summary.clear_count == 8
+        assert result.summary.clear_count == len(ARTICLE_5_CATEGORIES)
 
     def test_override_wrong_verdict_before_is_skipped(self, amber_report: ScreeningReport) -> None:
         override = OverrideEntry(
             category="5.1.f",
             verdict_before="red",
             verdict_after="clear",
-            rationale="Mismatch — should be skipped.",
+            rationale="Mismatch: should be skipped.",
             approver="X",
             approver_email="x@example.org",
             approved_at=datetime(2026, 4, 16, tzinfo=UTC),

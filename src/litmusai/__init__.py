@@ -1,4 +1,4 @@
-"""LitmusAI — Article 5 Prohibited AI Practice Screener.
+"""LitmusAI: Article 5 Prohibited AI Practice Screener.
 
 Free, deterministic, CLI screener for Article 5 of Regulation (EU) 2024/1689.
 
@@ -15,7 +15,7 @@ from importlib.metadata import PackageNotFoundError, version
 # the CLI command stays `litmus`.
 try:
     __version__ = version("litmus-screener")
-except PackageNotFoundError:  # pragma: no cover — editable/dev install
+except PackageNotFoundError:  # pragma: no cover: editable/dev install
     __version__ = "0.0.0+local"
 
 __all__ = ["__version__"]

@@ -11,6 +11,8 @@ from litmusai.models.report import (
 from litmusai.models.ruleset import Rule, Ruleset, RulesetSignature
 from litmusai.models.system import (
     DeploymentContext,
+    GenerativeMedia,
+    GenerativeMediaSafeguards,
     Metadata,
     SubjectPopulation,
     SystemDescription,
@@ -22,6 +24,8 @@ __all__ = [
     "CategoryResult",
     "Citation",
     "DeploymentContext",
+    "GenerativeMedia",
+    "GenerativeMediaSafeguards",
     "Metadata",
     "OverrideEntry",
     "ReportSummary",

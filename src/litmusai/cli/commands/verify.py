@@ -1,4 +1,4 @@
-"""litmus verify — check report integrity against input (FR-8, US-07, AC-5)."""
+"""litmus verify: check report integrity against input (FR-8, US-07, AC-5)."""
 
 from __future__ import annotations
 

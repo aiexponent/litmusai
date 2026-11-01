@@ -1,12 +1,13 @@
-"""Core Article 5 screening engine — PRD section 8.3."""
+"""Core Article 5 screening engine (PRD section 8.3)."""
 
 from __future__ import annotations
 
 from collections.abc import Sequence
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime
 from typing import Any, Literal
 
 from litmusai import __version__
+from litmusai.categories import ARTICLE_5_CATEGORIES, CATEGORY_LABELS
 from litmusai.engine.expression import ExpressionError, evaluate
 from litmusai.engine.hashing import sha256_hash
 from litmusai.models.report import (
@@ -19,27 +20,7 @@ from litmusai.models.report import (
 from litmusai.models.ruleset import Ruleset
 from litmusai.models.system import SystemDescription
 
-_ARTICLE_5_CATEGORIES = [
-    "5.1.a",
-    "5.1.b",
-    "5.1.c",
-    "5.1.d",
-    "5.1.e",
-    "5.1.f",
-    "5.1.g",
-    "5.1.h",
-]
-
-_CATEGORY_LABELS = {
-    "5.1.a": "Harmful manipulation",
-    "5.1.b": "Exploitation of vulnerabilities",
-    "5.1.c": "Social scoring",
-    "5.1.d": "Criminal risk prediction (individual)",
-    "5.1.e": "Untargeted facial image scraping",
-    "5.1.f": "Emotion inference (workplace/education)",
-    "5.1.g": "Biometric categorisation (sensitive attributes)",
-    "5.1.h": "Real-time remote biometric identification (public spaces)",
-}
+REPORT_VERSION = "1.1"
 
 _PENALTY = "€35M or 7% global turnover (Art. 99(3))"
 
@@ -49,11 +30,13 @@ _DISCLAIMERS = [
     "Article 5 screening must be reviewed by qualified legal counsel.",
     "Screening does not confirm compliance with any other article of the EU AI Act.",
     (
-        "The ruleset is a good-faith interpretation of Regulation (EU) 2024/1689 "
-        "and may not reflect the views of the European AI Office or national "
-        "competent authorities."
+        "The ruleset is a good-faith interpretation of Regulation (EU) 2024/1689, "
+        "as amended by Regulation (EU) 2026/1744, and may not reflect the views of "
+        "the European AI Office or national competent authorities."
     ),
 ]
+
+UNREVIEWED_LABEL = "UNREVIEWED: internal panel authored, no external legal review"
 
 
 def _build_ctx(system: SystemDescription) -> dict[str, Any]:
@@ -81,6 +64,15 @@ def _aggregate_confidence(confidences: Sequence[str]) -> Confidence:
     return result  # type: ignore[return-value]
 
 
+def format_applies_from(iso_date: str) -> str:
+    """``2026-12-02`` to ``2 December 2026``; an unparsable value is returned as is."""
+    try:
+        d = date.fromisoformat(iso_date)
+    except ValueError:
+        return iso_date
+    return f"{d.day} {d.strftime('%B %Y')}"
+
+
 class Screener:
     """Evaluates a SystemDescription against a Ruleset."""
 
@@ -99,13 +91,14 @@ class Screener:
 
         category_results: dict[str, CategoryResult] = {}
 
-        for cat_id in _ARTICLE_5_CATEGORIES:
+        for cat_id in ARTICLE_5_CATEGORIES:
             cat_rules = [r for r in self._ruleset.rules if r.category == cat_id]
             triggered: list[str] = []
             verdicts: list[str] = []
             confidences: list[str] = []
             citations: list[Citation] = []
             remediations: list[str] = []
+            applies_from: set[str] = set()
 
             for rule in cat_rules:
                 try:
@@ -122,18 +115,26 @@ class Screener:
                         confidences.append("low")
                     else:
                         confidences.append("high")
+                    if rule.applies_from:
+                        applies_from.add(rule.applies_from)
 
             verdict = _aggregate_verdict(verdicts)
-            confidence = _aggregate_confidence(confidences) if confidences else "high"
+            not_screened = not cat_rules
+            if not_screened:
+                confidence: Confidence = "low"
+            else:
+                confidence = _aggregate_confidence(confidences) if confidences else "high"
 
             if verdict in ("red", "amber"):
                 remediations.append("Seek qualified EU AI Act counsel before deployment.")
 
             category_results[cat_id] = CategoryResult(
-                label=_CATEGORY_LABELS.get(cat_id, cat_id),
+                label=CATEGORY_LABELS.get(cat_id, cat_id),
                 verdict=verdict,
                 confidence=confidence,
-                rationale=self._build_rationale(cat_id, verdict, triggered),
+                rationale=self._build_rationale(
+                    cat_id, verdict, triggered, not_screened, sorted(applies_from)
+                ),
                 triggered_rules=triggered,
                 regulation_citations=citations,
                 remediation=remediations,
@@ -154,14 +155,11 @@ class Screener:
             )
             sig_status = "verified"
         else:
-            prov_label = (
-                f"{self._ruleset.ruleset_version} "
-                f"(UNREVIEWED — internal panel authored, no external legal review)"
-            )
+            prov_label = f"{self._ruleset.ruleset_version} ({UNREVIEWED_LABEL})"
             sig_status = "unsigned"
 
         return ScreeningReport(
-            report_version="1.0",
+            report_version=REPORT_VERSION,
             ruleset_version=self._ruleset.ruleset_version,
             litmusai_version=__version__,
             generated_at=ts,
@@ -189,18 +187,33 @@ class Screener:
             overrides_applied=[],
         )
 
-    def _build_rationale(self, cat_id: str, verdict: str, triggered: list[str]) -> str:
-        label = _CATEGORY_LABELS.get(cat_id, cat_id)
+    def _build_rationale(
+        self,
+        cat_id: str,
+        verdict: str,
+        triggered: list[str],
+        not_screened: bool,
+        applies_from: list[str],
+    ) -> str:
+        label = CATEGORY_LABELS.get(cat_id, cat_id)
+        if not_screened:
+            return (
+                f"The active ruleset has no rules for {label}; Article {cat_id} was not screened."
+            )
         if verdict == "clear":
             return f"No rules triggered for {label}. No indicators of Article {cat_id} risk."
+        rules_str = ", ".join(triggered)
         if verdict == "amber":
-            rules_str = ", ".join(triggered)
-            return (
+            text = (
                 f"Amber for {label}. Rules triggered: {rules_str}. "
                 f"Requires legal review before deployment."
             )
-        rules_str = ", ".join(triggered)
-        return (
-            f"RED for {label}. Rules triggered: {rules_str}. "
-            f"System likely falls within Article {cat_id} prohibition."
-        )
+        else:
+            text = (
+                f"RED for {label}. Rules triggered: {rules_str}. "
+                f"System likely falls within Article {cat_id} prohibition."
+            )
+        if applies_from:
+            dates = " and ".join(format_applies_from(d) for d in applies_from)
+            text += f" The prohibition applies from {dates}."
+        return text

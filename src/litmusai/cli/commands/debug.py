@@ -1,4 +1,4 @@
-"""litmus debug — print the rule-firing trace for a report (FR-33)."""
+"""litmus debug: print the rule-firing trace for a report (FR-33)."""
 
 from __future__ import annotations
 

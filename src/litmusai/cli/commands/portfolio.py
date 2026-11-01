@@ -1,4 +1,4 @@
-"""litmus portfolio — batch screening of multiple system.yaml files (FR-7, US-06)."""
+"""litmus portfolio: batch screening of multiple system.yaml files (FR-7, US-06)."""
 
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ from pydantic import ValidationError
 from rich.console import Console
 from rich.table import Table
 
+from litmusai.categories import DEFAULT_RULESET_PATH
 from litmusai.cli.main import app
 from litmusai.engine.screener import Screener
 from litmusai.models.ruleset import Ruleset
@@ -18,9 +19,7 @@ from litmusai.models.system import SystemDescription
 
 console = Console()
 
-_DEFAULT_RULESET = (
-    Path(__file__).resolve().parents[2] / "_data" / "ruleset" / "ruleset-2024-1689-v1.0.json"
-)
+_DEFAULT_RULESET = DEFAULT_RULESET_PATH
 
 
 @app.command()

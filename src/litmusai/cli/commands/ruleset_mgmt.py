@@ -1,4 +1,4 @@
-"""BYO-ruleset management commands — FR-34, FR-35, FR-36."""
+"""BYO-ruleset management commands (FR-34, FR-35, FR-36)."""
 
 from __future__ import annotations
 
@@ -8,7 +8,9 @@ from pathlib import Path
 import typer
 from rich.console import Console
 
+from litmusai.categories import DEFAULT_RULESET_PATH
 from litmusai.cli.main import app
+from litmusai.engine.screener import UNREVIEWED_LABEL
 from litmusai.models.ruleset import Ruleset
 
 console = Console()
@@ -42,7 +44,7 @@ def use_ruleset(
         console.print(f"  Signed by: {sig.signer_name} ({sig.signed_date})")
     else:
         console.print(f"[yellow]Active ruleset set:[/yellow] {ruleset.ruleset_version}")
-        console.print("  [dim]UNREVIEWED — no signature[/dim]")
+        console.print("  [dim]UNREVIEWED: no signature[/dim]")
 
     console.print(f"  Rules: {len(ruleset.rules)}")
     console.print(f"  Config saved to: {_ACTIVE_RULESET_FILE}")
@@ -73,7 +75,8 @@ def verify_ruleset(
         console.print(f"  Algorithm: {ruleset.signature.signature_algorithm}")
         console.print(f"  Signed: {ruleset.signature.signed_date}")
         console.print(
-            "  [yellow]Note: cryptographic signature verification is a v1.1 feature.[/yellow]"
+            "  [yellow]Note: cryptographic signature verification is a planned feature; "
+            "this check is structural only.[/yellow]"
         )
         console.print(
             "  Signature status: [green]PRESENT[/green] (schema valid, crypto check pending)"
@@ -89,13 +92,8 @@ def ruleset_info(
     path: Path = typer.Argument(None, help="Path to a specific ruleset (or show active)."),
 ) -> None:
     """Show provenance of the active or specified ruleset."""
-    if path is None:  # pragma: no branch — Typer makes this unreachable to mypy
-        path = (  # type: ignore[unreachable]
-            Path(__file__).resolve().parents[2]
-            / "_data"
-            / "ruleset"
-            / "ruleset-2024-1689-v1.0.json"
-        )
+    if path is None:  # pragma: no branch (Typer makes this unreachable to mypy)
+        path = DEFAULT_RULESET_PATH  # type: ignore[unreachable]
 
     if not path.exists():
         typer.echo(f"Ruleset not found: {path}", err=True)
@@ -118,10 +116,14 @@ def ruleset_info(
         categories.setdefault(rule.category, []).append(rule.id)
     for cat_id in sorted(categories):
         console.print(f"  {cat_id}: {len(categories[cat_id])} rules")
+    applies_later = sorted({r.applies_from for r in ruleset.rules if r.applies_from})
+    for d in applies_later:
+        later = sorted(r.category for r in ruleset.rules if r.applies_from == d)
+        console.print(f"  Rules for {', '.join(dict.fromkeys(later))} apply from {d}")
 
     if ruleset.signature:
         console.print(f"[bold]Signer:[/bold] {ruleset.signature.signer_name}")
         console.print(f"[bold]Signed:[/bold] {ruleset.signature.signed_date}")
         console.print("[bold]Status:[/bold] [green]SIGNED[/green]")
     else:
-        console.print("[bold]Status:[/bold] [yellow]UNREVIEWED — internal panel authored[/yellow]")
+        console.print(f"[bold]Status:[/bold] [yellow]{UNREVIEWED_LABEL}[/yellow]")

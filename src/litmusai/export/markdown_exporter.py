@@ -11,7 +11,7 @@ def to_markdown(report: dict[str, Any]) -> str:
     summary = report.get("summary", {})
     prov = report.get("ruleset_provenance", {})
 
-    lines.append(f"# LitmusAI Screening Report — {system.get('name', 'Unknown')}")
+    lines.append(f"# LitmusAI Screening Report: {system.get('name', 'Unknown')}")
     lines.append("")
     lines.append(f"**Ruleset:** {prov.get('display_label', 'unknown')}")
     lines.append(f"**Generated:** {report.get('generated_at', '')}")

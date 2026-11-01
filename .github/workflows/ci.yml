@@ -40,7 +40,7 @@ jobs:
       - name: Run tests (network disabled per NFR-8)
         # Force bash so `\` line-continuation works on Windows runners too.
         # The default Windows shell is PowerShell, where `\` is not a
-        # continuation character — that's why this step had been failing on
+        # continuation character; that's why this step had been failing on
         # windows-latest. Bash is included on all GitHub-hosted runners.
         shell: bash
         run: |

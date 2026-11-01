@@ -142,6 +142,87 @@
       "title": "DeploymentContext",
       "type": "object"
     },
+    "GenerativeMedia": {
+      "additionalProperties": false,
+      "description": "Capabilities that Art. 5(1)(ba) and (bb) turn on, as inserted by\nRegulation (EU) 2026/1744 and read with Art. 5(1a) and (1b).\n\nSet a flag to true when it holds for the system as shipped, without\nsignificant technical modification (Art. 5(1a)(a)(ii)).",
+      "properties": {
+        "realistic_media_generation": {
+          "default": false,
+          "title": "Realistic Media Generation",
+          "type": "boolean"
+        },
+        "identifiable_persons": {
+          "default": false,
+          "title": "Identifiable Persons",
+          "type": "boolean"
+        },
+        "intimate_depictions_possible": {
+          "default": false,
+          "title": "Intimate Depictions Possible",
+          "type": "boolean"
+        },
+        "intimate_depictions_intended": {
+          "default": false,
+          "title": "Intimate Depictions Intended",
+          "type": "boolean"
+        },
+        "minors_depictions_possible": {
+          "default": false,
+          "title": "Minors Depictions Possible",
+          "type": "boolean"
+        },
+        "manipulation_within_1b_only": {
+          "default": false,
+          "title": "Manipulation Within 1B Only",
+          "type": "boolean"
+        },
+        "safeguards": {
+          "$ref": "#/$defs/GenerativeMediaSafeguards",
+          "default": {
+            "consent_demonstrable": false,
+            "intimate_output_prevention": false,
+            "csam_prevention": false,
+            "misuse_correction": false,
+            "documented": false
+          }
+        }
+      },
+      "title": "GenerativeMedia",
+      "type": "object"
+    },
+    "GenerativeMediaSafeguards": {
+      "additionalProperties": false,
+      "description": "Technical safety measures and other safeguards, Art. 5(1a)(a)(ii).\n\nEvery flag means \"in place, in force and verifiable\", not \"planned\".",
+      "properties": {
+        "consent_demonstrable": {
+          "default": false,
+          "title": "Consent Demonstrable",
+          "type": "boolean"
+        },
+        "intimate_output_prevention": {
+          "default": false,
+          "title": "Intimate Output Prevention",
+          "type": "boolean"
+        },
+        "csam_prevention": {
+          "default": false,
+          "title": "Csam Prevention",
+          "type": "boolean"
+        },
+        "misuse_correction": {
+          "default": false,
+          "title": "Misuse Correction",
+          "type": "boolean"
+        },
+        "documented": {
+          "default": false,
+          "title": "Documented",
+          "type": "boolean"
+        }
+      },
+      "title": "GenerativeMediaSafeguards",
+      "type": "object"
+    },
     "Metadata": {
       "additionalProperties": false,
       "properties": {
@@ -444,6 +525,7 @@
             "facial_images": false,
             "emotional_state_inference": false,
             "behaviour_history": false,
+            "social_behaviour_data": false,
             "scraped_internet_data": false,
             "freetext_prompts": false,
             "other": null
@@ -458,6 +540,7 @@
             "emotion_inferences": false,
             "sensitive_attribute_classifications": false,
             "freetext_generations": false,
+            "detrimental_treatment_unrelated_context": false,
             "other": null
           }
         },
@@ -472,6 +555,24 @@
             "healthcare": false,
             "financial_services": false,
             "other": null
+          }
+        },
+        "generative_media": {
+          "$ref": "#/$defs/GenerativeMedia",
+          "default": {
+            "realistic_media_generation": false,
+            "identifiable_persons": false,
+            "intimate_depictions_possible": false,
+            "intimate_depictions_intended": false,
+            "minors_depictions_possible": false,
+            "manipulation_within_1b_only": false,
+            "safeguards": {
+              "consent_demonstrable": false,
+              "csam_prevention": false,
+              "documented": false,
+              "intimate_output_prevention": false,
+              "misuse_correction": false
+            }
           }
         },
         "mitigations": {
@@ -524,6 +625,11 @@
         "behaviour_history": {
           "default": false,
           "title": "Behaviour History",
+          "type": "boolean"
+        },
+        "social_behaviour_data": {
+          "default": false,
+          "title": "Social Behaviour Data",
           "type": "boolean"
         },
         "scraped_internet_data": {
@@ -585,6 +691,11 @@
           "title": "Freetext Generations",
           "type": "boolean"
         },
+        "detrimental_treatment_unrelated_context": {
+          "default": false,
+          "title": "Detrimental Treatment Unrelated Context",
+          "type": "boolean"
+        },
         "other": {
           "anyOf": [
             {
@@ -605,7 +716,7 @@
   "additionalProperties": false,
   "properties": {
     "report_version": {
-      "default": "1.0",
+      "default": "1.1",
       "title": "Report Version",
       "type": "string"
     },

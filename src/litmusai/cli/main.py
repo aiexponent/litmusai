@@ -1,14 +1,19 @@
-"""LitmusAI CLI entry point — all commands registered here."""
+"""LitmusAI CLI entry point: all commands registered here."""
 
 from __future__ import annotations
 
 import typer
 
 from litmusai import __version__
+from litmusai.categories import ARTICLE_5_CATEGORIES
 
 app = typer.Typer(
     name="litmus",
-    help="LitmusAI — Article 5 Prohibited AI Practice Screener.",
+    help=(
+        "LitmusAI: Article 5 prohibited AI practice screener. "
+        f"Screens the {len(ARTICLE_5_CATEGORIES)} categories of Article 5(1), "
+        "points (a) to (h) plus (ba) and (bb) from Regulation (EU) 2026/1744."
+    ),
     no_args_is_help=True,
     add_completion=False,
     pretty_exceptions_enable=False,
@@ -16,7 +21,7 @@ app = typer.Typer(
 
 
 def _version_callback(value: bool) -> None:
-    """Multi-line version output — package version + ruleset legal status (FR-10).
+    """Multi-line version output: package version + ruleset legal status (FR-10).
 
     The `ruleset_legal_status` line is required by the G6 ruling: package
     SemVer reflects API stability; legal-review status rides on a content
@@ -26,16 +31,12 @@ def _version_callback(value: bool) -> None:
         import json
         from pathlib import Path
 
+        from litmusai.categories import DEFAULT_RULESET_PATH
         from litmusai.models.ruleset import Ruleset
 
         # Active ruleset path: user-configured (litmus use-ruleset) or default
         active_config = Path.home() / ".config" / "litmusai" / "active-ruleset.json"
-        bundled_default = (
-            Path(__file__).resolve().parents[1]
-            / "_data"
-            / "ruleset"
-            / "ruleset-2024-1689-v1.0.json"
-        )
+        bundled_default = DEFAULT_RULESET_PATH
         ruleset_path = bundled_default
         if active_config.exists():
             try:
@@ -44,7 +45,7 @@ def _version_callback(value: bool) -> None:
                 if candidate.exists():
                     ruleset_path = candidate
             except (json.JSONDecodeError, OSError):
-                # Malformed or unreadable user config — fall through to bundled default.
+                # Malformed or unreadable user config: fall through to bundled default.
                 ruleset_path = bundled_default
 
         try:
@@ -84,13 +85,13 @@ def main(
         is_eager=True,
     ),
 ) -> None:
-    """LitmusAI — free, deterministic Article 5 screener.
+    """LitmusAI: free, deterministic Article 5 screener.
 
     Not legal advice. Not a notified body.
     """
 
 
-# Register commands — imported after app is defined to avoid circular imports.
+# Register commands: imported after app is defined to avoid circular imports.
 import litmusai.cli.commands.debug as _debug  # noqa: F401, E402
 import litmusai.cli.commands.diff_ruleset as _diff_ruleset  # noqa: F401, E402
 import litmusai.cli.commands.export as _export  # noqa: F401, E402

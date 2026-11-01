@@ -1,0 +1,112 @@
+# LitmusAI example: expected verdict RED (Article 5(1)(bb) prohibition)
+# ------------------------------------------------------------------------------
+# A fictional open-weights text-to-image model released with no safety
+# measures. It is not made for abusive content, but it can produce sexual
+# material depicting children as a reasonably foreseeable and reproducible
+# outcome, and nothing in the system prevents that. Article 5(1)(bb) of
+# Regulation (EU) 2024/1689, inserted by Regulation (EU) 2026/1744,
+# prohibits AI systems that generate or manipulate material within the
+# meaning of Article 2, points (c) and (e), of Directive 2011/93/EU.
+#
+# Article 5(1a)(a)(ii): the prohibition reaches a provider whose system
+# makes such generation a foreseeable and reproducible outcome without
+# significant technical modification and that lacks reasonable and adequate
+# safeguards to prevent it and to correct misuse. No consent carve-out
+# exists for this point. It applies from 2 December 2026.
+#
+# The model does not depict identifiable real people (no reference images,
+# no named persons, synthetic faces only), so Article 5(1)(ba) stays CLEAR.
+# The company and product are invented.
+#
+# Run:  litmus screen example-bb-red.yaml
+# Expected:
+#   Overall verdict: RED
+#   5.1.bb (Child sexual abuse material): RED
+#   5.1.ba (Non-consensual intimate material): CLEAR
+#   Other categories: CLEAR
+
+name: "Motionforge Open Image 3"
+version: "3.0.0-weights"
+provider: "Motionforge Research BV (fictional)"
+deployer: "Anyone who downloads the weights"
+purpose: >
+  General-purpose text-to-image generation of photorealistic scenes and
+  people, released as open weights for research and creative use.
+
+system_description: >
+  Latent diffusion model trained on a large web-scraped image corpus that
+  was not cleaned for sexual content or for images of minors. Accepts a
+  text prompt and returns a photorealistic image. No reference-image
+  input, so outputs do not reproduce a specific real person. Shipped
+  without refusal training, prompt guardrails, output classifiers or a
+  usage policy. The weights are served from a public repository with no
+  abuse reporting channel.
+
+deployment_jurisdictions: ["EU", "US"]
+output_consumed_in_eu: true
+
+subject_population:
+  categories: ["general_public"]
+  notes: >
+    Outputs depict synthetic people. Children can be depicted because the
+    training data includes them and nothing blocks such prompts.
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: true            # the training corpus
+  freetext_prompts: true
+  other: null
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: "photorealistic images from text prompts"
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: true       # photorealistic people
+  identifiable_persons: false            # synthetic faces, no reference input
+  intimate_depictions_possible: true     # no NSFW filter of any kind
+  intimate_depictions_intended: false    # a general model
+  minors_depictions_possible: true       # training data includes children,
+                                         # no prompt or output block
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false               # nothing: no classifier, no hash
+                                         # matching, no refusal training
+    misuse_correction: false             # no reporting channel
+    documented: false
+
+# The release strategy (open weights) does not remove the provider's duty
+# under Article 5(1a)(a)(ii) to ship reasonable and adequate measures.
+# Recital 12 of Regulation (EU) 2026/1744 names data cleaning, refusal
+# training, safe prompt design, output controls, content classifiers and
+# filters, usage restrictions, abuse detection and notice-and-action
+# mechanisms as the kinds of measures expected.
+mitigations:
+  - "Model card asks users not to generate illegal content (DOES NOT cure 5(1)(bb): not a technical measure)"
+
+metadata:
+  last_reviewed: 2026-10-31
+  owner: "Head of Research, Motionforge Research BV (fictional)"
+  reviewed_by: "Internal AI governance review: release blocked pending safeguards"

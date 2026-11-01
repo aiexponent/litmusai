@@ -1,7 +1,7 @@
 """Unit tests for the constrained expression parser.
 
 80+ cases covering parsing, precedence, operator combinations, and error handling.
-Pinned to PRD §8.4. This is the highest-risk component in LitmusAI — a bug here
+Pinned to PRD §8.4. This is the highest-risk component in LitmusAI: a bug here
 could allow arbitrary code execution via ruleset files.
 """
 

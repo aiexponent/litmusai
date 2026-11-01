@@ -1,4 +1,4 @@
-"""Integration test — verify every published example yields its expected verdict.
+"""Integration test: verify every published example yields its expected verdict.
 
 The `examples/` directory is a public-facing artefact: it ships with the
 package, the README references it, and `litmus init` produces a starter
@@ -14,13 +14,14 @@ from pathlib import Path
 import pytest
 import yaml
 
+from litmusai.categories import DEFAULT_RULESET_PATH
 from litmusai.engine.screener import Screener
 from litmusai.models.ruleset import Ruleset
 from litmusai.models.system import SystemDescription
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 EXAMPLES_DIR = REPO_ROOT / "examples"
-RULESET_PATH = REPO_ROOT / "src" / "litmusai" / "_data" / "ruleset" / "ruleset-2024-1689-v1.0.json"
+RULESET_PATH = DEFAULT_RULESET_PATH
 
 
 @pytest.fixture(scope="module")
@@ -62,3 +63,46 @@ def test_example_red_yields_red_on_5_1_f_only(screener: Screener) -> None:
     reds = [cat for cat, r in report.categories.items() if r.verdict == "red"]
     assert len(reds) == 1, f"example-red should produce exactly one red (5.1.f); got {reds}"
     assert reds[0] == "5.1.f", f"example-red's red verdict should be on 5.1.f; got {reds[0]}"
+
+
+@pytest.mark.integration
+def test_example_ba_red_yields_red_on_5_1_ba(screener: Screener) -> None:
+    system = _load_system("example-ba-red.yaml")
+    report = screener.screen(system)
+    assert report.summary.overall_verdict == "red"
+    verdicts = {cat: r.verdict for cat, r in report.categories.items() if r.verdict != "clear"}
+    assert verdicts == {"5.1.ba": "red", "5.1.bb": "amber"}, verdicts
+    assert "rule_ba_intended_purpose_no_consent" in report.categories["5.1.ba"].triggered_rules
+
+
+@pytest.mark.integration
+def test_example_bb_red_yields_red_on_5_1_bb_only(screener: Screener) -> None:
+    system = _load_system("example-bb-red.yaml")
+    report = screener.screen(system)
+    assert report.summary.overall_verdict == "red"
+    verdicts = {cat: r.verdict for cat, r in report.categories.items() if r.verdict != "clear"}
+    assert verdicts == {"5.1.bb": "red"}, verdicts
+    assert report.categories["5.1.ba"].verdict == "clear", "no identifiable persons, so no (ba)"
+
+
+@pytest.mark.integration
+def test_example_generative_clear_yields_clear(screener: Screener) -> None:
+    system = _load_system("example-generative-clear.yaml")
+    report = screener.screen(system)
+    assert report.summary.overall_verdict == "clear"
+    fired = [cat for cat, r in report.categories.items() if r.verdict != "clear"]
+    assert fired == [], f"a safeguarded generator should fire no rules; got {fired}"
+
+
+@pytest.mark.integration
+def test_every_example_file_is_covered() -> None:
+    """A new example without a test here would ship unchecked."""
+    tested = {
+        "example-clear.yaml",
+        "example-amber.yaml",
+        "example-red.yaml",
+        "example-ba-red.yaml",
+        "example-bb-red.yaml",
+        "example-generative-clear.yaml",
+    }
+    assert {p.name for p in EXAMPLES_DIR.glob("*.yaml")} == tested

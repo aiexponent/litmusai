@@ -1,4 +1,4 @@
-"""Ruleset diff engine — PRD FR-26.
+"""Ruleset diff engine: PRD FR-26.
 
 Compares two `Ruleset` instances rule-by-rule and surfaces structural
 changes: added rules, removed rules, modified rules (with field-level
@@ -34,6 +34,7 @@ _RULE_CONTENT_FIELDS: tuple[str, ...] = (
     "citations",
     "reviewed_by",
     "reviewed_date",
+    "applies_from",
 )
 
 
@@ -64,7 +65,7 @@ class MetadataChange(BaseModel, extra="forbid"):
 class RulesetDiff(BaseModel, extra="forbid"):
     """Structured diff between two rulesets.
 
-    Stable JSON shape — the CLI's `--format json` and the future
+    Stable JSON shape: the CLI's `--format json` and the future
     `ruleset-changelog.json` artifact both serialize from this model.
     """
 

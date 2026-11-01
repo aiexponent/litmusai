@@ -1,0 +1,25 @@
+name: "Headshot Studio"
+version: "2.1.0"
+provider: "Fictional Creative GmbH"
+purpose: "Generate professional headshots of a verified customer from their own photos."
+system_description: "Face match ties every generation to the verified customer. Output classifier blocks nudity. Age check on uploads. Consent logged. Staffed abuse queue. Safety case documented and tested."
+deployment_jurisdictions: ["EU"]
+output_consumed_in_eu: true
+subject_population:
+  categories: ["general_public"]
+inputs:
+  facial_images: true
+outputs: {}
+deployment_context: {}
+generative_media:
+  realistic_media_generation: true
+  identifiable_persons: true
+  intimate_depictions_possible: false
+  minors_depictions_possible: false
+  safeguards:
+    consent_demonstrable: true
+    intimate_output_prevention: true
+    csam_prevention: true
+    misuse_correction: true
+    documented: true
+mitigations: []

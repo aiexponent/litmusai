@@ -58,6 +58,18 @@
         "reviewed_date": {
           "title": "Reviewed Date",
           "type": "string"
+        },
+        "applies_from": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applies From"
         }
       },
       "required": [

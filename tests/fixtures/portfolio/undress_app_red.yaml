@@ -1,0 +1,21 @@
+name: "UndressSnap"
+version: "1.0.0"
+provider: "Fictional Apps Ltd"
+purpose: "Generate a nude version of any uploaded photo of a person."
+system_description: "Diffusion model that keeps the face and replaces clothing with realistic nude skin. No consent from the depicted person."
+deployment_jurisdictions: ["EU"]
+output_consumed_in_eu: true
+subject_population:
+  categories: ["general_public"]
+inputs:
+  facial_images: true
+outputs: {}
+deployment_context: {}
+generative_media:
+  realistic_media_generation: true
+  identifiable_persons: true
+  intimate_depictions_possible: true
+  intimate_depictions_intended: true
+  safeguards:
+    csam_prevention: true
+mitigations: []

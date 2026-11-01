@@ -1,4 +1,4 @@
-"""Ruleset models including optional BYO signature block — PRD §7.3, FR-23, FR-34."""
+"""Ruleset models including optional BYO signature block: PRD §7.3, FR-23, FR-34."""
 
 from __future__ import annotations
 
@@ -7,20 +7,12 @@ from typing import Literal
 
 from pydantic import BaseModel, EmailStr, Field, field_validator, model_validator
 
-_ARTICLE_5_CATEGORIES = frozenset(
-    {
-        "5.1.a",
-        "5.1.b",
-        "5.1.c",
-        "5.1.d",
-        "5.1.e",
-        "5.1.f",
-        "5.1.g",
-        "5.1.h",
-    }
-)
+from litmusai.categories import ARTICLE_5_CATEGORIES
+
+_ARTICLE_5_CATEGORIES = frozenset(ARTICLE_5_CATEGORIES)
 
 _SNAKE_CASE_RE = re.compile(r"^[a-z][a-z0-9_]*$")
+_ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 Verdict = Literal["clear", "amber", "red"]
 SignatureAlgorithm = Literal["sha256", "pgp-detached", "x509-pkcs7"]
@@ -37,6 +29,18 @@ class Rule(BaseModel, extra="forbid"):
     citations: list[str] = Field(default_factory=list)
     reviewed_by: str
     reviewed_date: str
+    # ISO date from which the prohibition the rule encodes applies. Empty
+    # for rules on provisions that already apply. Reports run before this
+    # date say so in the rationale.
+    applies_from: str | None = None
+
+    @field_validator("applies_from")
+    @classmethod
+    def _validate_applies_from(cls, v: str | None) -> str | None:
+        if v is not None and not _ISO_DATE_RE.fullmatch(v):
+            msg = f"applies_from must be an ISO date (YYYY-MM-DD). Got: {v!r}"
+            raise ValueError(msg)
+        return v
 
     @field_validator("id")
     @classmethod

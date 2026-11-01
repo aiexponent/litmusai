@@ -1,0 +1,21 @@
+name: "OpenVid Weights"
+version: "0.9.0"
+provider: "Fictional Research Collective"
+purpose: "General text-to-video generation, released as open weights."
+system_description: "Photorealistic video from text prompts. Synthetic people only. No refusal training, no output classifier, no abuse reporting."
+deployment_jurisdictions: ["EU"]
+output_consumed_in_eu: true
+subject_population:
+  categories: ["general_public"]
+inputs:
+  scraped_internet_data: true
+  freetext_prompts: true
+outputs: {}
+deployment_context: {}
+generative_media:
+  realistic_media_generation: true
+  identifiable_persons: false
+  intimate_depictions_possible: true
+  minors_depictions_possible: true
+  safeguards: {}
+mitigations: []

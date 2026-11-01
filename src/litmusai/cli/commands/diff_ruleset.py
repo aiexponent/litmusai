@@ -1,4 +1,4 @@
-"""`litmus diff-ruleset <old> <new>` — PRD FR-26.
+"""`litmus diff-ruleset <old> <new>`: PRD FR-26.
 
 Compares two ruleset JSON files and renders the structural diff. Default
 output is a Rich console table optimised for human review; `--format json`
@@ -42,9 +42,9 @@ def _load_ruleset(path: Path, label: str) -> Ruleset:
 
 
 def _truncate(value: object, limit: int = 60) -> str:
-    text = str(value) if value is not None else "—"
+    text = str(value) if value is not None else "(none)"
     if len(text) > limit:
-        return text[: limit - 1] + "…"
+        return text[: limit - 3] + "..."
     return text
 
 
@@ -125,7 +125,7 @@ def _render_human(diff: RulesetDiff) -> None:
             console.print(mod_table)
 
     if not diff.has_changes:
-        console.print("[green]No differences — rulesets are identical.[/green]")
+        console.print("[green]No differences: rulesets are identical.[/green]")
     else:
         console.print(
             f"\n[bold]{diff.rule_change_total}[/bold] rule change(s) "

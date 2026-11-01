@@ -1,0 +1,421 @@
+{
+  "ruleset_version": "ruleset-2024-1689-v1.1",
+  "regulation": "Regulation (EU) 2024/1689, as amended by Regulation (EU) 2026/1744",
+  "effective_date": "2025-02-02",
+  "rules": [
+    {
+      "id": "rule_a_influences_behaviour",
+      "category": "5.1.a",
+      "version": "v1",
+      "description": "System output attempts to influence, persuade, or change user behaviour.",
+      "expression": "system.outputs.behaviour_predictions == true",
+      "verdict_if_triggered": "amber",
+      "citations": [
+        "Art. 5(1)(a)",
+        "Recital 29"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_a_subliminal_inputs",
+      "category": "5.1.a",
+      "version": "v1",
+      "description": "System uses inputs not transparent to the user (subliminal, concealed).",
+      "expression": "system.inputs.emotional_state_inference == true and system.outputs.behaviour_predictions == true",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(a)",
+        "Recital 29",
+        "Recital 30"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_a_freetext_manipulation",
+      "category": "5.1.a",
+      "version": "v1",
+      "description": "System generates free text aimed at changing behaviour (persuasion chatbots).",
+      "expression": "system.outputs.freetext_generations == true and system.outputs.behaviour_predictions == true",
+      "verdict_if_triggered": "amber",
+      "citations": [
+        "Art. 5(1)(a)",
+        "Recital 31"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_c_social_scoring",
+      "category": "5.1.c",
+      "version": "v2",
+      "description": "System produces individual scores from social behaviour or personal characteristics, or uses scores for detrimental treatment in an unrelated context (Art. 5(1)(c)(i) and (ii)).",
+      "expression": "system.outputs.individual_scores == true and (system.inputs.social_behaviour_data == true or system.outputs.detrimental_treatment_unrelated_context == true)",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(c)",
+        "Recital 31",
+        "Recital 33"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v2",
+      "reviewed_date": "2026-10-31"
+    },
+    {
+      "id": "rule_c_scoring_from_scraped_data",
+      "category": "5.1.c",
+      "version": "v1",
+      "description": "System scores individuals using scraped internet data.",
+      "expression": "system.outputs.individual_scores == true and system.inputs.scraped_internet_data == true",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(c)",
+        "Recital 33"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_c_scoring_general",
+      "category": "5.1.c",
+      "version": "v1",
+      "description": "System produces individual scores that may constitute social scoring.",
+      "expression": "system.outputs.individual_scores == true",
+      "verdict_if_triggered": "amber",
+      "citations": [
+        "Art. 5(1)(c)"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_e_untargeted_facial_scraping",
+      "category": "5.1.e",
+      "version": "v1",
+      "description": "System builds or expands a facial recognition database from untargeted scraping.",
+      "expression": "system.inputs.facial_images == true and system.inputs.scraped_internet_data == true",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(e)",
+        "Recital 42"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_e_facial_from_cctv",
+      "category": "5.1.e",
+      "version": "v1",
+      "description": "System uses facial images from public-space surveillance.",
+      "expression": "system.inputs.facial_images == true and system.deployment_context.public_space == true",
+      "verdict_if_triggered": "amber",
+      "citations": [
+        "Art. 5(1)(e)",
+        "Recital 42"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_f_workplace_emotion",
+      "category": "5.1.f",
+      "version": "v1",
+      "description": "System infers emotions in workplace context.",
+      "expression": "system.outputs.emotion_inferences == true and system.deployment_context.workplace == true",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(f)",
+        "Recital 44"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_f_education_emotion",
+      "category": "5.1.f",
+      "version": "v1",
+      "description": "System infers emotions in educational context.",
+      "expression": "system.outputs.emotion_inferences == true and system.deployment_context.education == true",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(f)",
+        "Recital 44"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_f_emotion_healthcare_exception",
+      "category": "5.1.f",
+      "version": "v1",
+      "description": "System infers emotions in healthcare context (exception applies, but flag for review).",
+      "expression": "system.outputs.emotion_inferences == true and system.deployment_context.healthcare == true",
+      "verdict_if_triggered": "amber",
+      "citations": [
+        "Art. 5(1)(f)",
+        "Recital 44"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_f_emotion_general",
+      "category": "5.1.f",
+      "version": "v1",
+      "description": "System infers emotions in any context.",
+      "expression": "system.outputs.emotion_inferences == true",
+      "verdict_if_triggered": "amber",
+      "citations": [
+        "Art. 5(1)(f)"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_b_targets_minors",
+      "category": "5.1.b",
+      "version": "v1",
+      "description": "System targets minors and produces behaviour predictions.",
+      "expression": "targets_population(system, \"minors\") and system.outputs.behaviour_predictions == true",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(b)",
+        "Recital 29",
+        "Recital 32"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_b_vulnerable_population",
+      "category": "5.1.b",
+      "version": "v1",
+      "description": "System targets persons in vulnerable economic situations.",
+      "expression": "targets_population(system, \"persons_in_vulnerable_economic_situations\")",
+      "verdict_if_triggered": "amber",
+      "citations": [
+        "Art. 5(1)(b)",
+        "Recital 32"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_b_targets_minors_freetext",
+      "category": "5.1.b",
+      "version": "v2",
+      "description": "System generates freetext output targeting minors: potential exploitation of age-based vulnerability.",
+      "expression": "targets_population(system, \"minors\") and system.outputs.freetext_generations == true",
+      "verdict_if_triggered": "amber",
+      "citations": [
+        "Art. 5(1)(b)",
+        "Recital 32"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v2",
+      "reviewed_date": "2026-10-31"
+    },
+    {
+      "id": "rule_ba_intended_purpose_no_consent",
+      "category": "5.1.ba",
+      "version": "v1",
+      "description": "Generating or manipulating realistic intimate or sexually explicit material of identifiable persons is the system's intended purpose, or the deployer's purpose, and consent of the depicted person is not collected and demonstrable.",
+      "expression": "system.generative_media.intimate_depictions_intended == true and system.generative_media.identifiable_persons == true and system.generative_media.safeguards.consent_demonstrable == false",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(ba)",
+        "Art. 5(1a)(a)(i)",
+        "Art. 5(1a)(b)",
+        "Regulation (EU) 2026/1744, recital 12",
+        "Art. 113(a), as amended by Regulation (EU) 2026/1744 (applies from 2 December 2026)"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v2",
+      "reviewed_date": "2026-10-31",
+      "applies_from": "2026-12-02"
+    },
+    {
+      "id": "rule_ba_foreseeable_no_safeguards",
+      "category": "5.1.ba",
+      "version": "v1",
+      "description": "Realistic intimate or sexually explicit depictions of identifiable persons are a reasonably foreseeable and reproducible outcome, consent of the depicted person is not collected and demonstrable, and the system lacks reasonable and adequate, documented safeguards to prevent them and to correct misuse. Manipulation within Art. 5(1b) is excluded.",
+      "expression": "system.generative_media.realistic_media_generation == true and system.generative_media.identifiable_persons == true and system.generative_media.intimate_depictions_possible == true and system.generative_media.manipulation_within_1b_only == false and system.generative_media.safeguards.consent_demonstrable == false and not (system.generative_media.safeguards.intimate_output_prevention == true and system.generative_media.safeguards.misuse_correction == true and system.generative_media.safeguards.documented == true)",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(ba)",
+        "Art. 5(1a)(a)(ii)",
+        "Art. 5(1b)",
+        "Regulation (EU) 2026/1744, recital 12",
+        "Art. 113(a), as amended by Regulation (EU) 2026/1744 (applies from 2 December 2026)"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v2",
+      "reviewed_date": "2026-10-31",
+      "applies_from": "2026-12-02"
+    },
+    {
+      "id": "rule_ba_identifiable_persons_review",
+      "category": "5.1.ba",
+      "version": "v1",
+      "description": "System generates or manipulates realistic media that can depict identifiable persons, and neither documented prevention of intimate outputs nor documented, demonstrable consent of the depicted person is in place; requires review.",
+      "expression": "system.generative_media.realistic_media_generation == true and system.generative_media.identifiable_persons == true and not (system.generative_media.safeguards.documented == true and (system.generative_media.safeguards.intimate_output_prevention == true or system.generative_media.safeguards.consent_demonstrable == true))",
+      "verdict_if_triggered": "amber",
+      "citations": [
+        "Art. 5(1)(ba)",
+        "Art. 5(1a)(a)(ii)",
+        "Art. 113(a), as amended by Regulation (EU) 2026/1744 (applies from 2 December 2026)"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v2",
+      "reviewed_date": "2026-10-31",
+      "applies_from": "2026-12-02"
+    },
+    {
+      "id": "rule_bb_minors_sexual_material",
+      "category": "5.1.bb",
+      "version": "v1",
+      "description": "Sexual material depicting children is a reasonably foreseeable and reproducible outcome of the system, or its intended purpose, and the system lacks measures that reliably prevent it. No consent dimension. Law enforcement and evaluation use under a 'without right' defence is reviewed separately.",
+      "expression": "system.generative_media.realistic_media_generation == true and system.generative_media.intimate_depictions_possible == true and system.generative_media.minors_depictions_possible == true and system.generative_media.safeguards.csam_prevention == false and system.deployment_context.law_enforcement_use == false",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(bb)",
+        "Art. 5(1a)(a)",
+        "Directive 2011/93/EU, Art. 2(c) and (e)",
+        "Regulation (EU) 2026/1744, recital 12",
+        "Art. 113(a), as amended by Regulation (EU) 2026/1744 (applies from 2 December 2026)"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v2",
+      "reviewed_date": "2026-10-31",
+      "applies_from": "2026-12-02"
+    },
+    {
+      "id": "rule_bb_without_right_defence_review",
+      "category": "5.1.bb",
+      "version": "v1",
+      "description": "Sexual material depicting children is a possible output and the system is used by law enforcement; a 'without right' defence under national law may apply but requires legal review.",
+      "expression": "system.generative_media.realistic_media_generation == true and system.generative_media.intimate_depictions_possible == true and system.generative_media.minors_depictions_possible == true and system.deployment_context.law_enforcement_use == true",
+      "verdict_if_triggered": "amber",
+      "citations": [
+        "Art. 5(1)(bb)",
+        "Directive 2011/93/EU, Art. 5(1)",
+        "Regulation (EU) 2026/1744, recital 13",
+        "Art. 113(a), as amended by Regulation (EU) 2026/1744 (applies from 2 December 2026)"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v2",
+      "reviewed_date": "2026-10-31",
+      "applies_from": "2026-12-02"
+    },
+    {
+      "id": "rule_bb_no_csam_safeguards",
+      "category": "5.1.bb",
+      "version": "v1",
+      "description": "System generates or manipulates realistic media and its measures against child sexual abuse material are not fully in place and documented; requires review.",
+      "expression": "system.generative_media.realistic_media_generation == true and not (system.generative_media.safeguards.csam_prevention == true and system.generative_media.safeguards.documented == true)",
+      "verdict_if_triggered": "amber",
+      "citations": [
+        "Art. 5(1)(bb)",
+        "Art. 5(1a)(a)(ii)",
+        "Art. 113(a), as amended by Regulation (EU) 2026/1744 (applies from 2 December 2026)"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v2",
+      "reviewed_date": "2026-10-31",
+      "applies_from": "2026-12-02"
+    },
+    {
+      "id": "rule_d_criminal_risk",
+      "category": "5.1.d",
+      "version": "v1",
+      "description": "System predicts individual criminal risk based on profiling.",
+      "expression": "system.outputs.criminal_risk_predictions == true",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(d)",
+        "Recital 42"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_g_biometric_sensitive_classification",
+      "category": "5.1.g",
+      "version": "v1",
+      "description": "System categorises individuals based on biometric data to infer sensitive attributes (race, political opinions, religious beliefs, sexual orientation).",
+      "expression": "system.inputs.biometric == true and system.outputs.sensitive_attribute_classifications == true",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(g)",
+        "Recital 44"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_g_facial_sensitive_classification",
+      "category": "5.1.g",
+      "version": "v1",
+      "description": "System uses facial images to infer sensitive attributes.",
+      "expression": "system.inputs.facial_images == true and system.outputs.sensitive_attribute_classifications == true",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(g)",
+        "Recital 44"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_g_sensitive_classification_general",
+      "category": "5.1.g",
+      "version": "v2",
+      "description": "System classifies sensitive attributes from any input; requires review.",
+      "expression": "system.outputs.sensitive_attribute_classifications == true",
+      "verdict_if_triggered": "amber",
+      "citations": [
+        "Art. 5(1)(g)"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v2",
+      "reviewed_date": "2026-10-31"
+    },
+    {
+      "id": "rule_h_realtime_rbi_public_space",
+      "category": "5.1.h",
+      "version": "v1",
+      "description": "Real-time remote biometric identification in publicly accessible spaces.",
+      "expression": "system.inputs.biometric == true and system.deployment_context.public_space == true and system.deployment_context.real_time_operation == true",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(h)",
+        "Recital 33"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_h_facial_public_realtime",
+      "category": "5.1.h",
+      "version": "v1",
+      "description": "Real-time facial recognition in publicly accessible spaces.",
+      "expression": "system.inputs.facial_images == true and system.deployment_context.public_space == true and system.deployment_context.real_time_operation == true",
+      "verdict_if_triggered": "red",
+      "citations": [
+        "Art. 5(1)(h)",
+        "Recital 33"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v1",
+      "reviewed_date": "2026-04-16"
+    },
+    {
+      "id": "rule_h_law_enforcement_rbi_exception",
+      "category": "5.1.h",
+      "version": "v2",
+      "description": "Biometric ID in public spaces by law enforcement: a narrow exception exists but requires legal review.",
+      "expression": "system.inputs.biometric == true and system.deployment_context.public_space == true and system.deployment_context.law_enforcement_use == true",
+      "verdict_if_triggered": "amber",
+      "citations": [
+        "Art. 5(1)(h)",
+        "Art. 5(2)",
+        "Art. 5(3)",
+        "Recital 33"
+      ],
+      "reviewed_by": "aiexponent-internal-panel-v2",
+      "reviewed_date": "2026-10-31"
+    }
+  ],
+  "signature": null
+}
