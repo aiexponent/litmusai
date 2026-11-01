@@ -11,7 +11,7 @@ Regulation (EU) 2026/1744 (Digital Omnibus on AI) inserts two prohibitions into 
 
 `litmus screen` now returns a Red / Amber / Clear verdict for both, next to the original eight. Six new rules encode the Article 5(1a) intended-purpose and foreseeable-outcome tests, the safeguards test, the consent carve-out of point (ba), the Article 5(1b) manipulation carve-out, and the "without right" defence of point (bb). A report run before 2 December 2026 says that the prohibition applies from that date.
 
-Declare the facts in the new `generative_media` block of `system.yaml` (`litmus init` writes it). Every field defaults to false, so existing files keep working.
+Declare the facts in the new `generative_media` block of `system.yaml` (`litmus init` writes it). Every field defaults to false, so existing files keep working, but a default is not an assessment: a file written for 1.0.x says nothing about generative media, so 5.1.ba and 5.1.bb read Clear until you add the block. Before you rely on an upgraded report or CI gate, open each existing `system.yaml`, add the `generative_media` block for any system that generates or manipulates realistic images, video or audio, and set the two new Article 5(1)(c) fields (`inputs.social_behaviour_data`, `outputs.detrimental_treatment_unrelated_context`) where they apply. `litmus screen --describe` never infers safeguards from free text; only the YAML path can declare them.
 
 ## Social scoring fix (litmusai#25)
 
@@ -29,7 +29,8 @@ A credit score built from repayment history no longer reads Red for social scori
 ```bash
 pip install --upgrade litmus-screener==1.1.0
 litmus --version
-litmus diff-ruleset <site-packages>/litmusai/_data/ruleset/ruleset-2024-1689-v1.0.json <site-packages>/litmusai/_data/ruleset/ruleset-2024-1689-v1.1.json
+RULESETS="$(python -c 'import litmusai.categories as c; print(c.RULESET_DIR)')"
+litmus diff-ruleset "$RULESETS/ruleset-2024-1689-v1.0.json" "$RULESETS/ruleset-2024-1689-v1.1.json"
 ```
 
 Requires Python 3.11 or newer. No network access at any point.

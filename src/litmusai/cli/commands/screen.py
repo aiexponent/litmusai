@@ -184,23 +184,11 @@ def _quickscreen_to_system(describe: str) -> SystemDescription:
         )
     )
     minors_possible = realistic_media and any(w in text for w in minors_words)
-    consent = "consent" in text
-    output_filters = any(
-        w in text
-        for w in (
-            "safety filter",
-            "content filter",
-            "output filter",
-            "content moderation",
-            "guardrail",
-            "nsfw filter",
-            "refusal training",
-            "classifier",
-        )
-    )
-    misuse_correction = any(
-        w in text for w in ("abuse report", "report abuse", "notice and action", "abuse detection")
-    )
+    # Safeguards are never inferred from free text. "without consent" contains
+    # "consent", and "no content filter" contains "content filter"; a wrong
+    # true here would turn a prohibited system Amber. Every safeguard flag
+    # means "in place, in force and verifiable", which only the YAML path can
+    # declare. Quick Screen therefore reports the unsafeguarded reading.
 
     return SystemDescription(
         name="Quick Screen",
@@ -235,13 +223,7 @@ def _quickscreen_to_system(describe: str) -> SystemDescription:
             intimate_depictions_possible=intimate_possible,
             intimate_depictions_intended=intimate_intended,
             minors_depictions_possible=minors_possible,
-            safeguards=GenerativeMediaSafeguards(
-                consent_demonstrable=consent,
-                intimate_output_prevention=output_filters,
-                csam_prevention=output_filters,
-                misuse_correction=misuse_correction,
-                documented=False,
-            ),
+            safeguards=GenerativeMediaSafeguards(),
         ),
         deployment_context=DeploymentContext(
             workplace=workplace,

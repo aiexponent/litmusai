@@ -405,6 +405,23 @@ class TestE2ECommands:
         assert report["categories"]["5.1.ba"]["verdict"] == "red"
         assert report["summary"]["overall_verdict"] == "red"
 
+    def test_describe_never_infers_safeguards_from_free_text(self, tmp_path: Path) -> None:
+        """'without consent' and 'no content filter' must not read as safeguards in place."""
+        report_file = tmp_path / "report.json"
+        _run(
+            "screen",
+            "--describe",
+            "an app that undresses photos of real people without consent and no content filter",
+            "--output",
+            str(report_file),
+            "--fail-on",
+            "none",
+        )
+        report = json.loads(report_file.read_text())
+        safeguards = report["system"]["generative_media"]["safeguards"]
+        assert not any(safeguards.values()), safeguards
+        assert report["categories"]["5.1.ba"]["verdict"] == "red"
+
     def test_describe_filtered_image_generator_is_not_red(self, tmp_path: Path) -> None:
         report_file = tmp_path / "report.json"
         result = _run(
