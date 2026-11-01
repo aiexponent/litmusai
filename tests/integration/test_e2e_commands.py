@@ -383,8 +383,11 @@ class TestE2ECommands:
         """PRD-411: the help text names the ten Article 5(1) categories."""
         result = _run("--help")
         assert result.returncode == 0
-        assert "10 categories" in result.stdout
-        assert "(ba) and (bb)" in result.stdout
+        # Rich wraps the help text to the console width (narrower on the
+        # Windows runners), so compare on collapsed whitespace.
+        flat = " ".join(result.stdout.split())
+        assert "10 categories" in flat
+        assert "(ba) and (bb)" in flat
 
     def test_describe_undress_app_is_red_on_ba(self, tmp_path: Path) -> None:
         report_file = tmp_path / "report.json"
