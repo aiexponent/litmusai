@@ -5,6 +5,12 @@ All notable changes to LitmusAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-11-01
+
+### Fixed
+
+- **`litmus verify <report> <system.yaml>` reported every pre-1.1.0 file as tampered.** The two-argument form hashed the raw YAML, while `litmus screen` hashes the validated declaration with its defaults filled in. The two only agreed for a file that spelt out every field; 1.0.1 already failed on `tests/fixtures/portfolio/calculator_clear.yaml`, and from 1.1.0 every file without the `generative_media` block failed, which is every file written before 1.1.0, including the shipped examples. `verify` now validates the file and hashes it the same way as `screen`. For a report with `report_version` 1.0 (written by 1.0.x) it hashes the system without the three fields added in 1.1, so an unchanged file still verifies; a file that now sets one of those fields reports a mismatch, because the old hash never covered them. Any read, parse or validation failure exits 2 instead of a traceback or a mismatch. The one-argument form was not affected. Found by the aiexponent.com evidence capture on release day; eight tests pin the behaviour, one of them against a report written by 1.0.1 itself.
+
 ## [1.1.0] - 2026-11-01
 
 > **LitmusAI 1.1.0 ships with reference ruleset `ruleset-2024-1689-v1.1` (UNREVIEWED: internal panel authored, no external lawyer review). Apache 2.0, AS IS.**

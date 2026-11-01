@@ -19,7 +19,7 @@
 
 ---
 
-> **LitmusAI 1.1.0 ships with the AiExponent reference ruleset `ruleset-2024-1689-v1.1` (UNREVIEWED: internal panel authored, no external lawyer review). Apache 2.0, AS IS.**
+> **LitmusAI 1.1.1 ships with the AiExponent reference ruleset `ruleset-2024-1689-v1.1` (UNREVIEWED: internal panel authored, no external lawyer review). Apache 2.0, AS IS.**
 >
 > The package's CLI surface, JSON/SARIF schema, and BYO-ruleset contract are stable for production integration. The reference ruleset has been authored and reviewed by an internal AiExponent panel (six engineering + governance roles) but has **not** been reviewed by a qualified EU AI Act practising lawyer. Every screening report carries this disclosure prominently. Customers who require lawyer-reviewed output can supply their own signed ruleset via the BYO mechanism; see [`docs/ruleset-authoring.md`](docs/ruleset-authoring.md).
 >
@@ -195,7 +195,7 @@ deployment:
       "tool": {
         "driver": {
           "name": "LitmusAI",
-          "version": "1.1.0",
+          "version": "1.1.1",
           "informationUri": "https://aiexponent.com/products/litmusai",
           "rules": [
             {
@@ -297,7 +297,7 @@ LitmusAI implements deterministic UNIX exit codes for scripting and CI gates:
 >
 > The default LitmusAI ruleset (`ruleset-2024-1689-v1.1`) is a good-faith engineering interpretation of Article 5, as amended by Regulation (EU) 2026/1744, authored by AiExponent's internal compliance panel. **It has not been reviewed or signed by a qualified EU AI Act lawyer and is not legal advice.** The panel's review records ship with the package under `litmusai/_data/ruleset/`.
 >
-> The package version (`litmusai 1.1.0`) reflects API and CLI stability. The legal-review status rides on the ruleset itself: `litmus --version` prints `ruleset_legal_status: REVIEWED` when the active ruleset carries a signature block and `UNREVIEWED` when it does not. That check is structural. LitmusAI does not verify the signature cryptographically and cannot vouch for the signer's qualifications, so the line reports what the ruleset's author declared; whether the review behind it was qualified is for you to confirm with the signer. No version number of the reference ruleset implies an external review.
+> The package version (`litmusai 1.1.1`) reflects API and CLI stability. The legal-review status rides on the ruleset itself: `litmus --version` prints `ruleset_legal_status: REVIEWED` when the active ruleset carries a signature block and `UNREVIEWED` when it does not. That check is structural. LitmusAI does not verify the signature cryptographically and cannot vouch for the signer's qualifications, so the line reports what the ruleset's author declared; whether the review behind it was qualified is for you to confirm with the signer. No version number of the reference ruleset implies an external review.
 >
 > If your organisation needs a lawyer-signed ruleset today, see [`docs/ruleset-authoring.md`](docs/ruleset-authoring.md) for the BYO-ruleset path. A complete dummy-signed example ships in `tests/fixtures/rulesets/acme-corp-signed-v1.0.json`.
 >
