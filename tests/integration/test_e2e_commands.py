@@ -233,6 +233,36 @@ class TestE2ECommands:
         assert result.returncode != 0
         assert "TAMPERED" in result.stderr
 
+    def test_verify_with_system_path_accepts_defaults(self, tmp_path: Path) -> None:
+        """1.1.1: `litmus verify report.json system.yaml` hashes the validated
+        declaration, so a file that leaves optional fields at their defaults
+        (no generative_media block, empty inputs) verifies like the one-argument
+        form. 1.1.0 hashed the raw YAML and reported every such file as tampered."""
+        report_file = tmp_path / "report.json"
+        fixture = _fixture("calculator_clear")
+        _run("screen", str(fixture), "--output", str(report_file))
+        result = _run("verify", str(report_file), str(fixture))
+        assert result.returncode == 0, result.stderr
+        assert "VERIFIED" in result.stdout
+
+    def test_verify_with_changed_system_file_is_tampered(self, tmp_path: Path) -> None:
+        report_file = tmp_path / "report.json"
+        fixture = _fixture("calculator_clear")
+        _run("screen", str(fixture), "--output", str(report_file))
+        changed = tmp_path / "system.yaml"
+        changed.write_text(fixture.read_text().replace("SimpleCalc", "OtherCalc"))
+        result = _run("verify", str(report_file), str(changed))
+        assert result.returncode == 3
+        assert "TAMPERED" in result.stderr
+
+    def test_verify_with_invalid_system_file_exits_two(self, tmp_path: Path) -> None:
+        report_file = tmp_path / "report.json"
+        _run("screen", str(_fixture("calculator_clear")), "--output", str(report_file))
+        bad = tmp_path / "bad.yaml"
+        bad.write_text("name: only-a-name\n")
+        result = _run("verify", str(report_file), str(bad))
+        assert result.returncode == 2
+
     # ── 6. litmus export report.json --format markdown ───────────────────
 
     def test_export_markdown_creates_file(self, tmp_path: Path) -> None:

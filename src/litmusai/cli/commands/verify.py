@@ -7,9 +7,11 @@ from pathlib import Path
 
 import typer
 import yaml
+from pydantic import ValidationError
 
 from litmusai.cli.main import app
 from litmusai.engine.hashing import sha256_hash
+from litmusai.models.system import SystemDescription
 
 
 @app.command()
@@ -29,8 +31,17 @@ def verify(
     stored_hash = report_data.get("input_hash_sha256", "")
 
     if system_path:
-        raw = yaml.safe_load(system_path.read_text())
-        computed_hash = sha256_hash(raw)
+        # Hash the validated declaration, exactly as `litmus screen` does, so a
+        # file that leaves optional fields at their defaults verifies. Hashing
+        # the raw YAML made every file without the generative_media block read
+        # as tampered from 1.1.0 (fixed in 1.1.1).
+        try:
+            raw = yaml.safe_load(system_path.read_text())
+            system = SystemDescription.model_validate(raw)
+        except (yaml.YAMLError, OSError, ValidationError) as exc:
+            typer.echo(f"Error reading {system_path}: {exc}", err=True)
+            raise typer.Exit(code=2) from exc
+        computed_hash = sha256_hash(system.model_dump())
     else:
         system_data = report_data.get("system")
         if not system_data:
