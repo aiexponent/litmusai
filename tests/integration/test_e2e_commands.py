@@ -306,18 +306,29 @@ class TestE2ECommands:
         result = _run("verify", str(_REPORT_1_0_1))
         assert result.returncode == 0, result.stderr
 
+    @pytest.mark.parametrize(
+        "snippet",
+        [
+            "generative_media:\n  realistic_media_generation: true\n",
+            "inputs:\n  social_behaviour_data: true\n",
+            "outputs:\n  detrimental_treatment_unrelated_context: true\n",
+        ],
+        ids=["generative_media", "social_behaviour_data", "detrimental_treatment"],
+    )
     def test_verify_1_0_report_against_file_declaring_1_1_fields_is_tampered(
-        self, tmp_path: Path
+        self, tmp_path: Path, snippet: str
     ) -> None:
         """A 1.0 hash cannot vouch for fields that did not exist; a file that now
-        sets them must not verify against the old report."""
+        sets any of them must not verify against the old report."""
+        base = _fixture("calculator_clear").read_text()
+        # The fixture declares `inputs: {}` and `outputs: {}`; replace those so
+        # the snippet is the only mapping for that key.
+        key = snippet.split(":", 1)[0]
+        base = base.replace(f"{key}: {{}}\n", "")
         changed = tmp_path / "system.yaml"
-        changed.write_text(
-            _fixture("calculator_clear").read_text()
-            + "generative_media:\n  realistic_media_generation: true\n"
-        )
+        changed.write_text(base + snippet)
         result = _run("verify", str(_REPORT_1_0_1), str(changed))
-        assert result.returncode == 3
+        assert result.returncode == 3, result.stderr
         assert "TAMPERED" in result.stderr
         assert "written before" in result.stderr
 
