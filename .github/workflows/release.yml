@@ -127,3 +127,50 @@ jobs:
           generate_release_notes: ${{ steps.notes.outputs.notes_path == '' }}
           files: dist/*
           fail_on_unmatched_files: true
+
+  verify-release:
+    name: Independent verification of the released version
+    # Runs verification/run.sh against the version just published to PyPI.
+    # It fails when the verdicts differ from the published
+    # verification/results.csv: the release stays published, and the
+    # verification report must be redone for this version.
+    needs: publish-to-pypi
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Wait until PyPI serves the new version
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          VERSION="${TAG_NAME#v}"
+          for _ in $(seq 1 20); do
+            if curl -fsS "https://pypi.org/pypi/litmus-screener/${VERSION}/json" > /dev/null; then exit 0; fi
+            sleep 15
+          done
+          echo "PyPI does not serve litmus-screener ${VERSION} after 5 minutes" >&2
+          exit 1
+      - name: Run verification/run.sh
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+          OUT: ${{ runner.temp }}/verification
+        run: verification/run.sh --out "$OUT" --version "${TAG_NAME#v}"
+      - name: Keep the reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: verification-reports
+          path: |
+            ${{ runner.temp }}/verification/results.csv
+            ${{ runner.temp }}/verification/scorecard.md
+            ${{ runner.temp }}/verification/scorecard.json
+            ${{ runner.temp }}/verification/citations.csv
+            ${{ runner.temp }}/verification/errors.txt
+            ${{ runner.temp }}/verification/reports/
+          if-no-files-found: ignore
+          retention-days: 90
