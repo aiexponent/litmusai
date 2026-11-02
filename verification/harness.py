@@ -8,8 +8,9 @@ Runs inside the environment that ``run.sh`` builds, where ``litmus`` and
    are identical apart from ``generated_at`` (repeatability);
 2. exports the report to SARIF and validates it against the OASIS SARIF 2.1.0
    schema, fetched once and checked against a pinned SHA-256;
-3. checks that every ``Art. 5(1)(x)`` citation names the point it sits under,
-   and lists every citation in ``citations.csv`` for a reader to check by hand;
+3. checks that every ``Art. 5(1)(x)`` citation names the point it sits under
+   and every recital cited is one about that point (``RECITALS`` below), and
+   lists every citation in ``citations.csv`` for a reader to check by hand;
 4. screens the case's "Description" paragraph with ``litmus screen --describe``
    (the quick-screen track, scored apart).
 
@@ -37,6 +38,23 @@ SARIF_SCHEMA_URL = (
 )
 SARIF_SCHEMA_SHA256 = "c3b4bb2d6093897483348925aaa73af03b3e3f4bd4ca38cef26dcb4212a2682e"
 ARTICLE_POINT = re.compile(r"Art\.\s*5\(1\)\(([a-z]+)\)")
+PLAIN_RECITAL = re.compile(r"^Recital (\d+)$")
+AMENDING_RECITAL = re.compile(r"^Regulation \(EU\) 2026/1744, recitals? (\d+)")
+# Recitals about each Article 5(1) point. Regulation (EU) 2024/1689 read at the
+# Publications Office Cellar on 2026-11-02; Regulation (EU) 2026/1744 recitals
+# 12 to 14 read on 2026-10-31 for points (ba) and (bb). Recital 28 introduces
+# the manipulative and exploitative practices of points (a) and (b).
+RECITALS: dict[str, set[int]] = {
+    "5.1.a": {28, 29},
+    "5.1.b": {28, 29},
+    "5.1.c": {31},
+    "5.1.d": {42},
+    "5.1.e": {43},
+    "5.1.f": {44},
+    "5.1.g": {30},
+    "5.1.h": set(range(32, 42)),
+}
+RECITALS_2026_1744: dict[str, set[int]] = {"5.1.ba": {12, 13, 14}, "5.1.bb": {12, 13, 14}}
 
 
 def read_description(case_file: Path) -> str:
@@ -64,7 +82,7 @@ def normalise(report: dict) -> dict:
 
 
 def citation_problems(report: dict) -> tuple[list[str], list[tuple[str, str]]]:
-    """Citations naming a different Article 5(1) point, and the full inventory."""
+    """Citations about a different Article 5(1) point, and the full inventory."""
     problems: list[str] = []
     inventory: list[tuple[str, str]] = []
     for point, result in report["categories"].items():
@@ -75,6 +93,12 @@ def citation_problems(report: dict) -> tuple[list[str], list[tuple[str, str]]]:
             match = ARTICLE_POINT.search(article)
             if match and match.group(1) != letter:
                 problems.append(f"{point} cites {article}")
+            plain = PLAIN_RECITAL.match(article)
+            if plain and int(plain.group(1)) not in RECITALS.get(point, set()):
+                problems.append(f"{point} cites {article}, which is about another point")
+            amending = AMENDING_RECITAL.match(article)
+            if amending and int(amending.group(1)) not in RECITALS_2026_1744.get(point, set()):
+                problems.append(f"{point} cites {article}, which is about another point")
     return problems, inventory
 
 

@@ -46,9 +46,9 @@ jsonschema-specifications==2025.9.1 \
     --hash=sha256:98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe \
     --hash=sha256:b540987f239e745613c7a9176f3edb72b832a4ac465cf02712288397832b5e8d
     # via jsonschema
-litmus-screener==1.1.2 \
-    --hash=sha256:1f101554ffb85a6307341fcd78ddbec3af7c00d787259b606c84bcf46c9677e0 \
-    --hash=sha256:e1ee669d872f49a8770ba24a0884ff0014d000f5e4fda5c5907167a0eb425a3a
+litmus-screener==1.1.3 \
+    --hash=sha256:e8c1fc839d736d3d2a396a21145e2e2b16a9b28572ff9e2f254509314fe42b01 \
+    --hash=sha256:fbcf2776b2d0110f9ace69b85feb61eed2ae0a9ad1dc042f01088802ca9f17ab
     # via -r requirements.in
 markdown-it-py==4.2.0 \
     --hash=sha256:04a21681d6fbb623de53f6f364d352309d4094dd4194040a10fd51833e418d49 \

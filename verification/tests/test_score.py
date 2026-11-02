@@ -163,11 +163,27 @@ class HarnessHelperTests(unittest.TestCase):
                     ]
                 },
                 "5.1.c": {"regulation_citations": [{"article": "Art. 5(1)(d)"}]},
+                "5.1.g": {
+                    "regulation_citations": [{"article": "Art. 5(1)(g)"}, {"article": "Recital 44"}]
+                },
+                "5.1.bb": {
+                    "regulation_citations": [
+                        {"article": "Regulation (EU) 2026/1744, recital 13"},
+                        {"article": "Regulation (EU) 2026/1744, recital 40"},
+                    ]
+                },
             }
         }
         problems, inventory = harness.citation_problems(report)
-        self.assertEqual(problems, ["5.1.c cites Art. 5(1)(d)"])
-        self.assertEqual(len(inventory), 5)
+        self.assertEqual(
+            problems,
+            [
+                "5.1.c cites Art. 5(1)(d)",
+                "5.1.g cites Recital 44, which is about another point",
+                "5.1.bb cites Regulation (EU) 2026/1744, recital 40, which is about another point",
+            ],
+        )
+        self.assertEqual(len(inventory), 9)
 
     def test_normalise_ignores_only_generated_at(self):
         a = {"generated_at": "1", "x": 1}
