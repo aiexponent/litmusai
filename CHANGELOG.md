@@ -5,11 +5,13 @@ All notable changes to LitmusAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.1.2] - 2026-11-02
+
+> Documentation and GitHub Action corrections only. Package code, rules, verdicts and report schema are those of 1.1.1.
 
 ### Fixed
 
-- **Documentation claims that outran the code.** The README no longer offers PDF export: `litmus export --format pdf` has always exited 2 with "PDF export is not supported", and no WeasyPrint extra exists. The 1.0.0 notes below describe a PDF exporter, an override mechanism and an `override-file` Action input; none of the three shipped, and each line now says so. The README's Action example pins `@v1.1.1`, a tag that exists; a `v1` tag was never created.
+- **Documentation claims that outran the code.** The README no longer offers PDF export: `litmus export --format pdf` has always exited 2 with "PDF export is not supported", and no WeasyPrint extra exists. The 1.0.0 notes below describe a PDF exporter, an override mechanism and an `override-file` Action input; none of the three shipped, and each line now says so. The README's Action example pins `@v1.1.2`, this release's tag; a `v1` tag was never created.
 - **GitHub Action `output-format: sarif` wrote JSON.** `litmus screen --output` always writes JSON, so the Action's SARIF option produced a JSON file with a `.sarif` name. The Action now runs `litmus export --format sarif` after the screen when SARIF is requested. CI runs the Action on the shipped examples on every push: the clear, amber and red examples, both report formats, and `fail-on` set to red, amber and none, so the published package and the Action are exercised on a real runner.
 
 ## [1.1.1] - 2026-11-01
