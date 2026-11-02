@@ -123,7 +123,7 @@ graph TB
 
 ## What LitmusAI Does
 
-- **Article 5 Full Coverage**: Screens against all ten prohibited practices under Article 5(1), points (a) to (h) plus (ba) and (bb) from Regulation (EU) 2026/1744. A report run before 2 December 2026 says that the two new points apply from that date.
+- **All ten Article 5 points**: The reference ruleset has rules for every prohibited practice under Article 5(1), points (a) to (h) plus (ba) and (bb) from Regulation (EU) 2026/1744. A report run before 2 December 2026 says that the two new points apply from that date. How well each point is detected is measured, and limited; see [Known limits](#known-limits).
 - **Deterministic by Design**: Same input + same ruleset = identical output, guaranteed across platforms.
 - **Zero Network Calls (NFR-8)**: 100% offline execution. No telemetry, no telemetry pings, no crash reports. Your architecture and prompts never leave your local machine (enforced in CI via `pytest-socket`).
 - **Cryptographic Tamper-Evidence**: Generates a canonical RFC 8785 SHA-256 digest on every report. Verify report integrity anytime via `litmus verify <report>`.
@@ -136,16 +136,38 @@ graph TB
 
 | Category | Prohibition | Statutory Citation | Verdict Logic |
 | :--- | :--- | :--- | :--- |
-| **5.1.a** | Harmful manipulation & cognitive distortion | Art. 5(1)(a) | **RED** if subliminal techniques + behavioral distortion + physical/psychological harm. |
-| **5.1.b** | Exploitation of vulnerable groups (age/disability) | Art. 5(1)(b) | **RED** if targeting minors/vulnerable cohorts + behavioral distortion + harm. |
+| **5.1.a** | Harmful manipulation & cognitive distortion | Art. 5(1)(a) | **RED** if the system infers emotional state (`inputs.emotional_state_inference`) and predicts behaviour (`outputs.behaviour_predictions`); **AMBER** if it predicts behaviour. No field captures manipulative, deceptive or subliminal techniques or significant harm (see [Known limits](#known-limits)). |
+| **5.1.b** | Exploitation of vulnerable groups (age/disability) | Art. 5(1)(b) | **RED** if the subject population includes `minors` and the system predicts behaviour; **AMBER** for `minors` with free-text generation, or for `persons_in_vulnerable_economic_situations`. Disability and older age do not trigger a rule (see [Known limits](#known-limits)). |
 | **5.1.ba** | Non-consensual intimate material of identifiable persons (applies from 2 December 2026) | Art. 5(1)(ba), 5(1a), 5(1b), as inserted by Regulation (EU) 2026/1744 | **RED** if generating such material is the intended purpose without demonstrable consent, or is a foreseeable and reproducible outcome with no adequate, documented safeguards; **AMBER** if realistic media of identifiable people is generated and safeguards or consent are undocumented. Edits that do not increase exposure (Art. 5(1b)) never reach RED. |
 | **5.1.bb** | Child sexual abuse material (applies from 2 December 2026) | Art. 5(1)(bb), 5(1a), as inserted by Regulation (EU) 2026/1744; Directive 2011/93/EU Art. 2(c) and (e) | **RED** if such material is a foreseeable and reproducible outcome and nothing reliably prevents it; **AMBER** for any realistic-media generator without documented prevention, and for law-enforcement use where a "without right" defence may apply. No consent carve-out. |
 | **5.1.c** | Social scoring by public or private actors | Art. 5(1)(c) | **RED** if scoring from social behaviour data, from scraped internet data, or if the score leads to detrimental treatment in an unrelated context; **AMBER** for any other individual scoring, including credit scoring from repayment history (high-risk under Annex III, not prohibited). |
-| **5.1.d** | Predictive criminal risk profiling | Art. 5(1)(d) | **RED** if profiling-based risk assessment solely on personal traits (without human corroboration). |
-| **5.1.e** | Untargeted facial image scraping | Art. 5(1)(e) | **RED** if scraping facial images from the internet or CCTV to build facial recognition databases. |
-| **5.1.f** | Emotion inference in workplace or education | Art. 5(1)(f) | **RED** in employment or educational institutions; **AMBER** if medical/safety exemptions apply. |
-| **5.1.g** | Biometric categorisation of sensitive traits | Art. 5(1)(g) | **RED** if categorising natural persons based on race, political opinions, religion, or sexual orientation. |
-| **5.1.h** | Real-time remote biometric identification | Art. 5(1)(h) | **RED** if real-time biometric ID in publicly accessible spaces (subject to narrow judicial exceptions). |
+| **5.1.d** | Predictive criminal risk profiling | Art. 5(1)(d) | **RED** whenever the system outputs criminal risk predictions (`outputs.criminal_risk_predictions`). The exclusion for systems that support a human assessment based on objective, verifiable facts is not modelled. |
+| **5.1.e** | Untargeted facial image scraping | Art. 5(1)(e) | **RED** if the system takes facial images and scraped internet data; **AMBER** for facial images in a public space. Targeted and untargeted collection are not told apart. |
+| **5.1.f** | Emotion inference in workplace or education | Art. 5(1)(f) | **RED** if the system infers emotions in a workplace or education setting; **AMBER** for emotion inference elsewhere, including healthcare. The medical and safety exceptions are not modelled: a workplace system with a safety purpose still reads RED. |
+| **5.1.g** | Biometric categorisation of sensitive traits | Art. 5(1)(g) | **RED** if biometric data or facial images are used to classify sensitive attributes (`outputs.sensitive_attribute_classifications`); **AMBER** for sensitive-attribute classification from other data. |
+| **5.1.h** | Real-time remote biometric identification | Art. 5(1)(h) | **RED** for real-time biometric or facial identification in a public space; **AMBER** for biometric data in a public space with law-enforcement use. The law-enforcement purpose, the authorised exceptions and the difference between placing on the market and use are not modelled. |
+
+---
+
+## Known limits
+
+LitmusAI screens what a `system.yaml` declares, and a rule can only use a field that exists. An independent test, run on 2 November 2026 by a tester who never saw the rules, screened 175 worked examples from the European Commission's Guidelines on prohibited AI practices (C(2025) 5052) and the recitals of Regulation (EU) 2026/1744 with litmus-screener 1.1.2. The cases, the expected answers written before the run, the scripts and the full scorecard are in [`verification/`](verification/), and anyone can re-run them with `verification/run.sh`.
+
+| Result on 1.1.2 (full screen) | Count |
+| :--- | :--- |
+| Expected prohibitions found (red) | 44 of 51 |
+| Expected prohibitions flagged for review (amber) | 1 of 51 |
+| Expected prohibitions missed (clear) | 6 of 51, all on points (a) and (b) |
+| Permitted cases screened red (false alarms) | 32 of 113 |
+
+What that means in practice:
+
+- **Points (a) and (b) are not detected from their legal elements.** There is no field for manipulative, deceptive or subliminal techniques, for significant harm, or for exploiting a disability or older age. Screen these points yourself.
+- **Exceptions and exclusions are not modelled** for points (d), (e), (f) and (h): human assessment on objective facts, targeted collection, medical or safety purposes, authorised law-enforcement use. Most false alarms come from these gaps, so a RED on those points needs a reviewer.
+- **`deployment_context.workplace` and `education`** describe where the system is used. A system used on customers or patients in a workplace still reads RED on point (f).
+- The quick screen (`--describe`) infers fields from keywords and misses more: 27 of 51 expected prohibitions came back clear.
+
+A release that adds the missing fields will be re-tested the same way, and the result published next to this one.
 
 ---
 
@@ -154,32 +176,85 @@ graph TB
 <details>
   <summary><b>📄 View Starter <code>system.yaml</code> Template</b></summary>
 
+This is what `litmus init` writes (litmus-screener 1.1.2). `subject_population.categories` accepts `general_public`, `minors`, `workers`, `students`, `persons_with_disabilities`, `persons_in_vulnerable_economic_situations` and `other`.
+
 ```yaml
-schema_version: "1.0"
-system_id: "customer-support-bot-v1"
-name: "Customer Support Assistant"
+# LitmusAI System Description
+# Edit the fields below to describe your AI system.
+# Then run: litmus screen system.yaml
+
+name: "My AI System"
 version: "1.0.0"
-description: "AI-driven customer assistant answering technical questions and routing tickets."
+provider: "My Organisation"
+deployer: "My Organisation"
+purpose: "Describe what the system does in one sentence."
+system_description: |
+  A more detailed description of the system: what inputs it takes,
+  what outputs it produces, and how those outputs are used.
 
-lifecycle:
-  status: "pre-deployment"
-  target_deployment: "2026-10-01"
+deployment_jurisdictions:
+  - EU
 
-capabilities:
-  emotion_recognition: false
-  biometric_identification: false
-  subliminal_techniques: false
-  social_scoring: false
+output_consumed_in_eu: true
 
-target_users:
-  general_public: true
-  minors: false
-  vulnerable_groups: false
+subject_population:
+  categories:
+    - general_public
+  notes: null
 
-deployment:
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false        # conduct outside the service: social media, associations
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: null
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false   # score used against the person elsewhere
+  other: null
+
+deployment_context:
   workplace: false
   education: false
-  public_spaces: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: null
+
+# Article 5(1)(ba) and (bb), inserted by Regulation (EU) 2026/1744 and
+# applicable from 2 December 2026. Leave everything false for a system
+# that does not generate or manipulate realistic images, video or audio.
+generative_media:
+  realistic_media_generation: false   # realistic images, video, audio or similar material
+  identifiable_persons: false         # outputs can depict identifiable real people
+  intimate_depictions_possible: false # intimate parts or sexual activity, without major modification
+  intimate_depictions_intended: false # that output is the system's purpose
+  minors_depictions_possible: false   # outputs can depict children in such material
+  manipulation_within_1b_only: false  # edits that neither increase exposure nor change the activity
+  safeguards:                         # each one: in place, in force and verifiable
+    consent_demonstrable: false       # explicit consent of each depicted person, collected and provable
+    intimate_output_prevention: false # filters, refusal training, guardrails against intimate outputs
+    csam_prevention: false            # measures against child sexual abuse material
+    misuse_correction: false          # abuse detection, notice and action, follow-up on circumvention
+    documented: false                 # the measures above are written down and testable
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null
 ```
 </details>
 
