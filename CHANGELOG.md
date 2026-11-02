@@ -5,6 +5,15 @@ All notable changes to LitmusAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2026-11-02
+
+> Documentation and GitHub Action corrections only. Package code, rules, verdicts and report schema are those of 1.1.1.
+
+### Fixed
+
+- **Documentation claims that outran the code.** The README no longer offers PDF export: `litmus export --format pdf` has always exited 2 with "PDF export is not supported", and no WeasyPrint extra exists. The 1.0.0 notes below describe a PDF exporter, an override mechanism and an `override-file` Action input; none of the three shipped, and each line now says so. The README's Action example pins `@v1.1.2`, this release's tag; a `v1` tag was never created.
+- **GitHub Action `output-format: sarif` wrote JSON.** `litmus screen --output` always writes JSON, so the Action's SARIF option produced a JSON file with a `.sarif` name. The Action now runs `litmus export --format sarif` after the screen when SARIF is requested. CI runs the Action on the shipped examples on every push: the clear, amber and red examples, both report formats, and `fail-on` set to red, amber and none, so the published package and the Action are exercised on a real runner.
+
 ## [1.1.1] - 2026-11-01
 
 ### Fixed
@@ -59,7 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 > **LitmusAI 1.0.0 ships with the AiExponent reference ruleset (UNREVIEWED — internal panel authored, no external lawyer review). Apache 2.0, AS IS.**
 >
-> Package SemVer reflects API stability. The CLI surface, JSON / SARIF schema, and BYO-ruleset contract are stable for production integration. The `ruleset_legal_status: UNREVIEWED` line printed by `litmus version` separates the legal-review status from the package version — a future `ruleset-2024-1689-v1.1` release will land `legal_status: REVIEWED` once external lawyer review completes.
+> Package SemVer reflects API stability. The CLI surface, JSON / SARIF schema, and BYO-ruleset contract are stable for production integration. The `ruleset_legal_status: UNREVIEWED` line printed by `litmus version` separates the legal-review status from the package version — a future `ruleset-2024-1689-v1.1` release will land `legal_status: REVIEWED` once external lawyer review completes. [Update 2026-11-02: v1.1 shipped on 2026-11-01 with the UNREVIEWED label; external review has no date.]
 
 ### Added — engine
 
@@ -67,13 +76,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Conservative-by-default verdict logic.** Where the regulatory text is ambiguous, the ruleset prefers `amber` over `clear` so a qualified reviewer takes the final call.
 - **Per-rule confidence band** (`high` / `medium` / `low`) on every verdict so reviewers can prioritise the soft calls.
 - **SHA-256 input hash** on every report (`canonical_json` via RFC 8785 ordering, with `date` / `datetime` coercion to ISO strings).
-- **Override mechanism** with full audit trail (`OverrideEntry`) — FR-10.
+- **Override mechanism** with full audit trail (`OverrideEntry`) — FR-10. [Never shipped: the model exists, nothing applies it, and `overrides_applied` is always empty. Noted 2026-11-02.]
 
 ### Added — CLI commands
 
 - `litmus screen [path|--describe]` — primary screening surface, rich console + multiple formats
 - `litmus init` — scaffold a starter `system.yaml` (FR-7)
-- `litmus export <report> --format {json|markdown|sarif|pdf}` — converters; PDF via optional WeasyPrint extra
+- `litmus export <report> --format {json|markdown|sarif|pdf}` — converters; PDF via optional WeasyPrint extra [PDF never shipped: the format exits 2 and no extra exists. Noted 2026-11-02.]
 - `litmus debug <report>` — full rule-firing trace per category (FR-33)
 - `litmus verify <report>` — re-hash the input and confirm the report has not been tampered with
 - `litmus portfolio <dir>` — bulk-screen every `system.yaml` in a directory
@@ -87,7 +96,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **SARIF 2.1.0** output mapping each Article 5 sub-point to a SARIF rule ID — compatible with GitHub Advanced Security, GitLab SAST, Azure DevOps Advanced Security (FR-29)
 - **Markdown** export for human-readable governance reports
-- **PDF** export via WeasyPrint (optional extra: `pip install litmus-screener[pdf]`)
+- **PDF** export via WeasyPrint (optional extra: `pip install litmus-screener[pdf]`) [Never shipped. Noted 2026-11-02.]
 
 ### Added — BYO-ruleset
 
@@ -105,7 +114,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added — developer experience
 
-- **GitHub Action wrapper** at `aiexponent/litmusai/.github/actions/litmusai-screen@v1` — drop-in CI integration with `path`, `fail-on`, `output-format`, and `override-file` inputs (FR-27)
+- **GitHub Action wrapper** at `aiexponent/litmusai/.github/actions/litmusai-screen@v1` — drop-in CI integration with `path`, `fail-on`, `output-format`, and `override-file` inputs (FR-27) [The inputs are `path`, `fail-on`, `output-format`, `ruleset` and `python-version`; `override-file` never existed. Noted 2026-11-02.]
 - **Conventional exit codes** (FR-28): 0 = clear / below-threshold, 1 = threshold exceeded, 2 = invalid input / schema error, 3 = tamper detected
 - Three worked-example `system.yaml` files in `examples/` covering CLEAR (`example-clear.yaml`), AMBER (`example-amber.yaml`), and RED (`example-red.yaml`) verdicts. CI pin via `tests/integration/test_examples.py` ensures any future ruleset change that flips an example's verdict surfaces before release.
 

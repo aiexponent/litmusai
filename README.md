@@ -19,7 +19,7 @@
 
 ---
 
-> **LitmusAI 1.1.1 ships with the AiExponent reference ruleset `ruleset-2024-1689-v1.1` (UNREVIEWED: internal panel authored, no external lawyer review). Apache 2.0, AS IS.**
+> **LitmusAI 1.1.2 ships with the AiExponent reference ruleset `ruleset-2024-1689-v1.1` (UNREVIEWED: internal panel authored, no external lawyer review). Apache 2.0, AS IS.**
 >
 > The package's CLI surface, JSON/SARIF schema, and BYO-ruleset contract are stable for production integration. The reference ruleset has been authored and reviewed by an internal AiExponent panel (six engineering + governance roles) but has **not** been reviewed by a qualified EU AI Act practising lawyer. Every screening report carries this disclosure prominently. Customers who require lawyer-reviewed output can supply their own signed ruleset via the BYO mechanism; see [`docs/ruleset-authoring.md`](docs/ruleset-authoring.md).
 >
@@ -104,7 +104,7 @@ graph TB
     subgraph Outputs ["4. Audit-Ready Artifacts"]
         OUT1["Rich Terminal UI<br/><em>(Color-coded Red / Amber / Clear table)</em>"]
         OUT2["SARIF 2.1.0 Report<br/><em>(GitHub Security tab & GitLab SAST)</em>"]
-        OUT3["JSON / Markdown / PDF<br/><em>(Reports for legal and security review)</em>"]
+        OUT3["JSON / Markdown<br/><em>(Reports for legal and security review)</em>"]
     end
 
     INP1 & INP2 & INP3 --> AST
@@ -128,7 +128,7 @@ graph TB
 - **Zero Network Calls (NFR-8)**: 100% offline execution. No telemetry, no telemetry pings, no crash reports. Your architecture and prompts never leave your local machine (enforced in CI via `pytest-socket`).
 - **Cryptographic Tamper-Evidence**: Generates a canonical RFC 8785 SHA-256 digest on every report. Verify report integrity anytime via `litmus verify <report>`.
 - **Bring-Your-Own-Ruleset (BYO)**: Legal counsel can author, sign, and distribute custom rulesets. Once activated (`litmus use-ruleset`), reports show `(SIGNED by: Counsel)` rather than `UNREVIEWED` in the provenance line.
-- **Multi-Format Export**: Native support for rich console output, machine-readable JSON, Markdown documentation, and SARIF 2.1.0 (with optional PDF via WeasyPrint).
+- **Multi-Format Export**: Native support for rich console output, machine-readable JSON, Markdown documentation, and SARIF 2.1.0.
 
 ---
 
@@ -195,7 +195,7 @@ deployment:
       "tool": {
         "driver": {
           "name": "LitmusAI",
-          "version": "1.1.1",
+          "version": "1.1.2",
           "informationUri": "https://aiexponent.com/products/litmusai",
           "rules": [
             {
@@ -240,7 +240,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: aiexponent/litmusai/.github/actions/litmusai-screen@v1
+      - uses: aiexponent/litmusai/.github/actions/litmusai-screen@v1.1.2   # pin a release tag
         with:
           path: system.yaml
           fail-on: amber       # fail CI if overall verdict is RED or AMBER
@@ -266,7 +266,7 @@ LitmusAI implements deterministic UNIX exit codes for scripting and CI gates:
 | :--- | :--- |
 | `litmus screen [path\|--describe]` | Primary screening command (supports file or inline prompt). |
 | `litmus init` | Scaffold a starter `system.yaml` template in the current directory. |
-| `litmus export <report> -o <file> --format <fmt>` | Convert reports to `json`, `markdown`, `sarif`, or `pdf`. |
+| `litmus export <report> -o <file> --format <fmt>` | Convert reports to `json`, `markdown` or `sarif`. |
 | `litmus verify <report>` | Validate cryptographic SHA-256 integrity against the original inputs. |
 | `litmus portfolio <directory>` | Batch-screen an entire portfolio of `system.yaml` definitions. |
 | `litmus debug <report>` | Print step-by-step rule firing trace and variable evaluation states. |
@@ -297,7 +297,7 @@ LitmusAI implements deterministic UNIX exit codes for scripting and CI gates:
 >
 > The default LitmusAI ruleset (`ruleset-2024-1689-v1.1`) is a good-faith engineering interpretation of Article 5, as amended by Regulation (EU) 2026/1744, authored by AiExponent's internal compliance panel. **It has not been reviewed or signed by a qualified EU AI Act lawyer and is not legal advice.** The panel's review records ship with the package under `litmusai/_data/ruleset/`.
 >
-> The package version (`litmusai 1.1.1`) reflects API and CLI stability. The legal-review status rides on the ruleset itself: `litmus --version` prints `ruleset_legal_status: REVIEWED` when the active ruleset carries a signature block and `UNREVIEWED` when it does not. That check is structural. LitmusAI does not verify the signature cryptographically and cannot vouch for the signer's qualifications, so the line reports what the ruleset's author declared; whether the review behind it was qualified is for you to confirm with the signer. No version number of the reference ruleset implies an external review.
+> The package version (`litmusai 1.1.2`) reflects API and CLI stability. The legal-review status rides on the ruleset itself: `litmus --version` prints `ruleset_legal_status: REVIEWED` when the active ruleset carries a signature block and `UNREVIEWED` when it does not. That check is structural. LitmusAI does not verify the signature cryptographically and cannot vouch for the signer's qualifications, so the line reports what the ruleset's author declared; whether the review behind it was qualified is for you to confirm with the signer. No version number of the reference ruleset implies an external review.
 >
 > If your organisation needs a lawyer-signed ruleset today, see [`docs/ruleset-authoring.md`](docs/ruleset-authoring.md) for the BYO-ruleset path. A complete dummy-signed example ships in `tests/fixtures/rulesets/acme-corp-signed-v1.0.json`.
 >

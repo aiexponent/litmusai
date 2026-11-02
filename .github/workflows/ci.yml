@@ -67,3 +67,56 @@ jobs:
           python-version: "3.11"
       - run: pip install -e ".[dev]"
       - run: licensecheck
+
+  action-self-test:
+    name: GitHub Action on the shipped examples
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Clear example, fail-on red (expect exit 0, verdict clear)
+        id: clear
+        uses: ./.github/actions/litmusai-screen
+        with:
+          path: examples/example-clear.yaml
+      - name: Red example, fail-on none, SARIF (expect exit 0, verdict red)
+        id: red-none
+        uses: ./.github/actions/litmusai-screen
+        with:
+          path: examples/example-red.yaml
+          fail-on: none
+          output-format: sarif
+      - name: Red example, fail-on red (expect exit 1)
+        id: red-gate
+        continue-on-error: true
+        uses: ./.github/actions/litmusai-screen
+        with:
+          path: examples/example-red.yaml
+      - name: Amber example, fail-on red (expect exit 0, verdict amber)
+        id: amber-pass
+        uses: ./.github/actions/litmusai-screen
+        with:
+          path: examples/example-amber.yaml
+      - name: Amber example, fail-on amber (expect exit 1)
+        id: amber-gate
+        continue-on-error: true
+        uses: ./.github/actions/litmusai-screen
+        with:
+          path: examples/example-amber.yaml
+          fail-on: amber
+      - name: Check verdicts, exit codes and the SARIF file
+        env:
+          CLEAR_VERDICT: ${{ steps.clear.outputs.verdict }}
+          RED_VERDICT: ${{ steps.red-none.outputs.verdict }}
+          RED_REPORT: ${{ steps.red-none.outputs.report-path }}
+          RED_GATE: ${{ steps.red-gate.outcome }}
+          AMBER_VERDICT: ${{ steps.amber-pass.outputs.verdict }}
+          AMBER_GATE: ${{ steps.amber-gate.outcome }}
+        run: |
+          test "$CLEAR_VERDICT" = "clear"
+          test "$RED_VERDICT" = "red"
+          test "$RED_GATE" = "failure"
+          test "$AMBER_VERDICT" = "amber"
+          test "$AMBER_GATE" = "failure"
+          test "$RED_REPORT" = "litmusai-report.sarif"
+          python3 -c "import json; d = json.load(open('$RED_REPORT')); assert d['version'] == '2.1.0' and d['runs'], 'not a SARIF 2.1.0 file'"
+          echo "Action self-test passed: clear=$CLEAR_VERDICT red=$RED_VERDICT red-gate=$RED_GATE amber=$AMBER_VERDICT amber-gate=$AMBER_GATE report=$RED_REPORT"

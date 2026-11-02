@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "litmus-screener"
-version = "1.1.1"
+version = "1.1.2"
 description = "LitmusAI: free, deterministic CLI screener for Article 5 of the EU AI Act (Regulation (EU) 2024/1689, as amended by Regulation (EU) 2026/1744)."
 readme = "README.md"
 requires-python = ">=3.11"
