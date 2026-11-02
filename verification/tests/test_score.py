@@ -98,7 +98,9 @@ class ScoreTests(unittest.TestCase):
 
 class ExpectedFileTests(unittest.TestCase):
     def write(self, rows, header=score.EXPECTED_COLUMNS):
-        tmp = Path(tempfile.mkdtemp()) / "expected.csv"
+        tmpdir = tempfile.TemporaryDirectory()
+        self.addCleanup(tmpdir.cleanup)
+        tmp = Path(tmpdir.name) / "expected.csv"
         with tmp.open("w", newline="", encoding="utf-8") as fh:
             w = csv.writer(fh)
             w.writerow(header)
@@ -136,7 +138,9 @@ class ExpectedFileTests(unittest.TestCase):
 
 class HarnessHelperTests(unittest.TestCase):
     def test_description(self):
-        tmp = Path(tempfile.mkdtemp()) / "c1.md"
+        tmpdir = tempfile.TemporaryDirectory()
+        self.addCleanup(tmpdir.cleanup)
+        tmp = Path(tmpdir.name) / "c1.md"
         tmp.write_text(
             "# c1\n\n## Description\n\nA system that\nscores people.\n\n## Source\n\np. 1\n",
             encoding="utf-8",

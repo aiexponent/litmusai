@@ -82,16 +82,21 @@ def load_sarif_validator(cache: Path):
     """A jsonschema validator for SARIF 2.1.0, from a hash-checked download."""
     import jsonschema  # installed from requirements.lock
 
-    if not cache.exists():
+    data = cache.read_bytes() if cache.exists() else b""
+    if hashlib.sha256(data).hexdigest() != SARIF_SCHEMA_SHA256:
+        # No cache, or a cache that fails the check: download afresh.
         with urllib.request.urlopen(SARIF_SCHEMA_URL, timeout=60) as resp:
-            cache.write_bytes(resp.read())
-    digest = hashlib.sha256(cache.read_bytes()).hexdigest()
+            data = resp.read()
+    digest = hashlib.sha256(data).hexdigest()
     if digest != SARIF_SCHEMA_SHA256:
         raise score.InputError(
             f"SARIF schema hash {digest} does not match the pinned {SARIF_SCHEMA_SHA256}"
         )
-    schema = json.loads(cache.read_text(encoding="utf-8"))
-    return jsonschema.Draft4Validator(schema)
+    # Cache only bytes that passed the hash check, so a bad download is not reused.
+    cache.write_bytes(data)
+    # Structure only: string formats (uri, date-time) need optional packages
+    # that are not in requirements.lock, so they are not checked.
+    return jsonschema.Draft4Validator(json.loads(data.decode("utf-8")))
 
 
 def litmus(exe: str, *args: str) -> subprocess.CompletedProcess[str]:

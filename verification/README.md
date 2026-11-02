@@ -31,7 +31,7 @@ LitmusAI answers red, amber (needs review) or clear for each Article 5 point. Ea
 
 The full table of expected against actual labels is printed under these lines. The same descriptions are also run through the quick screen (`litmus screen --describe`) and scored separately, because the quick screen infers from keywords and says so.
 
-Every report is also exported to SARIF and validated against the OASIS SARIF 2.1.0 schema; every case is screened twice and the two reports must match apart from `generated_at`; and every `Art. 5(1)(x)` citation must name the point it sits under.
+Every report is also exported to SARIF and validated against the structure of the OASIS SARIF 2.1.0 schema (string formats such as URIs and dates are not checked); every case is screened twice and the two reports must match apart from `generated_at`; and every `Art. 5(1)(x)` citation must name the point it sits under.
 
 ## Run it yourself
 
