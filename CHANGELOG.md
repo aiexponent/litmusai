@@ -5,6 +5,19 @@ All notable changes to LitmusAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2026-11-02
+
+> Citation corrections only. Rule expressions, verdicts and report schema are those of 1.1.2.
+
+### Fixed
+
+- **Recital citations that named the wrong Article 5 point.** Eleven rules in `ruleset-2024-1689-v1.1` (and the same rules in v1.0) cited a recital of Regulation (EU) 2024/1689 about another point: Recital 30 or 31 for point (a), Recital 32 for point (b), Recital 33 for point (c), Recital 42 for point (e) and Recital 44 for point (g). New ruleset `ruleset-2024-1689-v1.1.1` cites Recital 29 for (a) and (b), 31 for (c), 43 for (e) and 30 for (g), and is the default. Found by the independent verification run (`verification/`, PRD-274); each recital was read against the Regulation at the Publications Office Cellar on 2026-11-02. The internal review record for v1.1.1 lists every change. `tests/unit/test_ruleset_citations.py` maps each point to its recitals and fails on a citation outside the map; on the v1.1 file it fails on exactly these eleven rules.
+- **The internal review records were missing from the package.** A `.gitignore` pattern for internal notes matched `internal-review-record-2024-1689-v1.1.md`, and the wheel build applies `.gitignore`, so no published package so far contained a review record, although the README says the records ship under `litmusai/_data/ruleset/`. The pattern now exempts the review records, 1.1.3 ships the v1.0, v1.1 and v1.1.1 records, and a test fails if a bundled ruleset has no record next to it.
+
+### Changed
+
+- Reports name `ruleset-2024-1689-v1.1.1`. The v1.1 and v1.0 files stay in the package, and `litmus diff-ruleset` between v1.1 and v1.1.1 shows citation, rule version and review-stamp changes only.
+
 ## [1.1.2] - 2026-11-02
 
 > Documentation and GitHub Action corrections only. Package code, rules, verdicts and report schema are those of 1.1.1.
