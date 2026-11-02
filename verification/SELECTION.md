@@ -305,3 +305,15 @@ Every passage looked at while applying the rule, in the order of the source. "Po
 | bb | recital 13 | Red-teaming and evaluation for compliance | bb-09 |  |
 | ba/bb | recital 14 | Limits restated: realistic depictions, identifiable persons, more nudity, consent excluded, reasonable and adequate measures | no | restates recital 12; duplicates of ba-08 to ba-16 and ba-01/bb-01 |
 | ba/bb | recital 14 | Alignment with Charter and other directives | no | no system described |
+
+## Post-run notes
+
+Written after the first run on litmus-screener 1.1.2 (2026-11-02). No expected label, case file or declaration was changed after seeing a verdict. These notes record declaration choices that a reader should weigh when reading the scorecard. None is a correction.
+
+1. **Point (a) has no field for its core facts.** The template has no field for subliminal, manipulative or deceptive techniques, or for significant harm. For a-01, a-06 and a-08 these facts could only go into the free-text `other` fields and `system_description`. All three came back clear. The misses may reflect the template as much as the ruleset.
+2. **Point (b) has no category for older people.** The allowed population categories (found from the schema error message, not the template) are `general_public`, `minors`, `other`, `persons_in_vulnerable_economic_situations`, `persons_with_disabilities`, `students` and `workers`. b-03 and b-04 (older people) used `other` with a note. Both came back clear.
+3. **`workplace: true` where only customers or patients are analysed.** In f-08, f-13, f-33 and f-35 the system runs in a workplace but the people analysed are customers, patients or a crowd. I set `workplace: true` because the template asks where the system is deployed, and said so in a comment. These came back red. A user who reads the field as "applied to workers" would set it false.
+4. **`scraped_internet_data: true` for targeted collection.** In e-01 and e-04 the collection is targeted. The template has no field for targeted versus untargeted collection, so I set the field true and said so in a comment or in `inputs.other`. Both came back red.
+5. **Provider that does not use the system (h-01).** The template has no field for the actor's role beyond the `provider` and `deployer` strings. I filled `deployment_context` with the intended use by customers. It came back red; point (h) covers use only.
+6. **Exceptions and human assessment.** Many expected-clear cases rest on a fact the template cannot hold as a field: human assessment based on objective facts (d-10 to d-15), a targeted search or national authorisation (h-10, h-14, h-15), medical or safety reasons (f-25, f-28), personal training only (f-07, f-19), a 'without right' defence (bb-08, bb-09), or accidental generation (ba-07, bb-07). These went into `mitigations` or `other` as free text.
+7. **Recital 12.** As stated under "The rule", the (ba) and (bb) cases from recital 12 go beyond the brief's wording (recitals 13 and 14). They are ba-01 to ba-16 and bb-01 to bb-07; only bb-08 and bb-09 come from recital 13.
