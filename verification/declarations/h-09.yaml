@@ -1,0 +1,72 @@
+# Declaration for case h-09, written from cases/h-09.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case h-09"
+version: "1.0.0"
+provider: "A provider"
+deployer: "A police force"
+purpose: "Live identification of a shoplifter against criminal databases."
+system_description: |
+  Police use a real-time remote biometric identification system in a publicly accessible place to identify a shoplifter, comparing the person's face against criminal databases.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - general_public
+  notes: null
+
+inputs:
+  biometric: true
+  facial_images: true
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: null
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: null
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: true
+  real_time_operation: true
+  law_enforcement_use: true
+  healthcare: false
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

@@ -1,0 +1,72 @@
+# Declaration for case a-15, written from cases/a-15.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case a-15"
+version: "1.0.0"
+provider: "A provider"
+deployer: "A provider"
+purpose: "Therapeutic chatbot that uses subliminal techniques to help users quit smoking and live more healthily."
+system_description: |
+  A therapeutic chatbot uses subliminal techniques to steer users toward a healthier lifestyle and help them quit habits such as smoking. Users who follow it may feel some temporary physical discomfort and stress from the effort of quitting. There is no hidden aim beyond promoting healthy habits.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - general_public
+  notes: null
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: true
+  other: null
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: true
+  detrimental_treatment_unrelated_context: false
+  other: "subliminal cues promoting healthy habits; temporary discomfort only"
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: true  # assumed: the source does not say this; described as therapeutic
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

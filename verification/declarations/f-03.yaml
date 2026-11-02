@@ -1,0 +1,72 @@
+# Declaration for case f-03, written from cases/f-03.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case f-03"
+version: "1.0.0"
+provider: "A provider"
+deployer: "A TV broadcaster"
+purpose: "Counts how often news presenters smile at the camera."
+system_description: |
+  A TV broadcaster uses a device that counts how many times its news presenters smile at the camera. It does not infer what the presenters feel.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - workers
+  notes: null
+
+inputs:
+  biometric: false
+  facial_images: true
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: null
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: "count of smiles; no inference of feelings"
+
+deployment_context:
+  workplace: true
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

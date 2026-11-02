@@ -1,0 +1,72 @@
+# Declaration for case b-09, written from cases/b-09.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case b-09"
+version: "1.0.0"
+provider: "A provider"
+deployer: "A provider"
+purpose: "Personal assistant or assistive robot for older people."
+system_description: |
+  A personal assistant or assistive robot helps older people in daily life, supports their health and medical treatment and improves their digital skills.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - other
+  notes: "Older people."
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: null
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: "daily-life help, health and treatment support, digital skills"
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: true
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

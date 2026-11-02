@@ -1,0 +1,72 @@
+# Declaration for case c-12, written from cases/c-12.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case c-12"
+version: "1.0.0"
+provider: "A government"
+deployer: "A government"
+purpose: "Monitors and rates citizens across all areas of life."
+system_description: |
+  A government runs a comprehensive AI system that monitors and rates citizens on their behaviour across life: social interactions, online activity, purchasing habits and paying bills on time. People with low scores face restricted access to public services, higher loan interest, and difficulty travelling, renting a home or finding a job. Minor infractions lead to heavy social and financial penalties.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - general_public
+  notes: null
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: true
+  social_behaviour_data: true
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: "social interactions, online activity, purchases, bill payments"
+
+outputs:
+  individual_scores: true
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: true
+  other: "restricted public services, higher loan interest, barriers to travel, housing and jobs"
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

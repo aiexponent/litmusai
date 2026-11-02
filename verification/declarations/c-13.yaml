@@ -1,0 +1,72 @@
+# Declaration for case c-13, written from cases/c-13.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case c-13"
+version: "1.0.0"
+provider: "A life insurer"
+deployer: "A life insurer"
+purpose: "Recommends refusing contracts or raising life insurance premiums."
+system_description: |
+  A life insurer collects spending and other financial information from a bank, information that is not relevant to deciding who is eligible for life insurance. An AI system analyses it and recommends whether to refuse a contract or charge higher premiums to an individual or a group of customers.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - general_public
+  notes: null
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: "spending and financial data from a bank, unrelated to life insurance eligibility"
+
+outputs:
+  individual_scores: true
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: true
+  other: null
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: true
+  other: null
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

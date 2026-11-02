@@ -1,0 +1,72 @@
+# Declaration for case c-02, written from cases/c-02.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case c-02"
+version: "1.0.0"
+provider: "A migration authority"
+deployer: "A migration authority"
+purpose: "Surveillance at refugee camps that evaluates migrants over time, for example their risk of absconding."
+system_description: |
+  A migration and asylum authority runs a partly automated surveillance system at refugee camps, with cameras and motion sensors. The system analyses data gathered over a period of time to evaluate individual migrants, for example to judge whether they are at risk of absconding. Nothing is said about what happens to people as a result.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - other
+  notes: "Migrants and asylum seekers in camps."
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: true
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: "cameras and motion sensors, data over a period of time"
+
+outputs:
+  individual_scores: true  # the source speaks of evaluating specific individuals
+  behaviour_predictions: true
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: null
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

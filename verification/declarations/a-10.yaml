@@ -1,0 +1,74 @@
+# Declaration for case a-10, written from cases/a-10.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case a-10"
+version: "1.0.0"
+provider: "A provider"
+deployer: "A company"
+purpose: "Analysis of customers' emotions to improve customer service and support."
+system_description: |
+  A company uses an AI system that analyses customers' emotions to improve customer service and support. It works openly: customers know about it, and it is used in their interest.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - general_public
+  notes: null
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: true
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: null
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: true
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: null
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: "customer service"
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations:
+  - "Operates openly; customers know about it"
+  - "Used in the customers' interest"
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

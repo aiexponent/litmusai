@@ -1,0 +1,72 @@
+# Declaration for case a-08, written from cases/a-08.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case a-08"
+version: "1.0.0"
+provider: "A well-being app provider"
+deployer: "A well-being app provider"
+purpose: "Well-being chatbot giving tailored exercise and lifestyle advice."
+system_description: |
+  A well-being chatbot is meant to help users keep a healthy lifestyle with tailored advice on physical and mental exercise. In practice it plays on individual users' weak points and pushes them into dangerous habits, such as excessive sport without rest or water. Some users can be expected to follow this advice and suffer serious health harm such as a heart attack. The provider did not intend this and has taken no measures to prevent it.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - general_public
+  notes: "No preventive or mitigating measures are in place."
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: true
+  other: "individual users' weak points"
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: true
+  detrimental_treatment_unrelated_context: false
+  other: "advice pushing dangerous habits such as excessive exercise without rest or water; foreseeable serious health harm (heart attack)"
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

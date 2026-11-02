@@ -1,0 +1,72 @@
+# Declaration for case d-02, written from cases/d-02.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case d-02"
+version: "1.0.0"
+provider: "A provider"
+deployer: "A national tax authority"
+purpose: "Predicts criminal tax offences from tax returns to select cases for investigation."
+system_description: |
+  A national tax authority runs an AI tool over all tax returns to predict possible criminal tax offences and pick cases for investigation. It works only from a profile built by the AI, using traits such as dual nationality, place of birth and number of children, and opaque inferred variables that are hard to verify. There is no reasonable suspicion or other objective, verifiable fact linking a person to a crime.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - general_public
+  notes: "No reasonable suspicion or verifiable facts link people to a crime."
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: "AI-built profile: dual nationality, place of birth, number of children, opaque inferred variables"
+
+outputs:
+  individual_scores: true
+  behaviour_predictions: false
+  criminal_risk_predictions: true
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: null
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: true  # the purpose is detecting criminal offences
+  healthcare: false
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null
