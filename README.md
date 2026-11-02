@@ -151,9 +151,9 @@ graph TB
 
 ## Known limits
 
-LitmusAI screens what a `system.yaml` declares, and a rule can only use a field that exists. An independent test, run on 2 November 2026 by a tester who never saw the rules, screened 175 worked examples from the European Commission's Guidelines on prohibited AI practices (C(2025) 5052) and the recitals of Regulation (EU) 2026/1744 with litmus-screener 1.1.2. The cases, the expected answers written before the run, the scripts and the full scorecard are in [`verification/`](verification/), and anyone can re-run them with `verification/run.sh`.
+LitmusAI screens what a `system.yaml` declares, and a rule can only use a field that exists. An independent test, run on 2 November 2026 by a tester who never saw the rules, screened 175 worked examples from the European Commission's Guidelines on prohibited AI practices (C(2025) 5052) and the recitals of Regulation (EU) 2026/1744 with litmus-screener 1.1.2, and repeated it with 1.1.3, which gave the same verdict on every case. The cases, the expected answers written before the run, the scripts and the full scorecard are in [`verification/`](verification/), and anyone can re-run them with `verification/run.sh`.
 
-| Result on 1.1.2 (full screen) | Count |
+| Result on 1.1.2 and 1.1.3 (full screen) | Count |
 | :--- | :--- |
 | Expected prohibitions found (red) | 44 of 51 |
 | Expected prohibitions flagged for review (amber) | 1 of 51 |
@@ -176,7 +176,7 @@ A release that adds the missing fields will be re-tested the same way, and the r
 <details>
   <summary><b>📄 View Starter <code>system.yaml</code> Template</b></summary>
 
-This is what `litmus init` writes (litmus-screener 1.1.2). `subject_population.categories` accepts `general_public`, `minors`, `workers`, `students`, `persons_with_disabilities`, `persons_in_vulnerable_economic_situations` and `other`.
+This is what `litmus init` writes (litmus-screener 1.1.3). `subject_population.categories` accepts `general_public`, `minors`, `workers`, `students`, `persons_with_disabilities`, `persons_in_vulnerable_economic_situations` and `other`.
 
 ```yaml
 # LitmusAI System Description

@@ -2,7 +2,7 @@
 
 This folder tests the released LitmusAI the way a stranger would. It installs the published package from PyPI, screens AI systems described in public sources, and compares each verdict with the answer the source itself gives. Anyone can repeat the run with one command.
 
-> **Status:** first run on 2 November 2026, litmus-screener 1.1.2, 175 cases. On the full screen: 44 of 51 expected prohibitions found, 1 flagged for review, 6 missed (all on points (a) and (b)), and 32 of 113 permitted cases screened red. Details per point in `scorecard.md`; how the cases were chosen in `SELECTION.md`; what the numbers mean in the main README's "Known limits" section.
+> **Status:** first run on 2 November 2026, litmus-screener 1.1.2, 175 cases. On the full screen: 44 of 51 expected prohibitions found, 1 flagged for review, 6 missed (all on points (a) and (b)), and 32 of 113 permitted cases screened red. Details per point in `scorecard.md`; how the cases were chosen in `SELECTION.md`; what the numbers mean in the main README's "Known limits" section. Re-run on litmus-screener 1.1.3 the same day: every verdict identical, and the recital check added with that release passes. On 1.1.2 the same check fails 42 citations on points (b), (c), (e) and (g).
 
 LitmusAI is a screening aid. Neither the tool nor this test is a legal opinion, a conformity assessment or a certification.
 
@@ -31,7 +31,7 @@ LitmusAI answers red, amber (needs review) or clear for each Article 5 point. Ea
 
 The full table of expected against actual labels is printed under these lines. The same descriptions are also run through the quick screen (`litmus screen --describe`) and scored separately, because the quick screen infers from keywords and says so.
 
-Every report is also exported to SARIF and validated against the structure of the OASIS SARIF 2.1.0 schema (string formats such as URIs and dates are not checked); every case is screened twice and the two reports must match apart from `generated_at`; and every `Art. 5(1)(x)` citation must name the point it sits under.
+Every report is also exported to SARIF and validated against the structure of the OASIS SARIF 2.1.0 schema (string formats such as URIs and dates are not checked); every case is screened twice and the two reports must match apart from `generated_at`; every `Art. 5(1)(x)` citation must name the point it sits under; and every recital cited must be one about that point (the map is in `harness.py`, read against the Regulation on 2 November 2026). The 1.1.2 package failed that last check on eleven rules, which 1.1.3 corrects.
 
 ## Run it yourself
 
