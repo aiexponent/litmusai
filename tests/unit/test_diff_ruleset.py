@@ -9,7 +9,12 @@ from pathlib import Path
 import pytest
 from typer.testing import CliRunner
 
-from litmusai.categories import ARTICLE_5_CATEGORIES, DEFAULT_RULESET_PATH, PREVIOUS_RULESET_PATH
+from litmusai.categories import (
+    ARTICLE_5_CATEGORIES,
+    DEFAULT_RULESET_PATH,
+    PREVIOUS_RULESET_PATH,
+    V1_0_RULESET_PATH,
+)
 from litmusai.cli.main import app
 from litmusai.engine.diff import (
     MetadataChange,
@@ -275,8 +280,8 @@ def test_cli_json_output_is_valid_rulesetdiff(
 
 
 def test_shipped_v1_0_to_v1_1_diff_is_additions_plus_agreed_edits() -> None:
-    old = Ruleset.model_validate(json.loads(PREVIOUS_RULESET_PATH.read_text()))
-    new = Ruleset.model_validate(json.loads(DEFAULT_RULESET_PATH.read_text()))
+    old = Ruleset.model_validate(json.loads(V1_0_RULESET_PATH.read_text()))
+    new = Ruleset.model_validate(json.loads(PREVIOUS_RULESET_PATH.read_text()))
     diff = diff_rulesets(old, new)
 
     assert diff.removed_rules == []
@@ -312,10 +317,46 @@ def test_shipped_v1_0_to_v1_1_diff_is_additions_plus_agreed_edits() -> None:
     assert [m.field for m in diff.metadata_changes] == ["regulation"]
 
 
-def test_shipped_v1_1_has_rules_for_every_category() -> None:
+# Rules whose recital citations v1.1.1 corrects (PRD-274: the independent
+# test read each citation against the Regulation). See test_ruleset_citations.
+V1_1_1_CITATION_FIXES = {
+    "rule_a_subliminal_inputs",
+    "rule_a_freetext_manipulation",
+    "rule_b_targets_minors",
+    "rule_b_vulnerable_population",
+    "rule_b_targets_minors_freetext",
+    "rule_c_social_scoring",
+    "rule_c_scoring_from_scraped_data",
+    "rule_e_untargeted_facial_scraping",
+    "rule_e_facial_from_cctv",
+    "rule_g_biometric_sensitive_classification",
+    "rule_g_facial_sensitive_classification",
+}
+
+
+def test_shipped_v1_1_to_v1_1_1_diff_is_citations_only() -> None:
+    old = Ruleset.model_validate(json.loads(PREVIOUS_RULESET_PATH.read_text()))
+    new = Ruleset.model_validate(json.loads(DEFAULT_RULESET_PATH.read_text()))
+    diff = diff_rulesets(old, new)
+
+    assert diff.added_rules == []
+    assert diff.removed_rules == []
+    modified = {m.id: {c.field for c in m.changes} for m in diff.modified_rules}
+    assert set(modified) == V1_1_1_CITATION_FIXES
+    for fields in modified.values():
+        assert "citations" in fields
+        # A citation fix bumps the rule version and review stamp, nothing else:
+        # no verdict can change.
+        assert fields <= {"citations", "version", "reviewed_by", "reviewed_date"}
+    assert diff.unchanged_rule_count == len(old.rules) - len(V1_1_1_CITATION_FIXES)
+    # ruleset_version is not a compared metadata field; nothing else changed.
+    assert diff.metadata_changes == []
+
+
+def test_shipped_default_has_rules_for_every_category() -> None:
     new = Ruleset.model_validate(json.loads(DEFAULT_RULESET_PATH.read_text()))
     assert {r.category for r in new.rules} == set(ARTICLE_5_CATEGORIES)
-    assert new.ruleset_version == "ruleset-2024-1689-v1.1"
+    assert new.ruleset_version == "ruleset-2024-1689-v1.1.1"
     assert new.signature is None
 
 

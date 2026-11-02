@@ -19,7 +19,7 @@ from litmusai.categories import (
     ARTICLE_5_CATEGORIES,
     DEFAULT_RULESET_PATH,
     OMNIBUS_APPLIES_FROM,
-    PREVIOUS_RULESET_PATH,
+    V1_0_RULESET_PATH,
 )
 from litmusai.engine.diff import diff_rulesets
 from litmusai.engine.screener import Screener, format_applies_from
@@ -36,7 +36,7 @@ def screener() -> Screener:
 
 @pytest.fixture(scope="module")
 def v1_0_screener() -> Screener:
-    return Screener(Ruleset.model_validate(json.loads(PREVIOUS_RULESET_PATH.read_text())))
+    return Screener(Ruleset.model_validate(json.loads(V1_0_RULESET_PATH.read_text())))
 
 
 def _system(base: dict[str, Any], **sections: dict[str, Any]) -> SystemDescription:

@@ -1,6 +1,6 @@
 # Article 5 Category Coverage
 
-LitmusAI screens against all ten prohibited-practice categories of Article 5(1) of Regulation (EU) 2024/1689: the original eight, points (a) to (h), and the two inserted by Regulation (EU) 2026/1744, points (ba) and (bb). The reference ruleset is `ruleset-2024-1689-v1.1` (28 rules).
+LitmusAI screens against all ten prohibited-practice categories of Article 5(1) of Regulation (EU) 2024/1689: the original eight, points (a) to (h), and the two inserted by Regulation (EU) 2026/1744, points (ba) and (bb). The reference ruleset is `ruleset-2024-1689-v1.1.1` (28 rules).
 
 Report order follows the regulation: a, b, ba, bb, c, d, e, f, g, h.
 

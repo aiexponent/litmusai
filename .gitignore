@@ -81,4 +81,6 @@ docs/superpowers/specs/
 implementation-plan.md
 docs/implementation-plan.md
 internal-*.md
+# The ruleset review records are shipped package data, not internal notes.
+!src/litmusai/_data/ruleset/internal-review-record-*.md
 *-internal.md
