@@ -1,0 +1,72 @@
+# Declaration for case h-04, written from cases/h-04.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case h-04"
+version: "1.0.0"
+provider: "A provider"
+deployer: "A power plant operator"
+purpose: "Face scan for entry to a restricted area."
+system_description: |
+  A face identification system controls entry to a restricted area such as a power plant. People present themselves to the entrance camera, and the system compares their face with a database of people authorised to enter.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:  # assumed: the source does not say this; the people entering are staff
+    - workers
+  notes: null
+
+inputs:
+  biometric: true
+  facial_images: true
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: null
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: "access granted or refused against a list of authorised people"
+
+deployment_context:
+  workplace: true  # assumed: the source does not say this; restricted area of a plant
+  education: false
+  public_space: false
+  real_time_operation: true
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: "people actively present themselves to the camera"
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

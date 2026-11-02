@@ -1,0 +1,79 @@
+# Declaration for case ba-01, written from cases/ba-01.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case ba-01"
+version: "1.0.0"
+provider: "A provider"
+deployer: "Users of the generator"
+purpose: "General-purpose AI image and video generator."
+system_description: |
+  A provider offers a general-purpose AI image and video generator to the public. It is not intended to produce intimate images of real people. The provider has state-of-the-art safeguards that reliably prevent such output, including cleaned training data, refusal training, prompt and output filters, abuse detection, usage restrictions and a notice-and-action process, and it corrects reported misuse and circumvention.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - general_public
+  notes: null
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: true
+  other: null
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: null
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: true
+  identifiable_persons: true  # assumed: the source does not say this; a general generator can depict real people
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: true
+    csam_prevention: true
+    misuse_correction: true
+    documented: true  # assumed: the source does not say this; the source requires the measures to be demonstrable
+
+mitigations:
+  - "Cleaned training data"
+  - "Refusal training"
+  - "Prompt and output filters"
+  - "Abuse detection"
+  - "Usage restrictions"
+  - "Notice and action"
+  - "Correction of reported misuse and circumvention"
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

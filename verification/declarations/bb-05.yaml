@@ -1,0 +1,72 @@
+# Declaration for case bb-05, written from cases/bb-05.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case bb-05"
+version: "1.0.0"
+provider: "A provider"
+deployer: "A private person"
+purpose: "General image generator whose safeguards are circumvented to create sexual images of a child."
+system_description: |
+  A person takes a general-purpose AI image generator that has safeguards and is not meant for sexual content, works around its safeguards, and uses it to create sexual images of a child.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - general_public
+  notes: "The deployer works around the safeguards."
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: null
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: null
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: true
+  identifiable_persons: false
+  intimate_depictions_possible: true
+  intimate_depictions_intended: true  # the deployer's purpose, not the provider's
+  minors_depictions_possible: true
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: true  # present but circumvented by the deployer
+    misuse_correction: false
+    documented: false
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

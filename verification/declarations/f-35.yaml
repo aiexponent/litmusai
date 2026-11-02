@@ -1,0 +1,75 @@
+# Declaration for case f-35, written from cases/f-35.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case f-35"
+version: "1.0.0"
+provider: "A provider"
+deployer: "A stadium or station operator"
+purpose: "Recognises aggressive behaviour in crowds."
+system_description: |
+  A system at a football stadium or a central station recognises aggressive behaviour in the crowd. It may also pick up the emotions of security staff working there, although the deployer has safeguards to avoid screening employees and the system is not aimed at them.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - general_public
+    - workers
+  notes: null
+
+inputs:
+  biometric: true
+  facial_images: true
+  emotional_state_inference: true
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: null
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: true
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: null
+
+deployment_context:
+  workplace: true  # staff work there, but the system targets the crowd
+  education: false
+  public_space: true
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: "football stadium or central station; security staff may be picked up"
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations:
+  - "Safeguards to avoid screening employees"
+  - "Not aimed at employees"
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

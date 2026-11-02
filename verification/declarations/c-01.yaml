@@ -1,0 +1,72 @@
+# Declaration for case c-01, written from cases/c-01.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case c-01"
+version: "1.0.0"
+provider: "A credit information agency"
+deployer: "A credit information agency"
+purpose: "Credit score giving the probability that a person repays."
+system_description: |
+  A credit information agency uses an AI program to give each person a score: the probability that the person will meet payment commitments such as repaying a loan. The score is built by placing the person in a group of others with similar characteristics and assuming they will behave alike. Nothing is said about which data are used, where they come from, or how the score affects the person.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - general_public
+  notes: "Data sources and the effect of the score are not known."
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: "personal characteristics; group comparison"
+
+outputs:
+  individual_scores: true
+  behaviour_predictions: true
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: null
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: true
+  other: null
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

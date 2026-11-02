@@ -1,0 +1,73 @@
+# Declaration for case d-11, written from cases/d-11.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case d-11"
+version: "1.0.0"
+provider: "A provider"
+deployer: "A police force"
+purpose: "Supports an armed robbery investigation into two suspects."
+system_description: |
+  Police investigating a possible armed robbery suspect two individuals on the basis of verifiable facts, such as their part in dark-web chats about buying weapons. An AI system combines place-based policing data with number-plate recognition data on the suspects' vehicles to support the officers' assessment.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - general_public
+  notes: null
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: false
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: "place-based policing data and number-plate recognition data on the suspects' vehicles"
+
+outputs:
+  individual_scores: false
+  behaviour_predictions: false
+  criminal_risk_predictions: true
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: null
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: true
+  healthcare: false
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations:
+  - "Supports a human assessment based on verifiable facts (dark-web chats about buying weapons)"
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null

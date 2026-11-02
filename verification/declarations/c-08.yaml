@@ -1,0 +1,73 @@
+# Declaration for case c-08, written from cases/c-08.md and its source passage.
+# Fields are true only where the source supports them; template defaults otherwise.
+# The system is assumed to be on the EU market with output used in the EU.
+
+name: "Case c-08"
+version: "1.0.0"
+provider: "A public agency"
+deployer: "A public agency"
+purpose: "Profiles families to detect children at risk."
+system_description: |
+  A public agency uses an AI system to profile families for early detection of children at risk. It uses criteria such as parents' mental health and unemployment, and also information on parents' social behaviour drawn from many contexts. Families with high scores are singled out for inspection, and children are taken from their families even for minor lapses by the parents, such as occasionally missing a doctor's appointment or getting a traffic fine.
+
+deployment_jurisdictions:
+  - EU
+
+output_consumed_in_eu: true
+
+subject_population:
+  categories:
+    - general_public
+    - minors
+  notes: null
+
+inputs:
+  biometric: false
+  facial_images: false
+  emotional_state_inference: false
+  behaviour_history: false
+  social_behaviour_data: true
+  scraped_internet_data: false
+  freetext_prompts: false
+  other: "parents' mental health, unemployment, social behaviour from many contexts"
+
+outputs:
+  individual_scores: true
+  behaviour_predictions: false
+  criminal_risk_predictions: false
+  emotion_inferences: false
+  sensitive_attribute_classifications: false
+  freetext_generations: false
+  detrimental_treatment_unrelated_context: false
+  other: "inspections and removal of children, including for minor lapses such as a missed doctor's appointment or a traffic fine"
+
+deployment_context:
+  workplace: false
+  education: false
+  public_space: false
+  real_time_operation: false
+  law_enforcement_use: false
+  healthcare: false
+  financial_services: false
+  other: null
+
+generative_media:
+  realistic_media_generation: false
+  identifiable_persons: false
+  intimate_depictions_possible: false
+  intimate_depictions_intended: false
+  minors_depictions_possible: false
+  manipulation_within_1b_only: false
+  safeguards:
+    consent_demonstrable: false
+    intimate_output_prevention: false
+    csam_prevention: false
+    misuse_correction: false
+    documented: false
+
+mitigations: []
+
+metadata:
+  last_reviewed: null
+  owner: null
+  reviewed_by: null
