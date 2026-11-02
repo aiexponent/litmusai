@@ -91,16 +91,32 @@ jobs:
         uses: ./.github/actions/litmusai-screen
         with:
           path: examples/example-red.yaml
+      - name: Amber example, fail-on red (expect exit 0, verdict amber)
+        id: amber-pass
+        uses: ./.github/actions/litmusai-screen
+        with:
+          path: examples/example-amber.yaml
+      - name: Amber example, fail-on amber (expect exit 1)
+        id: amber-gate
+        continue-on-error: true
+        uses: ./.github/actions/litmusai-screen
+        with:
+          path: examples/example-amber.yaml
+          fail-on: amber
       - name: Check verdicts, exit codes and the SARIF file
         env:
           CLEAR_VERDICT: ${{ steps.clear.outputs.verdict }}
           RED_VERDICT: ${{ steps.red-none.outputs.verdict }}
           RED_REPORT: ${{ steps.red-none.outputs.report-path }}
-          GATE_OUTCOME: ${{ steps.red-gate.outcome }}
+          RED_GATE: ${{ steps.red-gate.outcome }}
+          AMBER_VERDICT: ${{ steps.amber-pass.outputs.verdict }}
+          AMBER_GATE: ${{ steps.amber-gate.outcome }}
         run: |
           test "$CLEAR_VERDICT" = "clear"
           test "$RED_VERDICT" = "red"
-          test "$GATE_OUTCOME" = "failure"
+          test "$RED_GATE" = "failure"
+          test "$AMBER_VERDICT" = "amber"
+          test "$AMBER_GATE" = "failure"
           test "$RED_REPORT" = "litmusai-report.sarif"
           python3 -c "import json; d = json.load(open('$RED_REPORT')); assert d['version'] == '2.1.0' and d['runs'], 'not a SARIF 2.1.0 file'"
-          echo "Action self-test passed: clear=$CLEAR_VERDICT red=$RED_VERDICT gate=$GATE_OUTCOME report=$RED_REPORT"
+          echo "Action self-test passed: clear=$CLEAR_VERDICT red=$RED_VERDICT red-gate=$RED_GATE amber=$AMBER_VERDICT amber-gate=$AMBER_GATE report=$RED_REPORT"
