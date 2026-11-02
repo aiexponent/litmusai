@@ -2,7 +2,7 @@
 
 This folder tests the released LitmusAI the way a stranger would. It installs the published package from PyPI, screens AI systems described in public sources, and compares each verdict with the answer the source itself gives. Anyone can repeat the run with one command.
 
-> **Status:** the scripts are in place; the cases are not written yet. Until they are, `run.sh` checks the install and the SARIF schema and stops. This README will carry the results and the date of the run once they exist.
+> **Status:** first run on 2 November 2026, litmus-screener 1.1.2, 175 cases. On the full screen: 44 of 51 expected prohibitions found, 1 flagged for review, 6 missed (all on points (a) and (b)), and 32 of 113 permitted cases screened red. Details per point in `scorecard.md`; how the cases were chosen in `SELECTION.md`; what the numbers mean in the main README's "Known limits" section.
 
 LitmusAI is a screening aid. Neither the tool nor this test is a legal opinion, a conformity assessment or a certification.
 
