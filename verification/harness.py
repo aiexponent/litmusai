@@ -111,7 +111,11 @@ def main(argv: list[str] | None = None) -> int:
     out.mkdir(parents=True, exist_ok=True)
     errors: list[str] = []
 
-    version = litmus(args.litmus, "--version")
+    try:
+        version = litmus(args.litmus, "--version")
+    except OSError as exc:
+        print(f"Error: cannot run litmus ({exc})", file=sys.stderr)
+        return 2
     if version.returncode != 0:
         print(f"Error: `litmus --version` failed: {version.stderr.strip()}", file=sys.stderr)
         return 2

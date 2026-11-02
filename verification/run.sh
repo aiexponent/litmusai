@@ -50,15 +50,20 @@ elif [ -e "$out" ] && [ -n "$(ls -A "$out" 2>/dev/null)" ] && [ "$force" -eq 0 ]
   exit 2
 fi
 mkdir -p "$out"
+# An absolute path, so Docker bind-mounts the folder and never creates a named volume.
+out="$(cd "$out" && pwd)"
 
 run_checks() {
   # Build an isolated environment under $out, install, screen, score, compare.
-  python3 -m venv "$out/venv"
+  # Called as `run_checks || status=$?`, so set -e is off in here: check each step.
+  python3 -m venv "$out/venv" || { echo "Error: could not create the venv" >&2; return 2; }
   if [ -n "$version" ]; then
     echo "Testing litmus-screener==$version (not hash-pinned; the lock pins the published version)."
-    "$out/venv/bin/pip" install --quiet --no-cache-dir "litmus-screener==$version" "jsonschema==4.26.0"
+    "$out/venv/bin/pip" install --quiet --no-cache-dir "litmus-screener==$version" "jsonschema==4.26.0" \
+      || { echo "Error: install of litmus-screener==$version failed" >&2; return 2; }
   else
-    "$out/venv/bin/pip" install --quiet --no-cache-dir --require-hashes -r "$HERE/requirements.lock"
+    "$out/venv/bin/pip" install --quiet --no-cache-dir --require-hashes -r "$HERE/requirements.lock" \
+      || { echo "Error: install from requirements.lock failed" >&2; return 2; }
   fi
   local rc=0
   "$out/venv/bin/python" "$HERE/harness.py" --verification-dir "$HERE" --out "$out" \
@@ -66,7 +71,7 @@ run_checks() {
   [ "$rc" -ne 0 ] && return "$rc"
   [ -f "$HERE/expected.csv" ] || return 0
   "$out/venv/bin/python" "$HERE/score.py" score --expected "$HERE/expected.csv" \
-    --results "$out/results.csv" --out "$out"
+    --results "$out/results.csv" --out "$out" || return 2
   "$out/venv/bin/python" "$HERE/score.py" drift --committed "$HERE/results.csv" \
     --current "$out/results.csv" || return $?
 }

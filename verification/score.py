@@ -58,7 +58,12 @@ def load_expected(path: Path) -> list[dict[str, str]]:
         rows = list(reader)
     seen: set[str] = set()
     for n, row in enumerate(rows, start=2):
+        if None in row or any(v is None for v in row.values()):
+            raise InputError(
+                f"{path}:{n}: expected {len(EXPECTED_COLUMNS)} fields (quote a value that contains a comma)"
+            )
         case_id = row["case_id"].strip()
+        row["case_id"] = case_id
         if not case_id or case_id.startswith("_"):
             raise InputError(f"{path}:{n}: case_id is empty or starts with '_'")
         if case_id in seen:

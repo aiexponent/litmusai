@@ -109,6 +109,12 @@ class ExpectedFileTests(unittest.TestCase):
         path = self.write([("c1", "5.1.bb", "red", "Reg. 2026/1744 recital 13")])
         self.assertEqual(len(score.load_expected(path)), 1)
 
+    def test_case_id_is_stripped_and_quoted_commas_are_kept(self):
+        path = self.write([(" c1 ", "5.1.a", "red", "Guidelines p. 12, para 3")])
+        row = score.load_expected(path)[0]
+        self.assertEqual(row["case_id"], "c1")
+        self.assertEqual(row["source_ref"], "Guidelines p. 12, para 3")
+
     def test_rejects_bad_label_point_duplicate_and_header(self):
         bad = [
             [("c1", "5.1.z", "red", "x")],
@@ -116,6 +122,8 @@ class ExpectedFileTests(unittest.TestCase):
             [("c1", "5.1.a", "red", "x"), ("c1", "5.1.b", "red", "x")],
             [("c1", "5.1.a", "red", "")],
             [("_c1", "5.1.a", "red", "x")],
+            [("c1", "5.1.a", "red", "Guidelines p. 12", " para 3")],
+            [("c1", "5.1.a", "red")],
         ]
         for rows in bad:
             with self.assertRaises(score.InputError):
