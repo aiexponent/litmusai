@@ -104,7 +104,7 @@ graph TB
     subgraph Outputs ["4. Audit-Ready Artifacts"]
         OUT1["Rich Terminal UI<br/><em>(Color-coded Red / Amber / Clear table)</em>"]
         OUT2["SARIF 2.1.0 Report<br/><em>(GitHub Security tab & GitLab SAST)</em>"]
-        OUT3["JSON / Markdown / PDF<br/><em>(Reports for legal and security review)</em>"]
+        OUT3["JSON / Markdown<br/><em>(Reports for legal and security review)</em>"]
     end
 
     INP1 & INP2 & INP3 --> AST
@@ -128,7 +128,7 @@ graph TB
 - **Zero Network Calls (NFR-8)**: 100% offline execution. No telemetry, no telemetry pings, no crash reports. Your architecture and prompts never leave your local machine (enforced in CI via `pytest-socket`).
 - **Cryptographic Tamper-Evidence**: Generates a canonical RFC 8785 SHA-256 digest on every report. Verify report integrity anytime via `litmus verify <report>`.
 - **Bring-Your-Own-Ruleset (BYO)**: Legal counsel can author, sign, and distribute custom rulesets. Once activated (`litmus use-ruleset`), reports show `(SIGNED by: Counsel)` rather than `UNREVIEWED` in the provenance line.
-- **Multi-Format Export**: Native support for rich console output, machine-readable JSON, Markdown documentation, and SARIF 2.1.0 (with optional PDF via WeasyPrint).
+- **Multi-Format Export**: Native support for rich console output, machine-readable JSON, Markdown documentation, and SARIF 2.1.0.
 
 ---
 
@@ -240,7 +240,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: aiexponent/litmusai/.github/actions/litmusai-screen@v1
+      - uses: aiexponent/litmusai/.github/actions/litmusai-screen@v1.1.1   # pin a release tag
         with:
           path: system.yaml
           fail-on: amber       # fail CI if overall verdict is RED or AMBER
@@ -266,7 +266,7 @@ LitmusAI implements deterministic UNIX exit codes for scripting and CI gates:
 | :--- | :--- |
 | `litmus screen [path\|--describe]` | Primary screening command (supports file or inline prompt). |
 | `litmus init` | Scaffold a starter `system.yaml` template in the current directory. |
-| `litmus export <report> -o <file> --format <fmt>` | Convert reports to `json`, `markdown`, `sarif`, or `pdf`. |
+| `litmus export <report> -o <file> --format <fmt>` | Convert reports to `json`, `markdown` or `sarif`. |
 | `litmus verify <report>` | Validate cryptographic SHA-256 integrity against the original inputs. |
 | `litmus portfolio <directory>` | Batch-screen an entire portfolio of `system.yaml` definitions. |
 | `litmus debug <report>` | Print step-by-step rule firing trace and variable evaluation states. |

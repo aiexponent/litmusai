@@ -11,7 +11,7 @@ inputs:
     required: false
     default: "red"
   output-format:
-    description: "Output format: json or sarif."
+    description: "Report format: json (the screen report) or sarif (exported from it with litmus export)."
     required: false
     default: "json"
   ruleset:
@@ -52,20 +52,26 @@ runs:
         LITMUS_FORMAT: ${{ inputs.output-format }}
         LITMUS_RULESET: ${{ inputs.ruleset }}
       run: |
-        REPORT_PATH="litmusai-report.$LITMUS_FORMAT"
         RULESET_FLAG=""
         if [ -n "$LITMUS_RULESET" ]; then
           RULESET_FLAG="--ruleset $LITMUS_RULESET"
         fi
 
+        # litmus screen writes JSON only; SARIF comes from litmus export.
         litmus screen "$LITMUS_PATH" \
-          --output "$REPORT_PATH" \
+          --output litmusai-report.json \
           --fail-on "$LITMUS_FAIL_ON" \
           $RULESET_FLAG \
           --quiet || EXIT_CODE=$?
 
-        # Extract verdict from JSON report
-        VERDICT=$(python3 -c "import json; print(json.load(open('$REPORT_PATH'))['summary']['overall_verdict'])" 2>/dev/null || echo "unknown")
+        REPORT_PATH="litmusai-report.json"
+        if [ "$LITMUS_FORMAT" = "sarif" ] && [ -f litmusai-report.json ]; then
+          litmus export litmusai-report.json --format sarif --output litmusai-report.sarif
+          REPORT_PATH="litmusai-report.sarif"
+        fi
+
+        # Extract the verdict from the JSON report
+        VERDICT=$(python3 -c "import json; print(json.load(open('litmusai-report.json'))['summary']['overall_verdict'])" 2>/dev/null || echo "unknown")
 
         echo "verdict=$VERDICT" >> "$GITHUB_OUTPUT"
         echo "report_path=$REPORT_PATH" >> "$GITHUB_OUTPUT"
