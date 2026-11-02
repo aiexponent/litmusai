@@ -36,7 +36,7 @@ RECITALS_2024_1689: dict[str, set[int]] = {
 RECITALS_2026_1744 = {12, 13, 14}
 
 PLAIN_RECITAL = re.compile(r"^Recital (\d+)$")
-AMENDING_RECITAL = re.compile(r"^Regulation \(EU\) 2026/1744, recitals? (\d+)")
+AMENDING_RECITAL = re.compile(r"^Regulation \(EU\) 2026/1744, recitals? (.+)$")
 ARTICLE_5_POINT = re.compile(r"^Art\. 5\(1\)\(([a-z]+)\)")
 
 RULESET = Ruleset.model_validate(json.loads(DEFAULT_RULESET_PATH.read_text()))
@@ -57,7 +57,10 @@ def test_recitals_match_the_point(rule) -> None:
         amending = AMENDING_RECITAL.match(citation)
         if amending:
             assert rule.category in OMNIBUS_CATEGORIES, f"{rule.id}: {citation}"
-            assert int(amending.group(1)) in RECITALS_2026_1744, f"{rule.id}: {citation}"
+            # Every number in "recitals 12 and 13" is checked, not only the first.
+            numbers = [int(n) for n in re.findall(r"\d+", amending.group(1))]
+            assert numbers, f"{rule.id}: no recital number in {citation!r}"
+            assert set(numbers) <= RECITALS_2026_1744, f"{rule.id}: {citation}"
         assert "Recital" not in citation or plain or "2026/1744" in citation, (
             f"{rule.id}: unrecognised recital citation {citation!r}"
         )

@@ -39,7 +39,7 @@ SARIF_SCHEMA_URL = (
 SARIF_SCHEMA_SHA256 = "c3b4bb2d6093897483348925aaa73af03b3e3f4bd4ca38cef26dcb4212a2682e"
 ARTICLE_POINT = re.compile(r"Art\.\s*5\(1\)\(([a-z]+)\)")
 PLAIN_RECITAL = re.compile(r"^Recital (\d+)$")
-AMENDING_RECITAL = re.compile(r"^Regulation \(EU\) 2026/1744, recitals? (\d+)")
+AMENDING_RECITAL = re.compile(r"^Regulation \(EU\) 2026/1744, recitals? (.+)$")
 # Recitals about each Article 5(1) point. Regulation (EU) 2024/1689 read at the
 # Publications Office Cellar on 2026-11-02; Regulation (EU) 2026/1744 recitals
 # 12 to 14 read on 2026-10-31 for points (ba) and (bb). Recital 28 introduces
@@ -97,7 +97,11 @@ def citation_problems(report: dict) -> tuple[list[str], list[tuple[str, str]]]:
             if plain and int(plain.group(1)) not in RECITALS.get(point, set()):
                 problems.append(f"{point} cites {article}, which is about another point")
             amending = AMENDING_RECITAL.match(article)
-            if amending and int(amending.group(1)) not in RECITALS_2026_1744.get(point, set()):
+            # Every number in "recitals 12 and 13" is checked, not only the first.
+            numbers = [int(n) for n in re.findall(r"\d+", amending.group(1))] if amending else []
+            if amending and (
+                not numbers or any(n not in RECITALS_2026_1744.get(point, set()) for n in numbers)
+            ):
                 problems.append(f"{point} cites {article}, which is about another point")
     return problems, inventory
 

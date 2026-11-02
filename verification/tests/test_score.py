@@ -170,6 +170,8 @@ class HarnessHelperTests(unittest.TestCase):
                     "regulation_citations": [
                         {"article": "Regulation (EU) 2026/1744, recital 13"},
                         {"article": "Regulation (EU) 2026/1744, recital 40"},
+                        {"article": "Regulation (EU) 2026/1744, recitals 12 and 13"},
+                        {"article": "Regulation (EU) 2026/1744, recitals 12 and 40"},
                     ]
                 },
             }
@@ -181,9 +183,10 @@ class HarnessHelperTests(unittest.TestCase):
                 "5.1.c cites Art. 5(1)(d)",
                 "5.1.g cites Recital 44, which is about another point",
                 "5.1.bb cites Regulation (EU) 2026/1744, recital 40, which is about another point",
+                "5.1.bb cites Regulation (EU) 2026/1744, recitals 12 and 40, which is about another point",
             ],
         )
-        self.assertEqual(len(inventory), 9)
+        self.assertEqual(len(inventory), 11)
 
     def test_normalise_ignores_only_generated_at(self):
         a = {"generated_at": "1", "x": 1}
