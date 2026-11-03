@@ -79,33 +79,74 @@ generative_media:
     misuse_correction: false          # abuse detection, notice and action, follow-up on circumvention
     documented: false                 # the measures above are written down and testable
 
-# Article 5(1)(a) and (b). Answer each question "yes", "no" or "not_sure".
-# A technique (or exploitation) question left at "not_answered" keeps the
-# screen on capability proxies, with low confidence. For each point: all yes
-# is RED; any not_sure with no element answered "no" is AMBER; a "no" on any
-# element clears it.
+# Article 5(1)(a) and (b). Answer every question for every system, "yes",
+# "no" or "not_sure", from what the system does or can do, whether or not
+# anyone intends it. A system that does not influence what people decide
+# answers "no". "not_answered" means the question was not considered;
+# the report then marks (a) and (b) as low confidence. What each answer does
+# to a verdict is in the README, not here, so answer the facts.
 influence:
-  subliminal_techniques: not_answered                # (a) stimuli a person cannot perceive
-  manipulative_or_deceptive_techniques: not_answered # (a) purposefully manipulative or deceptive
-  exploits_vulnerability: not_answered               # (b) due to age, disability or social or economic situation
-  materially_distorts_behaviour: not_answered        # (a, b) people decide what they would not otherwise
-  significant_harm_likely: not_answered              # (a, b) physical, psychological or financial harm
+  # Stimuli a person cannot consciously perceive: flashed images, inaudible audio.
+  subliminal_techniques: not_answered
+  # Techniques that subvert a person's autonomy or free choice, or deceive them
+  # with false or misleading content. "yes" also when nobody intended it, for
+  # example behaviour the system learned in training; not for merely
+  # incidental behaviour that the provider has measures against.
+  manipulative_or_deceptive_techniques: not_answered
+  # Exploits a vulnerability due to age (children or older people), a
+  # disability, or a specific social or economic situation (for example
+  # extreme poverty). Other weak points, such as loneliness or emotional
+  # dependency, belong under manipulative_or_deceptive_techniques.
+  exploits_vulnerability: not_answered
+  # Has the objective or the effect (intent is not needed) of appreciably
+  # impairing people's ability to make an informed decision, so that they
+  # decide what they would not otherwise have decided.
+  materially_distorts_behaviour: not_answered
+  # That behaviour causes, or is reasonably likely to cause, significant
+  # physical, psychological or financial harm to them or to others.
+  significant_harm_likely: not_answered
 
-# Exceptions and limits in Article 5(1), points (d) to (h). Answer only those
-# that apply; leave the rest at "not_answered". A "no" marked "clears" takes
-# the system outside that point; a "yes" marked "amber" claims an exception
-# a reviewer must check.
+# Exceptions and limits in Article 5(1), points (d) to (h). Answer the
+# questions about what your system does and leave the others at
+# "not_answered". What each answer does to a verdict is in the README.
 scope:
-  role: both                                         # provider_only, deployer or both; (h) prohibits use only
-  human_assessment_on_verifiable_facts: not_answered # (d) yes: amber
-  untargeted_collection: not_answered                # (e) no (a targeted search): clears
-  builds_facial_recognition_database: not_answered   # (e) no: clears
-  emotions_of_workers_or_students: not_answered      # (f) no (customers, patients, public): clears
-  medical_or_safety_reasons: not_answered            # (f) yes: amber
-  dataset_labelling_or_filtering_only: not_answered  # (g) yes: amber
-  remote_identification: not_answered                # (h) no (person steps up to a sensor): clears
-  law_enforcement_purpose: not_answered              # (h) no: clears
-  article_5_1_h_objective: not_answered              # (h) yes, one of (i) to (iii): amber
+  # provider_only: you place the system on the market or put it into service
+  # and do not use it. deployer: you use it (also a private person using a
+  # tool). both: you build and use it, or you are not sure.
+  role: both
+  # (d) The system only supports a human's assessment of a person's
+  # involvement in a criminal activity, and that assessment already rests on
+  # objective and verifiable facts directly linked to the activity.
+  human_assessment_on_verifiable_facts: not_answered
+  # (e) Facial images are collected without a target. "no" when the system
+  # looks for one specific person or a specific, defined group.
+  untargeted_collection: not_answered
+  # (e) The system creates or expands a database used to recognise faces.
+  builds_facial_recognition_database: not_answered
+  # (f) The emotions inferred are those of workers (employees, contractors,
+  # trainees, volunteers, job candidates) or of pupils and students. "no"
+  # when only customers, patients or the public are analysed.
+  emotions_of_workers_or_students: not_answered
+  # (f) The system is intended to be put in place for medical or safety
+  # reasons, such as a therapy aid or fatigue detection at dangerous machines.
+  medical_or_safety_reasons: not_answered
+  # (g) The system only labels or filters lawfully acquired biometric
+  # datasets, or categorises biometric data in the area of law enforcement.
+  dataset_labelling_or_filtering_only: not_answered
+  # (h) People are identified at a distance without their active
+  # involvement, such as cameras in a street. "no" when each person takes
+  # part, such as stepping up to a gate or presenting a document.
+  remote_identification: not_answered
+  # (h) Used by or for a law enforcement authority to prevent, investigate,
+  # detect or prosecute crime or to execute criminal penalties (Art. 3(46)).
+  law_enforcement_purpose: not_answered
+  # (h) Each use is strictly necessary for one of: (i) a targeted search for
+  # victims of abduction, trafficking or sexual exploitation, or for missing
+  # persons; (ii) preventing a specific, substantial and imminent threat to
+  # life or physical safety, or a terrorist attack; (iii) locating or
+  # identifying a suspect of an Annex II offence punishable by at least
+  # four years, for an investigation, prosecution or penalty.
+  article_5_1_h_objective: not_answered
 
 mitigations: []
 

@@ -19,7 +19,7 @@
 
 ---
 
-> **LitmusAI 1.2.0 ships with the AiExponent reference ruleset `ruleset-2024-1689-v1.2` (UNREVIEWED: internal panel authored, no external lawyer review). Apache 2.0, AS IS.**
+> **LitmusAI 1.2.1 ships with the AiExponent reference ruleset `ruleset-2024-1689-v1.2` (UNREVIEWED: internal panel authored, no external lawyer review). Apache 2.0, AS IS.**
 >
 > The package's CLI surface, JSON/SARIF schema, and BYO-ruleset contract are stable for production integration. The reference ruleset has been authored and reviewed by an internal AiExponent panel (six engineering + governance roles) but has **not** been reviewed by a qualified EU AI Act practising lawyer. Every screening report carries this disclosure prominently. Customers who require lawyer-reviewed output can supply their own signed ruleset via the BYO mechanism; see [`docs/ruleset-authoring.md`](docs/ruleset-authoring.md).
 >
@@ -179,7 +179,7 @@ What this means in practice:
 <details>
   <summary><b>📄 View Starter <code>system.yaml</code> Template</b></summary>
 
-This is what `litmus init` writes (litmus-screener 1.2.0). `subject_population.categories` accepts `general_public`, `minors`, `workers`, `students`, `persons_with_disabilities`, `persons_in_vulnerable_economic_situations`, `older_persons` and `other`. Each `influence` and `scope` question is answered `yes`, `no`, `not_sure` or `not_answered` (an unquoted YAML `yes` or `no` is accepted), except `scope.role`, which is `provider_only`, `deployer` or `both`.
+This is what `litmus init` writes (litmus-screener 1.2.1). The template asks only factual questions; what each answer does to a verdict is in [Article 5 Categories Covered](#article-5-categories-covered). `subject_population.categories` accepts `general_public`, `minors`, `workers`, `students`, `persons_with_disabilities`, `persons_in_vulnerable_economic_situations`, `older_persons` and `other`. Each `influence` and `scope` question is answered `yes`, `no`, `not_sure` or `not_answered` (an unquoted YAML `yes` or `no` is accepted), except `scope.role`, which is `provider_only`, `deployer` or `both`.
 
 ```yaml
 # LitmusAI System Description
@@ -252,33 +252,74 @@ generative_media:
     misuse_correction: false          # abuse detection, notice and action, follow-up on circumvention
     documented: false                 # the measures above are written down and testable
 
-# Article 5(1)(a) and (b). Answer each question "yes", "no" or "not_sure".
-# A technique (or exploitation) question left at "not_answered" keeps the
-# screen on capability proxies, with low confidence. For each point: all yes
-# is RED; any not_sure with no element answered "no" is AMBER; a "no" on any
-# element clears it.
+# Article 5(1)(a) and (b). Answer every question for every system, "yes",
+# "no" or "not_sure", from what the system does or can do, whether or not
+# anyone intends it. A system that does not influence what people decide
+# answers "no". "not_answered" means the question was not considered;
+# the report then marks (a) and (b) as low confidence. What each answer does
+# to a verdict is in the README, not here, so answer the facts.
 influence:
-  subliminal_techniques: not_answered                # (a) stimuli a person cannot perceive
-  manipulative_or_deceptive_techniques: not_answered # (a) purposefully manipulative or deceptive
-  exploits_vulnerability: not_answered               # (b) due to age, disability or social or economic situation
-  materially_distorts_behaviour: not_answered        # (a, b) people decide what they would not otherwise
-  significant_harm_likely: not_answered              # (a, b) physical, psychological or financial harm
+  # Stimuli a person cannot consciously perceive: flashed images, inaudible audio.
+  subliminal_techniques: not_answered
+  # Techniques that subvert a person's autonomy or free choice, or deceive them
+  # with false or misleading content. "yes" also when nobody intended it, for
+  # example behaviour the system learned in training; not for merely
+  # incidental behaviour that the provider has measures against.
+  manipulative_or_deceptive_techniques: not_answered
+  # Exploits a vulnerability due to age (children or older people), a
+  # disability, or a specific social or economic situation (for example
+  # extreme poverty). Other weak points, such as loneliness or emotional
+  # dependency, belong under manipulative_or_deceptive_techniques.
+  exploits_vulnerability: not_answered
+  # Has the objective or the effect (intent is not needed) of appreciably
+  # impairing people's ability to make an informed decision, so that they
+  # decide what they would not otherwise have decided.
+  materially_distorts_behaviour: not_answered
+  # That behaviour causes, or is reasonably likely to cause, significant
+  # physical, psychological or financial harm to them or to others.
+  significant_harm_likely: not_answered
 
-# Exceptions and limits in Article 5(1), points (d) to (h). Answer only those
-# that apply; leave the rest at "not_answered". A "no" marked "clears" takes
-# the system outside that point; a "yes" marked "amber" claims an exception
-# a reviewer must check.
+# Exceptions and limits in Article 5(1), points (d) to (h). Answer the
+# questions about what your system does and leave the others at
+# "not_answered". What each answer does to a verdict is in the README.
 scope:
-  role: both                                         # provider_only, deployer or both; (h) prohibits use only
-  human_assessment_on_verifiable_facts: not_answered # (d) yes: amber
-  untargeted_collection: not_answered                # (e) no (a targeted search): clears
-  builds_facial_recognition_database: not_answered   # (e) no: clears
-  emotions_of_workers_or_students: not_answered      # (f) no (customers, patients, public): clears
-  medical_or_safety_reasons: not_answered            # (f) yes: amber
-  dataset_labelling_or_filtering_only: not_answered  # (g) yes: amber
-  remote_identification: not_answered                # (h) no (person steps up to a sensor): clears
-  law_enforcement_purpose: not_answered              # (h) no: clears
-  article_5_1_h_objective: not_answered              # (h) yes, one of (i) to (iii): amber
+  # provider_only: you place the system on the market or put it into service
+  # and do not use it. deployer: you use it (also a private person using a
+  # tool). both: you build and use it, or you are not sure.
+  role: both
+  # (d) The system only supports a human's assessment of a person's
+  # involvement in a criminal activity, and that assessment already rests on
+  # objective and verifiable facts directly linked to the activity.
+  human_assessment_on_verifiable_facts: not_answered
+  # (e) Facial images are collected without a target. "no" when the system
+  # looks for one specific person or a specific, defined group.
+  untargeted_collection: not_answered
+  # (e) The system creates or expands a database used to recognise faces.
+  builds_facial_recognition_database: not_answered
+  # (f) The emotions inferred are those of workers (employees, contractors,
+  # trainees, volunteers, job candidates) or of pupils and students. "no"
+  # when only customers, patients or the public are analysed.
+  emotions_of_workers_or_students: not_answered
+  # (f) The system is intended to be put in place for medical or safety
+  # reasons, such as a therapy aid or fatigue detection at dangerous machines.
+  medical_or_safety_reasons: not_answered
+  # (g) The system only labels or filters lawfully acquired biometric
+  # datasets, or categorises biometric data in the area of law enforcement.
+  dataset_labelling_or_filtering_only: not_answered
+  # (h) People are identified at a distance without their active
+  # involvement, such as cameras in a street. "no" when each person takes
+  # part, such as stepping up to a gate or presenting a document.
+  remote_identification: not_answered
+  # (h) Used by or for a law enforcement authority to prevent, investigate,
+  # detect or prosecute crime or to execute criminal penalties (Art. 3(46)).
+  law_enforcement_purpose: not_answered
+  # (h) Each use is strictly necessary for one of: (i) a targeted search for
+  # victims of abduction, trafficking or sexual exploitation, or for missing
+  # persons; (ii) preventing a specific, substantial and imminent threat to
+  # life or physical safety, or a terrorist attack; (iii) locating or
+  # identifying a suspect of an Annex II offence punishable by at least
+  # four years, for an investigation, prosecution or penalty.
+  article_5_1_h_objective: not_answered
 
 mitigations: []
 
@@ -301,7 +342,7 @@ metadata:
       "tool": {
         "driver": {
           "name": "LitmusAI",
-          "version": "1.2.0",
+          "version": "1.2.1",
           "informationUri": "https://aiexponent.com/products/litmusai",
           "rules": [
             {
@@ -346,7 +387,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: aiexponent/litmusai/.github/actions/litmusai-screen@v1.2.0   # pin a release tag
+      - uses: aiexponent/litmusai/.github/actions/litmusai-screen@v1.2.1   # pin a release tag
         with:
           path: system.yaml
           fail-on: amber       # fail CI if overall verdict is RED or AMBER
@@ -403,7 +444,7 @@ LitmusAI implements deterministic UNIX exit codes for scripting and CI gates:
 >
 > The default LitmusAI ruleset (`ruleset-2024-1689-v1.2`) is a good-faith engineering interpretation of Article 5, as amended by Regulation (EU) 2026/1744, authored by AiExponent's internal compliance panel. **It has not been reviewed or signed by a qualified EU AI Act lawyer and is not legal advice.** The panel's review records ship with the package under `litmusai/_data/ruleset/`.
 >
-> The package version (`litmusai 1.2.0`) reflects API and CLI stability. The legal-review status rides on the ruleset itself: `litmus --version` prints `ruleset_legal_status: REVIEWED` when the active ruleset carries a signature block and `UNREVIEWED` when it does not. That check is structural. LitmusAI does not verify the signature cryptographically and cannot vouch for the signer's qualifications, so the line reports what the ruleset's author declared; whether the review behind it was qualified is for you to confirm with the signer. No version number of the reference ruleset implies an external review.
+> The package version (`litmusai 1.2.1`) reflects API and CLI stability. The legal-review status rides on the ruleset itself: `litmus --version` prints `ruleset_legal_status: REVIEWED` when the active ruleset carries a signature block and `UNREVIEWED` when it does not. That check is structural. LitmusAI does not verify the signature cryptographically and cannot vouch for the signer's qualifications, so the line reports what the ruleset's author declared; whether the review behind it was qualified is for you to confirm with the signer. No version number of the reference ruleset implies an external review.
 >
 > If your organisation needs a lawyer-signed ruleset today, see [`docs/ruleset-authoring.md`](docs/ruleset-authoring.md) for the BYO-ruleset path. A complete dummy-signed example ships in `tests/fixtures/rulesets/acme-corp-signed-v1.0.json`.
 >

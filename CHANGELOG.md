@@ -5,6 +5,27 @@ All notable changes to LitmusAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-11-03
+
+> Wording only. Rules, ruleset `ruleset-2024-1689-v1.2`, verdicts and report schema are those of 1.2.0.
+
+### Changed
+
+- **The `litmus init` template asks factual questions only (PRD-464).** The comments no longer say what an answer does to a verdict ("no: clears", "yes: amber"). That is documented in the README's "Article 5 Categories Covered" table, so a user is not steered towards the answer that gives the verdict they want. The blind re-test of 1.2.0 reported this as a risk.
+- **Every `influence` and `scope` question now has guidance,** from the ten points the re-test tester found unclear:
+  - answer all `influence` questions from what the system does, intended or not, with `no` for a system that does not influence decisions, and keep `not_answered` for questions not considered;
+  - manipulative or deceptive techniques count when nobody intended them, but not merely incidental behaviour the provider has measures against (Commission guidelines C(2025) 5052, para. 69);
+  - intent is not needed for material distortion (para. 76);
+  - weak points other than age, disability or a social or economic situation belong under the techniques question (para. 125);
+  - significant harm is harm caused by the distorted behaviour;
+  - `role` for a private person (`deployer`) and for build-and-use (`both`);
+  - the (d) question requires a human assessment;
+  - (f) covers job candidates, trainees and volunteers, and pupils and students (paras. 254 and 255);
+  - examples for remote identification;
+  - the definition of law enforcement (Art. 3(46));
+  - the three (h) objectives written out.
+- Tests check that the template carries no verdict effects, that every question has guidance, and that the README shows the template byte for byte.
+
 ## [1.2.0] - 2026-11-03
 
 > **LitmusAI 1.2.0 ships with reference ruleset `ruleset-2024-1689-v1.2` (UNREVIEWED: internal panel authored, no external lawyer review). Apache 2.0, AS IS.** A `system.yaml` written for 1.1.x keeps every verdict.
