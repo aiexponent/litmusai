@@ -149,18 +149,23 @@ jobs:
         run: |
           set -euo pipefail
           VERSION="${TAG_NAME#v}"
-          # pip installs from the simple index, which can lag the JSON API
-          # (v1.2.0: the JSON listed the version while pip could not find it).
-          # Wait for the wheel on the simple index, then a short settle.
-          for _ in $(seq 1 40); do
-            index="$(curl -fsS "https://pypi.org/simple/litmus-screener/" || true)"
+          # pip reads the JSON form of the simple index, which PyPI's CDN can
+          # serve stale for up to 10 minutes after the JSON API already lists
+          # the release (v1.2.0: pip found only 1.1.3 twice). Ask for the same
+          # representation pip asks for and require three listings in a row.
+          seen=0
+          for _ in $(seq 1 60); do
+            index="$(curl -fsS -H "Accept: application/vnd.pypi.simple.v1+json" \
+              "https://pypi.org/simple/litmus-screener/" || true)"
             if [[ "$index" == *"litmus_screener-${VERSION}-py3-none-any.whl"* ]]; then
-              sleep 30
-              exit 0
+              seen=$((seen + 1))
+              if [ "$seen" -ge 3 ]; then exit 0; fi
+            else
+              seen=0
             fi
-            sleep 15
+            sleep 20
           done
-          echo "The PyPI simple index does not list litmus-screener ${VERSION} after 10 minutes" >&2
+          echo "The PyPI simple index does not list litmus-screener ${VERSION} after 20 minutes" >&2
           exit 1
       - name: Run verification/run.sh
         env:
