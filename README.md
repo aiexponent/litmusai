@@ -151,25 +151,26 @@ graph TB
 
 ## Known limits
 
-LitmusAI screens what a `system.yaml` declares, and a rule can only use a field that exists. An independent test, run on 2 November 2026 by a tester who never saw the rules, screened 175 worked examples from the European Commission's Guidelines on prohibited AI practices (C(2025) 5052) and the recitals of Regulation (EU) 2026/1744 with litmus-screener 1.1.2, and repeated it with 1.1.3, which gave the same verdict on every case. The cases, the expected answers written before the run, the scripts, the full scorecard and a [report](verification/REPORT.md) giving the cause of every miss and false alarm are in [`verification/`](verification/), and anyone can re-run them with `verification/run.sh`.
+LitmusAI screens what a `system.yaml` declares, and a rule can only use a field that exists. An independent test screens 175 worked examples from the European Commission's Guidelines on prohibited AI practices (C(2025) 5052) and the recitals of Regulation (EU) 2026/1744, with expected answers written before any run by a tester who never saw the rules. The cases, the expected answers, the scripts, the scorecards and a [report](verification/REPORT.md) giving the cause of every miss and false alarm are in [`verification/`](verification/), and anyone can re-run them with `verification/run.sh`.
 
-| Result on 1.1.2 and 1.1.3 (full screen) | Count |
-| :--- | :--- |
-| Expected prohibitions found (red) | 44 of 51 |
-| Expected prohibitions flagged for review (amber) | 1 of 51 |
-| Expected prohibitions missed (clear) | 6 of 51, all on points (a) and (b) |
-| Permitted cases screened red (false alarms) | 32 of 113 |
+| Full screen | 1.2.0 (3 Nov 2026) | 1.1.2 and 1.1.3 (2 Nov 2026) |
+| :--- | :--- | :--- |
+| Expected prohibitions found (red) | 49 of 51 | 44 of 51 |
+| Expected prohibitions flagged for review (amber) | 2 of 51 | 1 of 51 |
+| Expected prohibitions missed (clear) | 0 of 51 | 6 of 51, all on points (a) and (b) |
+| Permitted cases screened red (false alarms) | 9 of 113 | 32 of 113 |
+| Permitted cases screened amber (over-caution) | 29 of 113 | 23 of 113 |
 
-What that meant, and what 1.2.0 changes:
+The 1.2.0 run used the tester's answers to the new `influence` and `scope` questions. The author of the 1.2.0 rules saw the 1.1.x results, and the template's comments say what each answer does to the verdict, so the 1.2.0 result is weaker evidence than the first run. The report says how.
 
-- **Points (a) and (b) were not detected from their legal elements in 1.1.x.** 1.2.0 adds the `influence` questions. A file that leaves them at `not_answered` keeps its 1.1 verdict, with low confidence on (a) and (b), so answer them.
-- **Exceptions and exclusions** for points (d), (e), (f), (g) and (h) were not modelled in 1.1.x and caused most false alarms. 1.2.0 adds the `scope` questions for the ones written in Article 5(1). Facts that take a system outside a prohibition clear it; exceptions that need evidence (human assessment, medical or safety reasons, dataset labelling, the (h)(i) to (iii) objectives) give AMBER for a reviewer.
-- **Still not modelled in 1.2.0:** accidental generation, emergency medical use and the red-teaming defence for (ba) and (bb), which the recitals of Regulation (EU) 2026/1744 describe; relevance and proportionality under sectoral law for (c); emotion recognition used only for a person's own training. A RED on those needs a reviewer.
-- **Every answer is self-declared.** LitmusAI cannot check that a declared exception holds.
+What this means in practice:
+
+- **Answer the `influence` questions.** A file that leaves them at `not_answered` keeps the 1.1 verdict on points (a) and (b), which missed 6 of 7 expected prohibitions there, and reports low confidence.
+- **Exceptions:** facts that take a system outside a point clear it; exceptions that need evidence (human assessment, medical or safety reasons, dataset labelling, the (h)(i) to (iii) objectives) give AMBER for a reviewer. Most of the 29 over-cautious results are of this kind.
+- **Still not modelled in 1.2.0** (the 9 false alarms): accidental generation, emergency medical use and the red-teaming defence for (ba) and (bb); relevance and proportionality under sectoral law for (c); emotion recognition used only for a person's own training. A RED on those needs a reviewer.
+- **Every answer is self-declared.** LitmusAI cannot check that a declared exception holds, and two results in the test turned on a `not_sure`.
 - `deployment_context.workplace` and `education` describe where the system is used. Whose emotions are inferred is the `scope.emotions_of_workers_or_students` question.
-- The quick screen (`--describe`) infers fields from keywords, does not answer the new questions, and misses more: 27 of 51 expected prohibitions came back clear on 1.1.x.
-
-The independent test will be re-run on 1.2.0 with declarations that answer the new questions, and the result published next to this one. The author of the 1.2.0 rules saw the 1.1.x results, so that re-test is weaker evidence than the first run.
+- The quick screen (`--describe`) infers fields from keywords, does not answer the new questions, and misses more: 27 of 51 expected prohibitions came back clear.
 
 ---
 
