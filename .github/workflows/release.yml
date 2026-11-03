@@ -149,11 +149,18 @@ jobs:
         run: |
           set -euo pipefail
           VERSION="${TAG_NAME#v}"
-          for _ in $(seq 1 20); do
-            if curl -fsS "https://pypi.org/pypi/litmus-screener/${VERSION}/json" > /dev/null; then exit 0; fi
+          # pip installs from the simple index, which can lag the JSON API
+          # (v1.2.0: the JSON listed the version while pip could not find it).
+          # Wait for the wheel on the simple index, then a short settle.
+          for _ in $(seq 1 40); do
+            index="$(curl -fsS "https://pypi.org/simple/litmus-screener/" || true)"
+            if [[ "$index" == *"litmus_screener-${VERSION}-py3-none-any.whl"* ]]; then
+              sleep 30
+              exit 0
+            fi
             sleep 15
           done
-          echo "PyPI does not serve litmus-screener ${VERSION} after 5 minutes" >&2
+          echo "The PyPI simple index does not list litmus-screener ${VERSION} after 10 minutes" >&2
           exit 1
       - name: Run verification/run.sh
         env:
