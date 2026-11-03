@@ -79,6 +79,32 @@ generative_media:
     misuse_correction: false          # abuse detection, notice and action, follow-up on circumvention
     documented: false                 # the measures above are written down and testable
 
+# Article 5(1)(a) and (b). Answer each question "yes", "no" or "not_sure".
+# A question left at "not_answered" keeps the screen on capability proxies,
+# with low confidence. All yes for (a) or (b) is RED; any not_sure is AMBER.
+influence:
+  subliminal_techniques: not_answered                # (a) stimuli a person cannot perceive
+  manipulative_or_deceptive_techniques: not_answered # (a) purposefully manipulative or deceptive
+  exploits_vulnerability: not_answered               # (b) due to age, disability or social or economic situation
+  materially_distorts_behaviour: not_answered        # (a, b) people decide what they would not otherwise
+  significant_harm_likely: not_answered              # (a, b) physical, psychological or financial harm
+
+# Exceptions and limits in Article 5(1), points (d) to (h). Answer only those
+# that apply; leave the rest at "not_answered". A "no" marked "clears" takes
+# the system outside that point; a "yes" marked "amber" claims an exception
+# a reviewer must check.
+scope:
+  role: both                                         # provider_only, deployer or both; (h) prohibits use only
+  human_assessment_on_verifiable_facts: not_answered # (d) yes: amber
+  untargeted_collection: not_answered                # (e) no (a targeted search): clears
+  builds_facial_recognition_database: not_answered   # (e) no: clears
+  emotions_of_workers_or_students: not_answered      # (f) no (customers, patients, public): clears
+  medical_or_safety_reasons: not_answered            # (f) yes: amber
+  dataset_labelling_or_filtering_only: not_answered  # (g) yes: amber
+  remote_identification: not_answered                # (h) no (person steps up to a sensor): clears
+  law_enforcement_purpose: not_answered              # (h) no: clears
+  article_5_1_h_objective: not_answered              # (h) yes, one of (i) to (iii): amber
+
 mitigations: []
 
 metadata:

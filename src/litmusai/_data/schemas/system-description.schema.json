@@ -135,6 +135,69 @@
       "title": "GenerativeMediaSafeguards",
       "type": "object"
     },
+    "Influence": {
+      "additionalProperties": false,
+      "description": "The elements of Art. 5(1)(a) and (b), one question each.\n\nAnswer for the system as placed on the market, put into service or used.\nPoint (a) needs a technique, material distortion and significant harm;\npoint (b) needs exploitation of a vulnerability, material distortion and\nsignificant harm.",
+      "properties": {
+        "subliminal_techniques": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Subliminal Techniques",
+          "type": "string"
+        },
+        "manipulative_or_deceptive_techniques": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Manipulative Or Deceptive Techniques",
+          "type": "string"
+        },
+        "exploits_vulnerability": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Exploits Vulnerability",
+          "type": "string"
+        },
+        "materially_distorts_behaviour": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Materially Distorts Behaviour",
+          "type": "string"
+        },
+        "significant_harm_likely": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Significant Harm Likely",
+          "type": "string"
+        }
+      },
+      "title": "Influence",
+      "type": "object"
+    },
     "Metadata": {
       "additionalProperties": false,
       "properties": {
@@ -177,6 +240,123 @@
         }
       },
       "title": "Metadata",
+      "type": "object"
+    },
+    "Scope": {
+      "additionalProperties": false,
+      "description": "Exceptions and limits written in Art. 5(1), points (d) to (h).\n\nA \"no\" that takes the system outside a prohibition clears that point.\nA \"yes\" to an exception that needs evidence gives amber for review.",
+      "properties": {
+        "role": {
+          "default": "both",
+          "enum": [
+            "provider_only",
+            "deployer",
+            "both"
+          ],
+          "title": "Role",
+          "type": "string"
+        },
+        "human_assessment_on_verifiable_facts": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Human Assessment On Verifiable Facts",
+          "type": "string"
+        },
+        "untargeted_collection": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Untargeted Collection",
+          "type": "string"
+        },
+        "builds_facial_recognition_database": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Builds Facial Recognition Database",
+          "type": "string"
+        },
+        "emotions_of_workers_or_students": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Emotions Of Workers Or Students",
+          "type": "string"
+        },
+        "medical_or_safety_reasons": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Medical Or Safety Reasons",
+          "type": "string"
+        },
+        "dataset_labelling_or_filtering_only": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Dataset Labelling Or Filtering Only",
+          "type": "string"
+        },
+        "remote_identification": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Remote Identification",
+          "type": "string"
+        },
+        "law_enforcement_purpose": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Law Enforcement Purpose",
+          "type": "string"
+        },
+        "article_5_1_h_objective": {
+          "default": "not_answered",
+          "enum": [
+            "yes",
+            "no",
+            "not_sure",
+            "not_answered"
+          ],
+          "title": "Article 5 1 H Objective",
+          "type": "string"
+        }
+      },
+      "title": "Scope",
       "type": "object"
     },
     "SubjectPopulation": {
@@ -427,6 +607,31 @@
           "intimate_output_prevention": false,
           "misuse_correction": false
         }
+      }
+    },
+    "influence": {
+      "$ref": "#/$defs/Influence",
+      "default": {
+        "subliminal_techniques": "not_answered",
+        "manipulative_or_deceptive_techniques": "not_answered",
+        "exploits_vulnerability": "not_answered",
+        "materially_distorts_behaviour": "not_answered",
+        "significant_harm_likely": "not_answered"
+      }
+    },
+    "scope": {
+      "$ref": "#/$defs/Scope",
+      "default": {
+        "role": "both",
+        "human_assessment_on_verifiable_facts": "not_answered",
+        "untargeted_collection": "not_answered",
+        "builds_facial_recognition_database": "not_answered",
+        "emotions_of_workers_or_students": "not_answered",
+        "medical_or_safety_reasons": "not_answered",
+        "dataset_labelling_or_filtering_only": "not_answered",
+        "remote_identification": "not_answered",
+        "law_enforcement_purpose": "not_answered",
+        "article_5_1_h_objective": "not_answered"
       }
     },
     "mitigations": {

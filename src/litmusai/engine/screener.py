@@ -20,7 +20,7 @@ from litmusai.models.report import (
 from litmusai.models.ruleset import Ruleset
 from litmusai.models.system import SystemDescription
 
-REPORT_VERSION = "1.1"
+REPORT_VERSION = "1.2"
 
 _PENALTY = "€35M or 7% global turnover (Art. 99(3))"
 
@@ -200,9 +200,17 @@ class Screener:
             return (
                 f"The active ruleset has no rules for {label}; Article {cat_id} was not screened."
             )
+        rules_str = ", ".join(triggered)
+        if verdict == "clear" and triggered:
+            # Only notice rules give a clear verdict (for example the point (a)
+            # and (b) questions left unanswered). They lower confidence.
+            return (
+                f"Clear for {label}, with low confidence. Rules triggered: {rules_str}. "
+                f"The declaration does not answer this point's questions; answer them "
+                f"in system.yaml to screen Article {cat_id} on its legal elements."
+            )
         if verdict == "clear":
             return f"No rules triggered for {label}. No indicators of Article {cat_id} risk."
-        rules_str = ", ".join(triggered)
         if verdict == "amber":
             text = (
                 f"Amber for {label}. Rules triggered: {rules_str}. "

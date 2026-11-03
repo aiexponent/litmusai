@@ -89,6 +89,13 @@ class ScoreTests(unittest.TestCase):
         changed[0]["verdict"] = "red"
         self.assertEqual(score.drift(RESULTS, RESULTS), [])
         self.assertEqual(len(score.drift(RESULTS, changed)), 1)
+        self.assertEqual(len(score.drift(RESULTS, RESULTS[1:])), 1)
+
+    def test_confidence_change_is_not_drift(self):
+        changed = [dict(r) for r in RESULTS]
+        changed[0]["confidence"] = "low"
+        self.assertEqual(score.drift(RESULTS, changed), [])
+        self.assertEqual(score.confidence_changes(RESULTS, changed), 1)
 
     def test_markdown_has_every_line(self):
         text = score.render_markdown(score.score(EXPECTED, RESULTS))

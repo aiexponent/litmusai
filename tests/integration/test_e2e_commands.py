@@ -83,6 +83,16 @@ _REPORT_1_0_1 = (
     / "calculator_clear-litmus-screener-1.0.1.json"
 )
 
+# Written by litmus-screener 1.1.3 (installed from PyPI) from the same fixture
+# on 2026-11-03: report_version 1.1, ten categories, before the influence and
+# scope blocks of 1.2 existed.
+_REPORT_1_1_3 = (
+    Path(__file__).resolve().parents[1]
+    / "fixtures"
+    / "reports"
+    / "calculator_clear-litmus-screener-1.1.3.json"
+)
+
 
 def _fixture(name: str) -> Path:
     """Return absolute path to a portfolio fixture file."""
@@ -338,6 +348,44 @@ class TestE2ECommands:
         result = _run("verify", str(_REPORT_1_0_1), str(changed))
         assert result.returncode == 3
 
+    # ── 5c. reports written by litmus-screener 1.1.x (report_version 1.1) ──
+
+    def test_verify_1_1_report_against_its_unchanged_source(self) -> None:
+        """A 1.1 report hashed a system without the influence and scope blocks;
+        the two-argument form drops them, so the unchanged file verifies."""
+        result = _run("verify", str(_REPORT_1_1_3), str(_fixture("calculator_clear")))
+        assert result.returncode == 0, result.stderr
+        assert "VERIFIED" in result.stdout
+
+    def test_verify_1_1_report_one_argument_form_still_works(self) -> None:
+        result = _run("verify", str(_REPORT_1_1_3))
+        assert result.returncode == 0, result.stderr
+
+    @pytest.mark.parametrize(
+        "snippet",
+        [
+            "influence:\n  significant_harm_likely: no\n",
+            "scope:\n  role: deployer\n",
+        ],
+        ids=["influence", "scope"],
+    )
+    def test_verify_1_1_report_against_file_declaring_1_2_fields_is_tampered(
+        self, tmp_path: Path, snippet: str
+    ) -> None:
+        changed = tmp_path / "system.yaml"
+        changed.write_text(_fixture("calculator_clear").read_text() + snippet)
+        result = _run("verify", str(_REPORT_1_1_3), str(changed))
+        assert result.returncode == 3, result.stderr
+        assert "written before" in result.stderr
+
+    def test_verify_1_0_report_against_file_declaring_1_2_fields_is_tampered(
+        self, tmp_path: Path
+    ) -> None:
+        changed = tmp_path / "system.yaml"
+        changed.write_text(_fixture("calculator_clear").read_text() + "scope:\n  role: deployer\n")
+        result = _run("verify", str(_REPORT_1_0_1), str(changed))
+        assert result.returncode == 3, result.stderr
+
     # ── 6. litmus export report.json --format markdown ───────────────────
 
     def test_export_markdown_creates_file(self, tmp_path: Path) -> None:
@@ -592,13 +640,19 @@ class TestE2ECommands:
         assert result.returncode == 0
         assert "RecidivismRiskEngine" in result.stdout
 
-    def test_debug_clear_fixture_shows_no_triggered_rules(self, tmp_path: Path) -> None:
-        """litmus debug on a clear fixture does not print any triggered rule IDs."""
+    def test_debug_clear_fixture_shows_only_the_unanswered_notices(self, tmp_path: Path) -> None:
+        """A clear 1.1-style fixture triggers only the notices that the point (a)
+        and (b) questions are unanswered (PRD-449, decision F2)."""
         report_file = tmp_path / "report.json"
         _run("screen", str(_fixture("calculator_clear")), "--output", str(report_file))
         result = _run("debug", str(report_file))
         assert result.returncode == 0
-        assert "triggered:" not in result.stdout
+        triggered = [
+            line.split("triggered:", 1)[1].strip()
+            for line in result.stdout.splitlines()
+            if line.startswith("  triggered:")
+        ]
+        assert triggered == ["rule_a_questions_not_answered", "rule_b_questions_not_answered"]
 
     # ── 10. litmus screen <red_fixture> --fail-on red → exit 1 ───────────
 

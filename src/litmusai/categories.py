@@ -46,11 +46,13 @@ OMNIBUS_CATEGORIES: frozenset[str] = frozenset({"5.1.ba", "5.1.bb"})
 OMNIBUS_APPLIES_FROM = "2026-12-02"
 
 RULESET_DIR: Path = Path(__file__).resolve().parent / "_data" / "ruleset"
-DEFAULT_RULESET_FILENAME = "ruleset-2024-1689-v1.1.1.json"
+DEFAULT_RULESET_FILENAME = "ruleset-2024-1689-v1.2.json"
 DEFAULT_RULESET_PATH: Path = RULESET_DIR / DEFAULT_RULESET_FILENAME
 # Earlier rulesets stay in the package so `litmus diff-ruleset` and
-# `--ruleset` can still reach them. v1.1.1 corrects recital citations only.
-PREVIOUS_RULESET_PATH: Path = RULESET_DIR / "ruleset-2024-1689-v1.1.json"
+# `--ruleset` can still reach them. v1.1.1 corrected recital citations only;
+# v1.2 adds the influence and scope questions (PRD-449).
+PREVIOUS_RULESET_PATH: Path = RULESET_DIR / "ruleset-2024-1689-v1.1.1.json"
+V1_1_RULESET_PATH: Path = RULESET_DIR / "ruleset-2024-1689-v1.1.json"
 V1_0_RULESET_PATH: Path = RULESET_DIR / "ruleset-2024-1689-v1.0.json"
 
 __all__ = [
@@ -63,4 +65,5 @@ __all__ = [
     "PREVIOUS_RULESET_PATH",
     "RULESET_DIR",
     "V1_0_RULESET_PATH",
+    "V1_1_RULESET_PATH",
 ]

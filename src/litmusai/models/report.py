@@ -62,7 +62,7 @@ class OverrideEntry(BaseModel, extra="forbid"):
 class ScreeningReport(BaseModel, extra="forbid"):
     # "1.0": eight categories, litmus-screener 1.0.x. "1.1": ten categories
     # and the generative_media block, litmus-screener 1.1.0 onwards.
-    report_version: str = "1.1"
+    report_version: str = "1.2"
     ruleset_version: str
     litmusai_version: str
     generated_at: datetime
