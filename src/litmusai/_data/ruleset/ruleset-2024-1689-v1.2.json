@@ -7,8 +7,8 @@
       "id": "rule_a_influences_behaviour",
       "category": "5.1.a",
       "version": "v2",
-      "description": "System output attempts to influence, persuade, or change user behaviour. Applies only while the point (a) questions in `influence` are not answered.",
-      "expression": "(system.outputs.behaviour_predictions == true) and system.influence.subliminal_techniques == \"not_answered\" and system.influence.manipulative_or_deceptive_techniques == \"not_answered\"",
+      "description": "System output attempts to influence, persuade, or change user behaviour. Applies only while a point (a) technique question in `influence` is unanswered, none is yes or not_sure, and neither distortion nor harm is no.",
+      "expression": "(system.outputs.behaviour_predictions == true) and (system.influence.subliminal_techniques == \"not_answered\" or system.influence.manipulative_or_deceptive_techniques == \"not_answered\") and not ((system.influence.subliminal_techniques == \"yes\" or system.influence.subliminal_techniques == \"not_sure\") or (system.influence.manipulative_or_deceptive_techniques == \"yes\" or system.influence.manipulative_or_deceptive_techniques == \"not_sure\")) and system.influence.materially_distorts_behaviour != \"no\" and system.influence.significant_harm_likely != \"no\"",
       "verdict_if_triggered": "amber",
       "citations": [
         "Art. 5(1)(a)",
@@ -21,8 +21,8 @@
       "id": "rule_a_subliminal_inputs",
       "category": "5.1.a",
       "version": "v3",
-      "description": "System uses inputs not transparent to the user (subliminal, concealed). Applies only while the point (a) questions in `influence` are not answered.",
-      "expression": "(system.inputs.emotional_state_inference == true and system.outputs.behaviour_predictions == true) and system.influence.subliminal_techniques == \"not_answered\" and system.influence.manipulative_or_deceptive_techniques == \"not_answered\"",
+      "description": "System uses inputs not transparent to the user (subliminal, concealed). Applies only while a point (a) technique question in `influence` is unanswered, none is yes or not_sure, and neither distortion nor harm is no.",
+      "expression": "(system.inputs.emotional_state_inference == true and system.outputs.behaviour_predictions == true) and (system.influence.subliminal_techniques == \"not_answered\" or system.influence.manipulative_or_deceptive_techniques == \"not_answered\") and not ((system.influence.subliminal_techniques == \"yes\" or system.influence.subliminal_techniques == \"not_sure\") or (system.influence.manipulative_or_deceptive_techniques == \"yes\" or system.influence.manipulative_or_deceptive_techniques == \"not_sure\")) and system.influence.materially_distorts_behaviour != \"no\" and system.influence.significant_harm_likely != \"no\"",
       "verdict_if_triggered": "red",
       "citations": [
         "Art. 5(1)(a)",
@@ -35,8 +35,8 @@
       "id": "rule_a_freetext_manipulation",
       "category": "5.1.a",
       "version": "v3",
-      "description": "System generates free text aimed at changing behaviour (persuasion chatbots). Applies only while the point (a) questions in `influence` are not answered.",
-      "expression": "(system.outputs.freetext_generations == true and system.outputs.behaviour_predictions == true) and system.influence.subliminal_techniques == \"not_answered\" and system.influence.manipulative_or_deceptive_techniques == \"not_answered\"",
+      "description": "System generates free text aimed at changing behaviour (persuasion chatbots). Applies only while a point (a) technique question in `influence` is unanswered, none is yes or not_sure, and neither distortion nor harm is no.",
+      "expression": "(system.outputs.freetext_generations == true and system.outputs.behaviour_predictions == true) and (system.influence.subliminal_techniques == \"not_answered\" or system.influence.manipulative_or_deceptive_techniques == \"not_answered\") and not ((system.influence.subliminal_techniques == \"yes\" or system.influence.subliminal_techniques == \"not_sure\") or (system.influence.manipulative_or_deceptive_techniques == \"yes\" or system.influence.manipulative_or_deceptive_techniques == \"not_sure\")) and system.influence.materially_distorts_behaviour != \"no\" and system.influence.significant_harm_likely != \"no\"",
       "verdict_if_triggered": "amber",
       "citations": [
         "Art. 5(1)(a)",
@@ -77,8 +77,8 @@
       "id": "rule_a_questions_not_answered",
       "category": "5.1.a",
       "version": "v1",
-      "description": "The point (a) questions in `influence` are not answered. The verdict comes from capability proxies only, with low confidence.",
-      "expression": "system.influence.subliminal_techniques == \"not_answered\" and system.influence.manipulative_or_deceptive_techniques == \"not_answered\"",
+      "description": "A point (a) technique question in `influence` is unanswered and no element is ruled out. The verdict comes from capability proxies, with low confidence.",
+      "expression": "(system.influence.subliminal_techniques == \"not_answered\" or system.influence.manipulative_or_deceptive_techniques == \"not_answered\") and not ((system.influence.subliminal_techniques == \"yes\" or system.influence.subliminal_techniques == \"not_sure\") or (system.influence.manipulative_or_deceptive_techniques == \"yes\" or system.influence.manipulative_or_deceptive_techniques == \"not_sure\")) and system.influence.materially_distorts_behaviour != \"no\" and system.influence.significant_harm_likely != \"no\"",
       "verdict_if_triggered": "clear",
       "citations": [
         "Art. 5(1)(a)"
@@ -229,8 +229,8 @@
       "id": "rule_b_targets_minors",
       "category": "5.1.b",
       "version": "v3",
-      "description": "System targets minors and produces behaviour predictions. Applies only while the point (b) question in `influence` is not answered.",
-      "expression": "(targets_population(system, \"minors\") and system.outputs.behaviour_predictions == true) and system.influence.exploits_vulnerability == \"not_answered\"",
+      "description": "System targets minors and produces behaviour predictions. Applies only while the point (b) question in `influence` is unanswered and neither distortion nor harm is no.",
+      "expression": "(targets_population(system, \"minors\") and system.outputs.behaviour_predictions == true) and system.influence.exploits_vulnerability == \"not_answered\" and system.influence.materially_distorts_behaviour != \"no\" and system.influence.significant_harm_likely != \"no\"",
       "verdict_if_triggered": "red",
       "citations": [
         "Art. 5(1)(b)",
@@ -243,8 +243,8 @@
       "id": "rule_b_vulnerable_population",
       "category": "5.1.b",
       "version": "v3",
-      "description": "System targets persons in vulnerable economic situations. Applies only while the point (b) question in `influence` is not answered.",
-      "expression": "(targets_population(system, \"persons_in_vulnerable_economic_situations\")) and system.influence.exploits_vulnerability == \"not_answered\"",
+      "description": "System targets persons in vulnerable economic situations. Applies only while the point (b) question in `influence` is unanswered and neither distortion nor harm is no.",
+      "expression": "(targets_population(system, \"persons_in_vulnerable_economic_situations\")) and system.influence.exploits_vulnerability == \"not_answered\" and system.influence.materially_distorts_behaviour != \"no\" and system.influence.significant_harm_likely != \"no\"",
       "verdict_if_triggered": "amber",
       "citations": [
         "Art. 5(1)(b)",
@@ -257,8 +257,8 @@
       "id": "rule_b_targets_minors_freetext",
       "category": "5.1.b",
       "version": "v4",
-      "description": "System generates freetext output targeting minors: potential exploitation of age-based vulnerability. Applies only while the point (b) question in `influence` is not answered.",
-      "expression": "(targets_population(system, \"minors\") and system.outputs.freetext_generations == true) and system.influence.exploits_vulnerability == \"not_answered\"",
+      "description": "System generates freetext output targeting minors: potential exploitation of age-based vulnerability. Applies only while the point (b) question in `influence` is unanswered and neither distortion nor harm is no.",
+      "expression": "(targets_population(system, \"minors\") and system.outputs.freetext_generations == true) and system.influence.exploits_vulnerability == \"not_answered\" and system.influence.materially_distorts_behaviour != \"no\" and system.influence.significant_harm_likely != \"no\"",
       "verdict_if_triggered": "amber",
       "citations": [
         "Art. 5(1)(b)",
@@ -299,8 +299,8 @@
       "id": "rule_b_questions_not_answered",
       "category": "5.1.b",
       "version": "v1",
-      "description": "The point (b) question in `influence` is not answered. The verdict comes from population proxies only, with low confidence.",
-      "expression": "system.influence.exploits_vulnerability == \"not_answered\"",
+      "description": "The point (b) question in `influence` is unanswered and no element is ruled out. The verdict comes from population proxies, with low confidence.",
+      "expression": "system.influence.exploits_vulnerability == \"not_answered\" and system.influence.materially_distorts_behaviour != \"no\" and system.influence.significant_harm_likely != \"no\"",
       "verdict_if_triggered": "clear",
       "citations": [
         "Art. 5(1)(b)"

@@ -17,7 +17,7 @@ The independent test of 1.1.2 and 1.1.3 on 175 worked examples from the Commissi
   - material distortion of behaviour;
   - likely significant harm.
 
-  Answer `yes`, `no` or `not_sure`. All `yes` is RED; any `not_sure` is AMBER.
+  Answer `yes`, `no` or `not_sure`. For each point, all `yes` is RED; a `not_sure` on any element, with no element answered `no`, is AMBER; a `no` on any element clears it.
 - **`scope` block for the exceptions and limits in points (d) to (h).** A fact that takes a system outside a point clears it:
   - only customers' or patients' emotions;
   - targeted collection;

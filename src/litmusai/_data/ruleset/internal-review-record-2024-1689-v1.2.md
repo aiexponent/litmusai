@@ -55,8 +55,8 @@ The questions follow those three elements. `subliminal_techniques` and `manipula
 
 - `rule_a_elements_declared`: RED when a technique, material distortion and significant harm are all `yes`. **Approved.**
 - `rule_a_elements_not_sure`: AMBER when a technique is `yes` or `not_sure` and neither distortion nor harm is `no`. **Approved.**
-- `rule_a_questions_not_answered`: CLEAR with low confidence when both technique questions are `not_answered`. It states the gap and does not change the verdict. **Approved.**
-- **Panel note:** the 1.1 proxy rules (emotional-state inference with behaviour prediction) stay for unanswered files only, so answering the questions replaces them.
+- `rule_a_questions_not_answered`: CLEAR with low confidence when a technique question is `not_answered`, no technique is `yes` or `not_sure`, and neither distortion nor harm is `no`. It states the gap and does not change the verdict. **Approved.**
+- **Panel note:** the 1.1 proxy rules (emotional-state inference with behaviour prediction) apply under the same condition as the notice rule. A `no` on distortion or harm rules point (a) out and clears them; a partly answered file keeps them, with low confidence. The same holds for the (b) proxies. (Tightened after review of litmusai#38.)
 
 ### 5.1.b: Exploitation of vulnerabilities
 

@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - material distortion of behaviour;
   - likely significant harm.
 
-  Each answer is `yes`, `no`, `not_sure` or `not_answered` (the default). All `yes` gives RED; any `not_sure` gives AMBER. While the questions stay unanswered, the 1.1 proxy rules apply and (a) and (b) report low confidence, with a note in the rationale. The independent test found 6 expected prohibitions on (a) and (b) that 1.1.x screened clear (`verification/REPORT.md`).
+  Each answer is `yes`, `no`, `not_sure` or `not_answered` (the default). For each point, all `yes` gives RED; a `not_sure` on any element, with no element answered `no`, gives AMBER; a `no` on any element clears the point. While a technique (or exploitation) question stays unanswered and no element is `no`, the 1.1 proxy rules apply and (a) and (b) report low confidence, with a note in the rationale. The independent test found 6 expected prohibitions on (a) and (b) that 1.1.x screened clear (`verification/REPORT.md`).
 - **The exceptions and limits written in Article 5(1), points (d) to (h).** A new `scope` block covers:
   - (d) human assessment on objective and verifiable facts;
   - (e) untargeted collection, and whether a facial recognition database is built;

@@ -310,3 +310,46 @@ def test_unquoted_yaml_yes_and_no_are_answers(minimal_system_dict) -> None:
     s = _system(minimal_system_dict, **raw)
     assert s.influence.subliminal_techniques == "yes"
     assert s.influence.significant_harm_likely == "no"
+
+
+PROXY_A: dict[str, dict[str, Any]] = {
+    "inputs": {"emotional_state_inference": True},
+    "outputs": {"behaviour_predictions": True},
+}
+
+
+class TestPartialAnswers:
+    """Review of litmusai#38: a partly answered (a) or (b) must not read as
+    fully screened, and a shared element ruled out must clear the proxies."""
+
+    def test_one_technique_no_other_unanswered_keeps_proxies_and_low_confidence(
+        self, screener, minimal_system_dict
+    ) -> None:
+        s = _system(minimal_system_dict, **PROXY_A, influence={"subliminal_techniques": "no"})
+        assert _verdict(screener, s, "5.1.a") == ("red", "low")
+        clear = _system(minimal_system_dict, influence={"subliminal_techniques": "no"})
+        assert _verdict(screener, clear, "5.1.a") == ("clear", "low")
+
+    @pytest.mark.parametrize("field", ["materially_distorts_behaviour", "significant_harm_likely"])
+    def test_a_shared_element_ruled_out_clears_the_a_proxies(
+        self, screener, minimal_system_dict, field
+    ) -> None:
+        s = _system(minimal_system_dict, **PROXY_A, influence={field: "no"})
+        assert _verdict(screener, s, "5.1.a") == ("clear", "high")
+
+    @pytest.mark.parametrize("field", ["materially_distorts_behaviour", "significant_harm_likely"])
+    def test_a_shared_element_ruled_out_clears_the_b_proxies(
+        self, screener, minimal_system_dict, field
+    ) -> None:
+        s = _system(
+            minimal_system_dict,
+            subject_population={"categories": ["minors"]},
+            outputs={"behaviour_predictions": True},
+            influence={field: "no"},
+        )
+        assert _verdict(screener, s, "5.1.b") == ("clear", "high")
+
+    def test_rationale_states_the_computed_confidence(self, screener, minimal_system_dict) -> None:
+        result = screener.screen(_system(minimal_system_dict)).categories["5.1.a"]
+        assert result.confidence == "low"
+        assert "with low confidence" in result.rationale

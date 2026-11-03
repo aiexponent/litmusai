@@ -133,7 +133,7 @@ class Screener:
                 verdict=verdict,
                 confidence=confidence,
                 rationale=self._build_rationale(
-                    cat_id, verdict, triggered, not_screened, sorted(applies_from)
+                    cat_id, verdict, triggered, not_screened, sorted(applies_from), confidence
                 ),
                 triggered_rules=triggered,
                 regulation_citations=citations,
@@ -194,6 +194,7 @@ class Screener:
         triggered: list[str],
         not_screened: bool,
         applies_from: list[str],
+        confidence: str = "high",
     ) -> str:
         label = CATEGORY_LABELS.get(cat_id, cat_id)
         if not_screened:
@@ -204,11 +205,13 @@ class Screener:
         if verdict == "clear" and triggered:
             # Only notice rules give a clear verdict (for example the point (a)
             # and (b) questions left unanswered). They lower confidence.
-            return (
-                f"Clear for {label}, with low confidence. Rules triggered: {rules_str}. "
-                f"The declaration does not answer this point's questions; answer them "
-                f"in system.yaml to screen Article {cat_id} on its legal elements."
-            )
+            text = f"Clear for {label}, with {confidence} confidence. Rules triggered: {rules_str}."
+            if confidence != "high":
+                text += (
+                    f" The declaration does not answer this point's questions; answer them "
+                    f"in system.yaml to screen Article {cat_id} on its legal elements."
+                )
+            return text
         if verdict == "clear":
             return f"No rules triggered for {label}. No indicators of Article {cat_id} risk."
         if verdict == "amber":

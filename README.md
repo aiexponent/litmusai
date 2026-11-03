@@ -92,7 +92,7 @@ graph TB
 
     subgraph Core ["2. Deterministic Screening Engine"]
         AST["Safe AST Evaluator<br/><em>(Constrained expressions, zero eval, zero Python execution)</em>"]
-        RULE["Article 5 Reference Ruleset<br/><em>(28 rules covering 5.1.a to 5.1.h, 5.1.ba and 5.1.bb)</em>"]
+        RULE["Article 5 Reference Ruleset<br/><em>(38 rules covering 5.1.a to 5.1.h, 5.1.ba and 5.1.bb)</em>"]
         BYO["Bring-Your-Own Ruleset<br/><em>(Optional lawyer-signed JSON via litmus use-ruleset)</em>"]
     end
 
@@ -178,7 +178,7 @@ The independent test will be re-run on 1.2.0 with declarations that answer the n
 <details>
   <summary><b>📄 View Starter <code>system.yaml</code> Template</b></summary>
 
-This is what `litmus init` writes (litmus-screener 1.2.0). `subject_population.categories` accepts `general_public`, `minors`, `workers`, `students`, `persons_with_disabilities`, `persons_in_vulnerable_economic_situations`, `older_persons` and `other`. Each `influence` and `scope` answer is `yes`, `no`, `not_sure` or `not_answered`; an unquoted YAML `yes` or `no` is accepted.
+This is what `litmus init` writes (litmus-screener 1.2.0). `subject_population.categories` accepts `general_public`, `minors`, `workers`, `students`, `persons_with_disabilities`, `persons_in_vulnerable_economic_situations`, `older_persons` and `other`. Each `influence` and `scope` question is answered `yes`, `no`, `not_sure` or `not_answered` (an unquoted YAML `yes` or `no` is accepted), except `scope.role`, which is `provider_only`, `deployer` or `both`.
 
 ```yaml
 # LitmusAI System Description
@@ -252,8 +252,10 @@ generative_media:
     documented: false                 # the measures above are written down and testable
 
 # Article 5(1)(a) and (b). Answer each question "yes", "no" or "not_sure".
-# A question left at "not_answered" keeps the screen on capability proxies,
-# with low confidence. All yes for (a) or (b) is RED; any not_sure is AMBER.
+# A technique (or exploitation) question left at "not_answered" keeps the
+# screen on capability proxies, with low confidence. For each point: all yes
+# is RED; any not_sure with no element answered "no" is AMBER; a "no" on any
+# element clears it.
 influence:
   subliminal_techniques: not_answered                # (a) stimuli a person cannot perceive
   manipulative_or_deceptive_techniques: not_answered # (a) purposefully manipulative or deceptive

@@ -97,6 +97,17 @@ class ScoreTests(unittest.TestCase):
         self.assertEqual(score.drift(RESULTS, changed), [])
         self.assertEqual(score.confidence_changes(RESULTS, changed), 1)
 
+    def test_a_verdict_change_is_not_counted_as_a_confidence_change(self):
+        changed = [dict(r) for r in RESULTS]
+        changed[0]["confidence"] = "low"
+        changed[0]["verdict"] = "red"
+        self.assertEqual(len(score.drift(RESULTS, changed)), 1)
+        self.assertEqual(score.confidence_changes(RESULTS, changed), 0)
+
+    def test_a_short_committed_row_missing_from_the_run_is_drift(self):
+        short = [{"case_id": "t-x", "track": "yaml", "point": "5.1.a", "confidence": "high"}]
+        self.assertEqual(len(score.drift(short, [])), 1)
+
     def test_markdown_has_every_line(self):
         text = score.render_markdown(score.score(EXPECTED, RESULTS))
         for _, title in score.LINE_TITLES:

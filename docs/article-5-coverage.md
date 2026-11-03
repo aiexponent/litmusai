@@ -1,6 +1,6 @@
 # Article 5 Category Coverage
 
-LitmusAI screens against all ten prohibited-practice categories of Article 5(1) of Regulation (EU) 2024/1689: the original eight, points (a) to (h), and the two inserted by Regulation (EU) 2026/1744, points (ba) and (bb). The reference ruleset is `ruleset-2024-1689-v1.2` (38 rules). Each answer in the `influence` and `scope` blocks is `yes`, `no`, `not_sure` or `not_answered`; a question left at `not_answered` keeps the 1.1 behaviour.
+LitmusAI screens against all ten prohibited-practice categories of Article 5(1) of Regulation (EU) 2024/1689: the original eight, points (a) to (h), and the two inserted by Regulation (EU) 2026/1744, points (ba) and (bb). The reference ruleset is `ruleset-2024-1689-v1.2` (38 rules). Each question in the `influence` and `scope` blocks is answered `yes`, `no`, `not_sure` or `not_answered`, except `scope.role`, which is `provider_only`, `deployer` or `both`. A question left at `not_answered` keeps the 1.1 behaviour.
 
 Report order follows the regulation: a, b, ba, bb, c, d, e, f, g, h.
 

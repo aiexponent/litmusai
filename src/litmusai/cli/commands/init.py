@@ -80,8 +80,10 @@ generative_media:
     documented: false                 # the measures above are written down and testable
 
 # Article 5(1)(a) and (b). Answer each question "yes", "no" or "not_sure".
-# A question left at "not_answered" keeps the screen on capability proxies,
-# with low confidence. All yes for (a) or (b) is RED; any not_sure is AMBER.
+# A technique (or exploitation) question left at "not_answered" keeps the
+# screen on capability proxies, with low confidence. For each point: all yes
+# is RED; any not_sure with no element answered "no" is AMBER; a "no" on any
+# element clears it.
 influence:
   subliminal_techniques: not_answered                # (a) stimuli a person cannot perceive
   manipulative_or_deceptive_techniques: not_answered # (a) purposefully manipulative or deceptive

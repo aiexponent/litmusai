@@ -177,8 +177,11 @@ def render_markdown(card: dict) -> str:
     return "\n".join(out)
 
 
-def _by_key(rows: list[dict[str, str]], field: str) -> dict[tuple[str, str, str], str]:
-    return {(r["case_id"], r["track"], r["point"]): r[field] for r in rows}
+_ABSENT = "(no row)"
+
+
+def _by_key(rows: list[dict[str, str]], field: str) -> dict[tuple[str, str, str], str | None]:
+    return {(r["case_id"], r["track"], r["point"]): r.get(field) for r in rows}
 
 
 def drift(committed: list[dict[str, str]], current: list[dict[str, str]]) -> list[str]:
@@ -186,16 +189,19 @@ def drift(committed: list[dict[str, str]], current: list[dict[str, str]]) -> lis
     including rows present on one side only."""
     old, new = _by_key(committed, "verdict"), _by_key(current, "verdict")
     return [
-        f"{' '.join(k)}: published {old.get(k)} now {new.get(k)}"
+        f"{' '.join(k)}: published {old.get(k, _ABSENT)} now {new.get(k, _ABSENT)}"
         for k in sorted(old.keys() | new.keys())
-        if old.get(k) != new.get(k)
+        if k not in old or k not in new or old[k] != new[k]
     ]
 
 
 def confidence_changes(committed: list[dict[str, str]], current: list[dict[str, str]]) -> int:
     """Rows with the same verdict but a different confidence. Reported, not a failure."""
-    old, new = _by_key(committed, "confidence"), _by_key(current, "confidence")
-    return sum(1 for k in old.keys() & new.keys() if old[k] != new[k])
+    old_v, new_v = _by_key(committed, "verdict"), _by_key(current, "verdict")
+    old_c, new_c = _by_key(committed, "confidence"), _by_key(current, "confidence")
+    return sum(
+        1 for k in old_c.keys() & new_c.keys() if old_v[k] == new_v[k] and old_c[k] != new_c[k]
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
