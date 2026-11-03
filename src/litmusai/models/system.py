@@ -159,14 +159,18 @@ class Influence(BaseModel, extra="forbid"):
     # person cannot perceive, such as flashed images or inaudible audio.
     subliminal_techniques: Answer = "not_answered"
     # (a) Purposefully manipulative or deceptive techniques: they subvert or
-    # impair a person's autonomy, decision-making or free choice.
+    # impair a person's autonomy, decision-making or free choice, or deceive.
+    # Also when nobody intended it, such as behaviour learned in training;
+    # not merely incidental behaviour the provider has measures against
+    # (Commission guidelines C(2025) 5052, para. 69).
     manipulative_or_deceptive_techniques: Answer = "not_answered"
     # (b) Exploits a vulnerability of a person or group due to their age
     # (children or older people), a disability, or a specific social or
-    # economic situation.
+    # economic situation. Other weak points belong under (a) (para. 125).
     exploits_vulnerability: Answer = "not_answered"
-    # (a), (b) Has the objective or the effect of materially distorting
-    # behaviour: people take a decision they would not otherwise have taken.
+    # (a), (b) Has the objective or the effect (intent is not needed,
+    # para. 76) of materially distorting behaviour: people take a decision
+    # they would not otherwise have taken.
     materially_distorts_behaviour: Answer = "not_answered"
     # (a), (b) Causes or is reasonably likely to cause significant harm to
     # that person, another person or a group: physical, psychological or
@@ -182,7 +186,8 @@ class Scope(BaseModel, extra="forbid"):
     """
 
     # Who is screening. Point (h) prohibits use, not placing on the market:
-    # a provider that only sells a system declares provider_only.
+    # a provider that only sells a system declares provider_only. A private
+    # person using a tool declares deployer; build-and-use declares both.
     role: Literal["provider_only", "deployer", "both"] = "both"
     # (d) The system supports a human assessment of a person's involvement
     # in a criminal activity that is already based on objective and
@@ -194,8 +199,10 @@ class Scope(BaseModel, extra="forbid"):
     # (e) The system creates or expands a facial recognition database.
     # "no", for example training a generator of fictitious faces, clears (e).
     builds_facial_recognition_database: Answer = "not_answered"
-    # (f) The emotions inferred are those of workers, job candidates or
-    # students. "no" (only customers, patients or the public) clears (f).
+    # (f) The emotions inferred are those of workers (employees, contractors,
+    # trainees, volunteers, job candidates; guidelines para. 254) or of pupils
+    # and students (para. 255). "no" (only customers, patients or the public)
+    # clears (f).
     emotions_of_workers_or_students: Answer = "not_answered"
     # (f) The system is put in place for medical or safety reasons.
     # "yes" gives amber.
@@ -207,7 +214,8 @@ class Scope(BaseModel, extra="forbid"):
     # (h) Identification happens at a distance without the person's active
     # involvement. "no" (a person steps up to a gate or sensor) clears (h).
     remote_identification: Answer = "not_answered"
-    # (h) Used for the purposes of law enforcement. "no" clears (h).
+    # (h) Used for the purposes of law enforcement as defined in Art. 3(46).
+    # "no" clears (h).
     law_enforcement_purpose: Answer = "not_answered"
     # (h) Each use is strictly necessary for one of the objectives in
     # Art. 5(1)(h)(i) to (iii): a targeted search for victims or missing
