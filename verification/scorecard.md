@@ -2,20 +2,20 @@
 
 ## Full screen of system.yaml
 
-- **Missed prohibitions (expected red, got clear):** 6 (a-01, a-06, a-08, b-01, b-03, b-04)
-- **Flagged for review (expected red, got amber):** 1 (bb-05)
-- **False alarms (expected clear, got red):** 32 (ba-07, ba-14, bb-07, bb-09, c-26, d-05, d-10, d-11, d-12, d-13, d-14, d-15, e-01, e-04, e-08, f-07, f-08, f-13, f-19, f-25, f-28, f-33, f-35, g-11, g-12, h-01, h-05, h-08, h-10, h-11, h-14, h-15)
-- **Over-caution (expected clear, got amber):** 23 (b-10, b-15, ba-10, ba-12, ba-13, ba-15, bb-06, bb-08, c-06, c-18, c-19, c-20, c-22, c-24, c-25, f-05, f-14, f-29, f-31, f-32, f-34, g-01, h-06)
-- **Off-target reds (a point other than the target came back red):** 1 (d-03 5.1.c)
+- **Missed prohibitions (expected red, got clear):** 0
+- **Flagged for review (expected red, got amber):** 2 (a-08, bb-05)
+- **False alarms (expected clear, got red):** 9 (ba-07, ba-14, bb-07, bb-09, c-26, d-13, f-07, f-19, g-11)
+- **Over-caution (expected clear, got amber):** 29 (b-07, ba-10, ba-12, ba-13, ba-15, bb-06, bb-08, c-06, c-18, c-19, c-20, c-22, c-24, c-25, d-05, d-10, d-11, d-12, d-14, d-15, f-05, f-25, f-28, g-01, g-12, h-06, h-10, h-14, h-15)
+- **Off-target reds (a point other than the target came back red):** 4 (b-01 5.1.a, b-02 5.1.a, b-03 5.1.a, d-03 5.1.c)
 
 | Point | Cases | Expected | Got red | Got amber | Got clear | Missing |
 |---|---|---|---|---|---|---|
-| 5.1.a | 17 | red | 0 | 0 | 3 | 0 |
-| 5.1.a | 17 | amber | 0 | 0 | 2 | 0 |
+| 5.1.a | 17 | red | 2 | 1 | 0 | 0 |
+| 5.1.a | 17 | amber | 0 | 2 | 0 | 0 |
 | 5.1.a | 17 | clear | 0 | 0 | 12 | 0 |
-| 5.1.b | 16 | red | 1 | 0 | 3 | 0 |
-| 5.1.b | 16 | amber | 0 | 0 | 1 | 0 |
-| 5.1.b | 16 | clear | 0 | 2 | 9 | 0 |
+| 5.1.b | 16 | red | 4 | 0 | 0 | 0 |
+| 5.1.b | 16 | amber | 0 | 1 | 0 | 0 |
+| 5.1.b | 16 | clear | 0 | 1 | 10 | 0 |
 | 5.1.ba | 16 | red | 5 | 0 | 0 | 0 |
 | 5.1.ba | 16 | clear | 2 | 4 | 5 | 0 |
 | 5.1.bb | 9 | red | 3 | 1 | 0 | 0 |
@@ -25,16 +25,16 @@
 | 5.1.c | 26 | clear | 1 | 7 | 4 | 0 |
 | 5.1.d | 19 | red | 3 | 0 | 0 | 0 |
 | 5.1.d | 19 | amber | 2 | 0 | 0 | 0 |
-| 5.1.d | 19 | clear | 7 | 0 | 7 | 0 |
+| 5.1.d | 19 | clear | 1 | 6 | 7 | 0 |
 | 5.1.e | 8 | red | 2 | 0 | 0 | 0 |
-| 5.1.e | 8 | clear | 3 | 0 | 3 | 0 |
+| 5.1.e | 8 | clear | 0 | 0 | 6 | 0 |
 | 5.1.f | 35 | red | 14 | 0 | 0 | 0 |
-| 5.1.f | 35 | clear | 8 | 6 | 7 | 0 |
+| 5.1.f | 35 | clear | 2 | 3 | 16 | 0 |
 | 5.1.g | 14 | red | 4 | 0 | 0 | 0 |
-| 5.1.g | 14 | clear | 2 | 1 | 7 | 0 |
+| 5.1.g | 14 | clear | 1 | 2 | 7 | 0 |
 | 5.1.h | 15 | red | 2 | 0 | 0 | 0 |
-| 5.1.h | 15 | amber | 1 | 0 | 1 | 0 |
-| 5.1.h | 15 | clear | 7 | 1 | 3 | 0 |
+| 5.1.h | 15 | amber | 0 | 1 | 1 | 0 |
+| 5.1.h | 15 | clear | 0 | 4 | 7 | 0 |
 
 ## Quick screen (--describe)
 
