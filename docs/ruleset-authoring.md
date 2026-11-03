@@ -148,7 +148,7 @@ ruleset: your-org-v1.0 (SIGNED by: Smith & Co LLP · 2026-05-01 · signature ver
 When using the default reference ruleset:
 
 ```
-ruleset: ruleset-2024-1689-v1.1.1 (UNREVIEWED: internal panel authored, no external legal review)
+ruleset: ruleset-2024-1689-v1.2 (UNREVIEWED: internal panel authored, no external legal review)
 ```
 
 ---

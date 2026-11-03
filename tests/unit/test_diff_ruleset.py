@@ -14,6 +14,7 @@ from litmusai.categories import (
     DEFAULT_RULESET_PATH,
     PREVIOUS_RULESET_PATH,
     V1_0_RULESET_PATH,
+    V1_1_RULESET_PATH,
 )
 from litmusai.cli.main import app
 from litmusai.engine.diff import (
@@ -281,7 +282,7 @@ def test_cli_json_output_is_valid_rulesetdiff(
 
 def test_shipped_v1_0_to_v1_1_diff_is_additions_plus_agreed_edits() -> None:
     old = Ruleset.model_validate(json.loads(V1_0_RULESET_PATH.read_text()))
-    new = Ruleset.model_validate(json.loads(PREVIOUS_RULESET_PATH.read_text()))
+    new = Ruleset.model_validate(json.loads(V1_1_RULESET_PATH.read_text()))
     diff = diff_rulesets(old, new)
 
     assert diff.removed_rules == []
@@ -335,8 +336,8 @@ V1_1_1_CITATION_FIXES = {
 
 
 def test_shipped_v1_1_to_v1_1_1_diff_is_citations_only() -> None:
-    old = Ruleset.model_validate(json.loads(PREVIOUS_RULESET_PATH.read_text()))
-    new = Ruleset.model_validate(json.loads(DEFAULT_RULESET_PATH.read_text()))
+    old = Ruleset.model_validate(json.loads(V1_1_RULESET_PATH.read_text()))
+    new = Ruleset.model_validate(json.loads(PREVIOUS_RULESET_PATH.read_text()))
     diff = diff_rulesets(old, new)
 
     assert diff.added_rules == []
@@ -356,8 +357,72 @@ def test_shipped_v1_1_to_v1_1_1_diff_is_citations_only() -> None:
 def test_shipped_default_has_rules_for_every_category() -> None:
     new = Ruleset.model_validate(json.loads(DEFAULT_RULESET_PATH.read_text()))
     assert {r.category for r in new.rules} == set(ARTICLE_5_CATEGORIES)
-    assert new.ruleset_version == "ruleset-2024-1689-v1.1.1"
+    assert new.ruleset_version == "ruleset-2024-1689-v1.2"
     assert new.signature is None
+
+
+# PRD-449: v1.2 adds the influence and scope questions. Every existing rule it
+# touches gains a condition on a new field; no other part of it changes.
+V1_2_GATED = {
+    "rule_a_influences_behaviour",
+    "rule_a_subliminal_inputs",
+    "rule_a_freetext_manipulation",
+    "rule_b_targets_minors",
+    "rule_b_vulnerable_population",
+    "rule_b_targets_minors_freetext",
+    "rule_d_criminal_risk",
+    "rule_e_untargeted_facial_scraping",
+    "rule_e_facial_from_cctv",
+    "rule_f_workplace_emotion",
+    "rule_f_education_emotion",
+    "rule_f_emotion_healthcare_exception",
+    "rule_f_emotion_general",
+    "rule_g_biometric_sensitive_classification",
+    "rule_g_facial_sensitive_classification",
+    "rule_h_realtime_rbi_public_space",
+    "rule_h_facial_public_realtime",
+    "rule_h_law_enforcement_rbi_exception",
+}
+V1_2_ADDED = {
+    "rule_a_elements_declared",
+    "rule_a_elements_not_sure",
+    "rule_a_questions_not_answered",
+    "rule_b_elements_declared",
+    "rule_b_elements_not_sure",
+    "rule_b_questions_not_answered",
+    "rule_d_human_assessment_claimed",
+    "rule_f_medical_or_safety_claimed",
+    "rule_g_labelling_claimed",
+    "rule_h_objective_claimed",
+}
+
+
+def test_shipped_v1_1_1_to_v1_2_diff_adds_questions_and_gates_old_rules() -> None:
+    old = Ruleset.model_validate(json.loads(PREVIOUS_RULESET_PATH.read_text()))
+    new = Ruleset.model_validate(json.loads(DEFAULT_RULESET_PATH.read_text()))
+    diff = diff_rulesets(old, new)
+
+    assert diff.removed_rules == []
+    assert {r.id for r in diff.added_rules} == V1_2_ADDED
+    modified = {m.id: m for m in diff.modified_rules}
+    assert set(modified) == V1_2_GATED
+    old_by_id = {r.id: r for r in old.rules}
+    for rid, mod in modified.items():
+        fields = {c.field for c in mod.changes}
+        assert fields <= {"expression", "description", "version", "reviewed_by", "reviewed_date"}
+        new_rule = next(r for r in new.rules if r.id == rid)
+        # The old condition is kept whole, and only a condition on a new
+        # field is added, so a file that leaves the new fields unanswered
+        # keeps its verdict.
+        assert new_rule.expression.startswith(f"({old_rule_expr(old_by_id[rid])}) and ")
+        added = new_rule.expression[len(old_rule_expr(old_by_id[rid])) + 6 :]
+        assert "system.influence." in added or "system.scope." in added
+        assert new_rule.verdict_if_triggered == old_by_id[rid].verdict_if_triggered
+    assert diff.unchanged_rule_count == len(old.rules) - len(V1_2_GATED)
+
+
+def old_rule_expr(rule) -> str:
+    return rule.expression
 
 
 # ---------------------------------------------------------------------------

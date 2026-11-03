@@ -20,7 +20,7 @@ from litmusai.models.report import (
 from litmusai.models.ruleset import Ruleset
 from litmusai.models.system import SystemDescription
 
-REPORT_VERSION = "1.1"
+REPORT_VERSION = "1.2"
 
 _PENALTY = "€35M or 7% global turnover (Art. 99(3))"
 
@@ -133,7 +133,7 @@ class Screener:
                 verdict=verdict,
                 confidence=confidence,
                 rationale=self._build_rationale(
-                    cat_id, verdict, triggered, not_screened, sorted(applies_from)
+                    cat_id, verdict, triggered, not_screened, sorted(applies_from), confidence
                 ),
                 triggered_rules=triggered,
                 regulation_citations=citations,
@@ -194,15 +194,26 @@ class Screener:
         triggered: list[str],
         not_screened: bool,
         applies_from: list[str],
+        confidence: str = "high",
     ) -> str:
         label = CATEGORY_LABELS.get(cat_id, cat_id)
         if not_screened:
             return (
                 f"The active ruleset has no rules for {label}; Article {cat_id} was not screened."
             )
+        rules_str = ", ".join(triggered)
+        if verdict == "clear" and triggered:
+            # Only notice rules give a clear verdict (for example the point (a)
+            # and (b) questions left unanswered). They lower confidence.
+            text = f"Clear for {label}, with {confidence} confidence. Rules triggered: {rules_str}."
+            if confidence != "high":
+                text += (
+                    f" The declaration does not answer this point's questions; answer them "
+                    f"in system.yaml to screen Article {cat_id} on its legal elements."
+                )
+            return text
         if verdict == "clear":
             return f"No rules triggered for {label}. No indicators of Article {cat_id} risk."
-        rules_str = ", ".join(triggered)
         if verdict == "amber":
             text = (
                 f"Amber for {label}. Rules triggered: {rules_str}. "

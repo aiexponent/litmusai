@@ -51,7 +51,7 @@ verification/run.sh --no-docker
 
 Other options: `--out DIR` chooses where reports go (a new temporary folder by default), `--version X.Y.Z` tests another released version, and `--update` copies `results.csv` and `scorecard.md` back into this folder when publishing a new result. Nothing is written into the checkout without `--update`.
 
-Exit codes: `0` the verdicts match the published `results.csv`; `1` they differ, so the published result must be redone for this version; `2` a check failed (install, screen, SARIF, repeatability or citations).
+Exit codes: `0` the verdicts match the published `results.csv` (a change of confidence alone is reported, not a failure); `1` they differ, so the published result must be redone for this version; `2` a check failed (install, screen, SARIF, repeatability or citations).
 
 The scorer's own tests need only the standard library:
 

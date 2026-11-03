@@ -11,17 +11,22 @@ import yaml
 
 from litmusai.cli.main import app
 from litmusai.engine.hashing import sha256_hash
-from litmusai.models.system import GenerativeMedia, SystemDescription
+from litmusai.models.system import GenerativeMedia, Influence, Scope, SystemDescription
 
-# Declaration fields that did not exist in report version 1.0 (litmus-screener
-# 1.0.x). A 1.0 report hashed a system without them, so verifying such a
-# report against its source file must hash the same shape.
+# Declaration fields each report version never covered. A report hashed the
+# system as its writer knew it, so verifying an older report against its
+# source file must hash the same shape: the fields added later are removed,
+# provided the file leaves them at their defaults.
 _ADDED_IN_1_1: tuple[tuple[str, ...], ...] = (
     ("generative_media",),
     ("inputs", "social_behaviour_data"),
     ("outputs", "detrimental_treatment_unrelated_context"),
 )
-_LEGACY_REPORT_VERSIONS = frozenset({"1.0"})
+_ADDED_IN_1_2: tuple[tuple[str, ...], ...] = (("influence",), ("scope",))
+_FIELDS_NOT_COVERED: dict[str, tuple[tuple[str, ...], ...]] = {
+    "1.0": _ADDED_IN_1_1 + _ADDED_IN_1_2,
+    "1.1": _ADDED_IN_1_2,
+}
 
 
 def _declares_1_1_fields(dump: dict[str, Any]) -> bool:
@@ -34,15 +39,24 @@ def _declares_1_1_fields(dump: dict[str, Any]) -> bool:
     )
 
 
+def _declares_1_2_fields(dump: dict[str, Any]) -> bool:
+    """True when the influence or scope block (added in 1.2) is not at its defaults."""
+    return (
+        dump.get("influence") != Influence().model_dump()
+        or dump.get("scope") != Scope().model_dump()
+    )
+
+
 def _hashable_view(system: SystemDescription, report_version: str) -> dict[str, Any] | None:
     """The system as the report's writer hashed it, or None when the file
     declares fields the report's version never covered."""
     dump = system.model_dump()
-    if report_version not in _LEGACY_REPORT_VERSIONS:
+    removed = _FIELDS_NOT_COVERED.get(report_version)
+    if removed is None:
         return dump
-    if _declares_1_1_fields(dump):
+    if _declares_1_2_fields(dump) or (report_version == "1.0" and _declares_1_1_fields(dump)):
         return None
-    for path in _ADDED_IN_1_1:
+    for path in removed:
         parent = dump
         for key in path[:-1]:
             parent = parent[key]
@@ -84,9 +98,10 @@ def verify(
         if view is None:
             typer.echo("TAMPERED: input hash does not match.", err=True)
             typer.echo(
-                f"  The report (version {report_version}) was written before the "
-                f"generative_media block and the Article 5(1)(c) fields existed, and "
-                f"{system_path} now declares them. Screen the file again.",
+                f"  The report (version {report_version}) was written before some "
+                f"fields of {system_path} existed (generative_media and the Article "
+                f"5(1)(c) fields in 1.1; influence and scope in 1.2), and the file now "
+                f"declares them. Screen the file again.",
                 err=True,
             )
             raise typer.Exit(code=3)

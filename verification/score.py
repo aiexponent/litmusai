@@ -177,16 +177,31 @@ def render_markdown(card: dict) -> str:
     return "\n".join(out)
 
 
+_ABSENT = "(no row)"
+
+
+def _by_key(rows: list[dict[str, str]], field: str) -> dict[tuple[str, str, str], str | None]:
+    return {(r["case_id"], r["track"], r["point"]): r.get(field) for r in rows}
+
+
 def drift(committed: list[dict[str, str]], current: list[dict[str, str]]) -> list[str]:
-    """Rows that differ between the published results and this run."""
-    key = lambda r: (r["case_id"], r["track"], r["point"])  # noqa: E731
-    old = {key(r): (r["verdict"], r["confidence"]) for r in committed}
-    new = {key(r): (r["verdict"], r["confidence"]) for r in current}
-    diffs = []
-    for k in sorted(old.keys() | new.keys()):
-        if old.get(k) != new.get(k):
-            diffs.append(f"{' '.join(k)}: published {old.get(k)} now {new.get(k)}")
-    return diffs
+    """Rows whose verdict differs between the published results and this run,
+    including rows present on one side only."""
+    old, new = _by_key(committed, "verdict"), _by_key(current, "verdict")
+    return [
+        f"{' '.join(k)}: published {old.get(k, _ABSENT)} now {new.get(k, _ABSENT)}"
+        for k in sorted(old.keys() | new.keys())
+        if k not in old or k not in new or old[k] != new[k]
+    ]
+
+
+def confidence_changes(committed: list[dict[str, str]], current: list[dict[str, str]]) -> int:
+    """Rows with the same verdict but a different confidence. Reported, not a failure."""
+    old_v, new_v = _by_key(committed, "verdict"), _by_key(current, "verdict")
+    old_c, new_c = _by_key(committed, "confidence"), _by_key(current, "confidence")
+    return sum(
+        1 for k in old_c.keys() & new_c.keys() if old_v[k] == new_v[k] and old_c[k] != new_c[k]
+    )
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -215,7 +230,11 @@ def main(argv: list[str] | None = None) -> int:
         if not args.committed.exists():
             print("No published results.csv yet; drift check skipped.")
             return 0
-        diffs = drift(load_results(args.committed), load_results(args.current))
+        committed, current = load_results(args.committed), load_results(args.current)
+        diffs = drift(committed, current)
+        changed = confidence_changes(committed, current)
+        if changed:
+            print(f"Note: {changed} row(s) keep their verdict but report a different confidence.")
         if diffs:
             print("Verdicts differ from the published results.csv:", file=sys.stderr)
             for line in diffs:

@@ -1,6 +1,6 @@
 # Article 5 Category Coverage
 
-LitmusAI screens against all ten prohibited-practice categories of Article 5(1) of Regulation (EU) 2024/1689: the original eight, points (a) to (h), and the two inserted by Regulation (EU) 2026/1744, points (ba) and (bb). The reference ruleset is `ruleset-2024-1689-v1.1.1` (28 rules).
+LitmusAI screens against all ten prohibited-practice categories of Article 5(1) of Regulation (EU) 2024/1689: the original eight, points (a) to (h), and the two inserted by Regulation (EU) 2026/1744, points (ba) and (bb). The reference ruleset is `ruleset-2024-1689-v1.2` (38 rules). Each question in the `influence` and `scope` blocks is answered `yes`, `no`, `not_sure` or `not_answered`, except `scope.role`, which is `provider_only`, `deployer` or `both`. A question left at `not_answered` keeps the 1.1 behaviour.
 
 Report order follows the regulation: a, b, ba, bb, c, d, e, f, g, h.
 
@@ -9,14 +9,17 @@ Report order follows the regulation: a, b, ba, bb, c, d, e, f, g, h.
 ### 5.1.a: Harmful manipulation
 AI systems that deploy subliminal or manipulative techniques to materially distort behaviour causing significant harm.
 
-**Triggers:** behaviour predictions + emotional inference, freetext manipulation
+**Declared in:** `influence`: `subliminal_techniques`, `manipulative_or_deceptive_techniques`, `materially_distorts_behaviour`, `significant_harm_likely`
+**Triggers:** a technique + material distortion + significant harm, all `yes` (RED); any of them `not_sure` and none `no` (AMBER)
+**Not answered:** the 1.1 proxies apply (behaviour predictions + emotional inference RED; behaviour predictions AMBER), with low confidence
 **Penalty:** Up to EUR 35M or 7% global turnover
 
 ### 5.1.b: Exploitation of vulnerabilities
 AI systems that exploit vulnerabilities due to age, disability, or socioeconomic status.
 
-**Triggers:** targeting minors/vulnerable populations + behaviour predictions or freetext output
-**Key test:** does the system target a specific vulnerable population AND influence behaviour?
+**Declared in:** `influence`: `exploits_vulnerability`, `materially_distorts_behaviour`, `significant_harm_likely`
+**Triggers:** exploitation + material distortion + significant harm, all `yes` (RED); any of them `not_sure` and none `no` (AMBER)
+**Not answered:** the 1.1 proxies apply (minors + behaviour predictions RED; minors + freetext output or vulnerable economic situation AMBER), with low confidence
 
 ### 5.1.ba: Non-consensual intimate material of identifiable persons
 Applies from 2 December 2026 (Article 113(a), as amended by Regulation (EU) 2026/1744).
@@ -46,32 +49,34 @@ Individual scoring based on social behaviour or personal characteristics, leadin
 ### 5.1.d: Criminal risk prediction
 Predicting individual criminal risk based solely on profiling.
 
-**Triggers:** criminal risk predictions output
-**Exception:** specific criminal investigation contexts (rare, requires legal review)
+**Triggers:** criminal risk predictions output (RED)
+**Exclusion:** `scope.human_assessment_on_verifiable_facts: yes`, a system that supports a human assessment already based on objective and verifiable facts directly linked to a criminal activity, gives AMBER for review
 
 ### 5.1.e: Untargeted facial image scraping
 Building or expanding facial recognition databases from untargeted internet or CCTV scraping.
 
-**Triggers:** facial images + scraped internet data, or facial images + public space
-**This is a RED prohibition** for scraping; AMBER for public-space use
+**Triggers:** facial images + scraped internet data (RED); facial images + public space (AMBER)
+**Outside the point:** `scope.untargeted_collection: no` (a targeted search) or `scope.builds_facial_recognition_database: no` clears it
 
 ### 5.1.f: Emotion inference in workplace/education
 Inferring emotions in workplace or educational settings.
 
-**Triggers:** emotion inferences + workplace or education context
-**Exception:** medical/safety use (healthcare context gives AMBER, not RED)
+**Triggers:** emotion inferences + workplace or education context (RED); emotion inference elsewhere, including healthcare (AMBER)
+**Outside the point:** `scope.emotions_of_workers_or_students: no` (only customers, patients or the public) clears it
+**Exception:** `scope.medical_or_safety_reasons: yes` gives AMBER for review
 
 ### 5.1.g: Biometric categorisation of sensitive attributes
 Using biometric data to categorise individuals by race, political opinions, religion, sexual orientation.
 
-**Triggers:** biometric/facial inputs + sensitive attribute classifications
-**This is a RED prohibition**
+**Triggers:** biometric/facial inputs + sensitive attribute classifications (RED)
+**Carve-out:** `scope.dataset_labelling_or_filtering_only: yes` (labelling or filtering lawfully acquired biometric datasets) gives AMBER for review
 
 ### 5.1.h: Real-time remote biometric identification in public spaces
 Real-time biometric identification in publicly accessible spaces.
 
-**Triggers:** biometric/facial inputs + public space + real-time operation
-**Exception:** narrow law enforcement exceptions under Art. 5(2) and (3) give AMBER
+**Triggers:** biometric/facial inputs + public space + real-time operation (RED)
+**Outside the point:** `scope.role: provider_only` (point (h) prohibits use only), `scope.remote_identification: no`, or `scope.law_enforcement_purpose: no` clears it
+**Exception:** `scope.article_5_1_h_objective: yes` (Art. 5(1)(h)(i) to (iii)) gives AMBER; Art. 5(2) and (3) add authorisation, a fundamental rights impact assessment and registration
 
 ## Categories a ruleset does not cover
 

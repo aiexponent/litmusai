@@ -5,6 +5,47 @@ All notable changes to LitmusAI will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-11-03
+
+> **LitmusAI 1.2.0 ships with reference ruleset `ruleset-2024-1689-v1.2` (UNREVIEWED: internal panel authored, no external lawyer review). Apache 2.0, AS IS.** A `system.yaml` written for 1.1.x keeps every verdict.
+
+### Added
+
+- **Questions for Article 5(1)(a) and (b) (PRD-449).** A new `influence` block asks for each legal element:
+  - subliminal techniques;
+  - purposefully manipulative or deceptive techniques;
+  - exploitation of a vulnerability due to age, disability or a specific social or economic situation;
+  - material distortion of behaviour;
+  - likely significant harm.
+
+  Each answer is `yes`, `no`, `not_sure` or `not_answered` (the default). For each point, all `yes` gives RED; a `not_sure` on any element, with no element answered `no`, gives AMBER; a `no` on any element clears the point. While a technique (or exploitation) question stays unanswered and no element is `no`, the 1.1 proxy rules apply and (a) and (b) report low confidence, with a note in the rationale. The independent test found 6 expected prohibitions on (a) and (b) that 1.1.x screened clear (`verification/REPORT.md`).
+- **The exceptions and limits written in Article 5(1), points (d) to (h).** A new `scope` block covers:
+  - (d) human assessment on objective and verifiable facts;
+  - (e) untargeted collection, and whether a facial recognition database is built;
+  - (f) whether the emotions are those of workers or students, and medical or safety reasons;
+  - (g) labelling or filtering of lawfully acquired biometric datasets;
+  - (h) the role (`provider_only`, since point (h) prohibits use), remote identification, law-enforcement purpose and the objectives in (h)(i) to (iii).
+
+  A fact that takes a system outside a point clears it. An exception that needs evidence gives AMBER for review. These gaps caused most of the 32 false alarms in the independent test.
+- `older_persons` as a population category.
+- `litmus init`, the README and `docs/article-5-coverage.md` document every new question.
+
+### Changed
+
+- Ruleset `ruleset-2024-1689-v1.2` (38 rules) is the default.
+  - Ten rules are added.
+  - Eighteen rules keep their whole v1.1.1 condition and gain only a condition on a new field.
+  - On 195 declarations (the 175 test cases, the examples and the test fixtures), v1.1.1 and v1.2 give the same verdict on every point when the new questions are unanswered. Only the confidence on (a) and (b) changes.
+- Report version 1.2. A report now includes the `influence` and `scope` blocks in its `system` and its input hash. `litmus verify <report> <system.yaml>` still verifies a 1.0 or 1.1 report against an unchanged file, and reports a mismatch when the file now answers questions the old report never covered.
+- An answer written as an unquoted YAML `yes` or `no` is accepted as `"yes"` or `"no"`.
+
+### Not changed
+
+The quick screen (`--describe`) does not answer the new questions. These cases are still not modelled:
+- (c) proportionality;
+- (ba) and (bb) accidental generation, emergency medical use and the red-teaming defence;
+- emotion recognition used only for a person's own training.
+
 ## [1.1.3] - 2026-11-02
 
 > Citation corrections only. Rule expressions, verdicts and report schema are those of 1.1.2.
