@@ -151,7 +151,7 @@ graph TB
 
 ## Known limits
 
-LitmusAI screens what a `system.yaml` declares, and a rule can only use a field that exists. An independent test, run on 2 November 2026 by a tester who never saw the rules, screened 175 worked examples from the European Commission's Guidelines on prohibited AI practices (C(2025) 5052) and the recitals of Regulation (EU) 2026/1744 with litmus-screener 1.1.2, and repeated it with 1.1.3, which gave the same verdict on every case. The cases, the expected answers written before the run, the scripts and the full scorecard are in [`verification/`](verification/), and anyone can re-run them with `verification/run.sh`.
+LitmusAI screens what a `system.yaml` declares, and a rule can only use a field that exists. An independent test, run on 2 November 2026 by a tester who never saw the rules, screened 175 worked examples from the European Commission's Guidelines on prohibited AI practices (C(2025) 5052) and the recitals of Regulation (EU) 2026/1744 with litmus-screener 1.1.2, and repeated it with 1.1.3, which gave the same verdict on every case. The cases, the expected answers written before the run, the scripts, the full scorecard and a [report](verification/REPORT.md) giving the cause of every miss and false alarm are in [`verification/`](verification/), and anyone can re-run them with `verification/run.sh`.
 
 | Result on 1.1.2 and 1.1.3 (full screen) | Count |
 | :--- | :--- |

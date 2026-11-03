@@ -2,7 +2,7 @@
 
 This folder tests the released LitmusAI the way a stranger would. It installs the published package from PyPI, screens AI systems described in public sources, and compares each verdict with the answer the source itself gives. Anyone can repeat the run with one command.
 
-> **Status:** first run on 2 November 2026, litmus-screener 1.1.2, 175 cases. On the full screen: 44 of 51 expected prohibitions found, 1 flagged for review, 6 missed (all on points (a) and (b)), and 32 of 113 permitted cases screened red. Details per point in `scorecard.md`; how the cases were chosen in `SELECTION.md`; what the numbers mean in the main README's "Known limits" section. Re-run on litmus-screener 1.1.3 the same day: every verdict identical, and the recital check added with that release passes. On 1.1.2 the same check fails 42 citations on points (b), (c), (e) and (g).
+> **Status:** first run on 2 November 2026, litmus-screener 1.1.2, 175 cases. On the full screen: 44 of 51 expected prohibitions found, 1 flagged for review, 6 missed (all on points (a) and (b)), and 32 of 113 permitted cases screened red. The findings, with the cause of every miss and false alarm, are in `REPORT.md`; the counts per point in `scorecard.md`; how the cases were chosen in `SELECTION.md`; what the numbers mean in the main README's "Known limits" section. Re-run on litmus-screener 1.1.3 the same day: every verdict identical, and the recital check added with that release passes. On 1.1.2 the same check fails 42 citations on points (b), (c), (e) and (g).
 
 LitmusAI is a screening aid. Neither the tool nor this test is a legal opinion, a conformity assessment or a certification.
 
@@ -69,6 +69,7 @@ python3 -m unittest discover -s verification/tests
 | `declarations/<case_id>.yaml` | The `system.yaml` written for each case |
 | `results.csv` | The published verdicts, one row per case, track and point |
 | `scorecard.md` | The published scorecard |
+| `REPORT.md` | The report: method, how amber counts, results per point, every miss and false alarm with its cause, limits |
 | `run.sh`, `harness.py`, `score.py` | The one command, the runner and the scorer |
 | `requirements.lock` | Pinned versions and hashes for the package under test and `jsonschema` |
 
