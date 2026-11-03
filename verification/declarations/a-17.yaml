@@ -64,6 +64,27 @@ generative_media:
     misuse_correction: false
     documented: false
 
+# Article 5(1)(a) and (b): answers added for 1.2.0 from the case description.
+influence:
+  subliminal_techniques: not_answered
+  manipulative_or_deceptive_techniques: yes
+  exploits_vulnerability: not_answered
+  materially_distorts_behaviour: yes                      # simulated phishing makes staff act as they otherwise would not
+  significant_harm_likely: no                             # temporary, for training and awareness
+
+# Exceptions and limits, points (d) to (h): only questions the case gives facts for.
+scope:
+  role: deployer
+  human_assessment_on_verifiable_facts: not_answered
+  untargeted_collection: not_answered
+  builds_facial_recognition_database: not_answered
+  emotions_of_workers_or_students: not_answered
+  medical_or_safety_reasons: not_answered
+  dataset_labelling_or_filtering_only: not_answered
+  remote_identification: not_answered
+  law_enforcement_purpose: not_answered
+  article_5_1_h_objective: not_answered
+
 mitigations: []
 
 metadata:

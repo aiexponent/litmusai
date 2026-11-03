@@ -64,6 +64,27 @@ generative_media:
     misuse_correction: false
     documented: false
 
+# Article 5(1)(a) and (b): answers added for 1.2.0 from the case description.
+influence:
+  subliminal_techniques: yes
+  manipulative_or_deceptive_techniques: no
+  exploits_vulnerability: no                              # patients may be vulnerable, but the use is consented treatment, not exploitation
+  materially_distorts_behaviour: no                       # assumption: consented treatment under medical standards
+  significant_harm_likely: no
+
+# Exceptions and limits, points (d) to (h): only questions the case gives facts for.
+scope:
+  role: deployer
+  human_assessment_on_verifiable_facts: not_answered
+  untargeted_collection: not_answered
+  builds_facial_recognition_database: not_answered
+  emotions_of_workers_or_students: not_answered
+  medical_or_safety_reasons: not_answered
+  dataset_labelling_or_filtering_only: not_answered
+  remote_identification: not_answered
+  law_enforcement_purpose: not_answered
+  article_5_1_h_objective: not_answered
+
 mitigations:
   - "Follows applicable law and medical standards"
   - "Explicit consent of the patient or their legal representative"
