@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **The `litmus init` template asks factual questions only (PRD-464).** The comments no longer say what an answer does to a verdict ("no: clears", "yes: amber"). That is documented in the README's "Article 5 Categories Covered" table, so a user is not steered towards the answer that gives the verdict they want. The blind re-test of 1.2.0 reported this as a risk.
 - **Every `influence` and `scope` question now has guidance,** from the ten points the re-test tester found unclear:
-  - answer all `influence` questions, with `no` for a system that does not try to influence decisions, and keep `not_answered` for questions not considered;
+  - answer all `influence` questions from what the system does, intended or not, with `no` for a system that does not influence decisions, and keep `not_answered` for questions not considered;
   - manipulative or deceptive techniques count when nobody intended them, but not merely incidental behaviour the provider has measures against (Commission guidelines C(2025) 5052, para. 69);
   - intent is not needed for material distortion (para. 76);
   - weak points other than age, disability or a social or economic situation belong under the techniques question (para. 125);

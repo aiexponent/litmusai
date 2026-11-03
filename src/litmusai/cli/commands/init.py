@@ -80,8 +80,9 @@ generative_media:
     documented: false                 # the measures above are written down and testable
 
 # Article 5(1)(a) and (b). Answer every question for every system, "yes",
-# "no" or "not_sure". A system that does not try to influence what people
-# decide answers "no". "not_answered" means the question was not considered;
+# "no" or "not_sure", from what the system does or can do, whether or not
+# anyone intends it. A system that does not influence what people decide
+# answers "no". "not_answered" means the question was not considered;
 # the report then marks (a) and (b) as low confidence. What each answer does
 # to a verdict is in the README, not here, so answer the facts.
 influence:
