@@ -2,7 +2,7 @@
 
 This folder tests the released LitmusAI the way a stranger would. It installs the published package from PyPI, screens AI systems described in public sources, and compares each verdict with the answer the source itself gives. Anyone can repeat the run with one command.
 
-> **Status:** blind re-test on 3 November 2026, litmus-screener 1.2.0, the same 175 cases, with the tester's answers to the new `influence` and `scope` questions. On the full screen: 49 of 51 expected prohibitions found, 2 flagged for review, none missed, and 9 of 113 permitted cases screened red. The findings, with the cause of every flag and false alarm and the cautions on this run, are in `REPORT.md`; the counts per point in `scorecard.md`. The first run (litmus-screener 1.1.2 and 1.1.3, 2 November 2026: 6 missed, 32 false alarms) is kept in `history/1.1.3/`.
+> **Status:** blind re-test on 3 November 2026, litmus-screener 1.2.0, the same 175 cases, with the tester's answers to the new `influence` and `scope` questions. On the full screen: 49 of 51 expected prohibitions found, 2 flagged for review, none missed, and 9 of 113 permitted cases screened red. The findings, with the cause of every flag and false alarm and the cautions on this run, are in `REPORT.md`; the counts per point in `scorecard.md`. The first run (litmus-screener 1.1.2 and 1.1.3, 2 November 2026: 6 missed, 32 false alarms) is kept in `history/1.1.3/`. litmus-screener 1.2.1 (wording only) gives the same verdict on every case; `requirements.lock` pins it.
 
 LitmusAI is a screening aid. Neither the tool nor this test is a legal opinion, a conformity assessment or a certification.
 
